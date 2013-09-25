@@ -5,99 +5,103 @@ import .models.AdventureMapModel as AdventureMapModel;
 import .views.AdventureMapView as AdventureMapView;
 
 exports = Class(Emitter, function (supr) {
-	this.init = function (opts) {
-		supr(this, 'init', [opts]);
+  this.init = function (opts) {
+    supr(this, 'init', [opts]);
 
-		this._model = new AdventureMapModel({
-			tileWidth: opts.tileSettings.tileWidth,
-			tileHeight: opts.tileSettings.tileHeight,
-			width: opts.gridSettings.width,
-			height: opts.gridSettings.height,
-			defaultTile: opts.gridSettings.defaultTile
-		});
+    this._model = new AdventureMapModel({
+      tileWidth: opts.tileSettings.tileWidth,
+      tileHeight: opts.tileSettings.tileHeight,
+      width: opts.gridSettings.width,
+      height: opts.gridSettings.height,
+      defaultTile: opts.gridSettings.defaultTile,
 
-		var tileSettings = opts.tileSettings;
-		var gridSettings = opts.gridSettings;
+    });
 
-		this._gridSettings = gridSettings;
-		this._tileSettings = tileSettings;
-		this._pathSettings = opts.pathSettings;
-		this._nodeSettings = opts.nodeSettings;
+    var tileSettings = opts.tileSettings;
+    var gridSettings = opts.gridSettings;
 
-		if (tileSettings.tiles === 'CREATE_GRID') {
-			tileSettings.tiles = [];
-			for (var y = 0; y < gridSettings.height; y++) {
-				for (var x = 0; x < gridSettings.width; x++) {
-					tileSettings.tiles.push('resources/images/tiles/' + String.fromCharCode(97 + y) + x + '.png');
-				}
-			}
-		}
+    this._gridSettings = gridSettings;
+    this._tileSettings = tileSettings;
+    this._pathSettings = opts.pathSettings;
+    this._nodeSettings = opts.nodeSettings;
 
-		opts.map = this._model.getMap();
+    if (tileSettings.tiles === 'CREATE_GRID') {
+      tileSettings.tiles = [];
+      for (var y = 0; y < gridSettings.height; y++) {
+	for (var x = 0; x < gridSettings.width; x++) {
+	  tileSettings.tiles.push('resources/images/tiles/'+tileSettings.map+"/" + String.fromCharCode(97 + y) + x + '.jpg');
+	}
+      }
+    }
 
-		this._adventureMapView = new AdventureMapView(opts);
-		this._pinchSet = 0;
-		this._pinchUp = 0;
-		this._pinchReset = 0;
-		this._pinchScale = null;
-		this._dragSingleCount = 0;
+    opts.map = this._model.getMap();
 
-		this._adventureMapView.on('Size', bind(this._model, 'onSize'));
-		this._adventureMapView.on('ClickTag', bind(this, 'onClickTag'));
-		this._adventureMapView.on('ClickNode', bind(this, 'onClickNode'));
+    this._adventureMapView = new AdventureMapView(opts);
+    this._pinchSet = 0;
+    this._pinchUp = 0;
+    this._pinchReset = 0;
+    this._pinchScale = null;
+    this._dragSingleCount = 0;
 
-		this._model.on('NeedsPopulate', bind(this._adventureMapView, 'needsPopulate'));
-		this._model.on('Update', bind(this._adventureMapView, 'onUpdate'));
-		this._model.on('UpdateTile', bind(this._adventureMapView, 'refreshTile'));
+    this._adventureMapView.on('Size', bind(this._model, 'onSize'));
+    this._adventureMapView.on('ClickTag', bind(this, 'onClickTag'));
+    this._adventureMapView.on('ClickNode', bind(this, 'onClickNode'));
 
-		this._adventureMapView.tick = bind(this, function(dt) {
-			this._adventureMapView.style.visible && this._model.tick(dt);
-		});
-	};
+    this._model.on('NeedsPopulate', bind(this._adventureMapView, 'needsPopulate'));
+    this._model.on('Update', bind(this._adventureMapView, 'onUpdate'));
+    this._model.on('UpdateTile', bind(this._adventureMapView, 'refreshTile'));
 
-	this.getModel = function () {
-		return this._model;
-	};
+    this._adventureMapView.tick = bind(this, function(dt) {
+      this._adventureMapView.style.visible && this._model.tick(dt);
+    });
+  };
 
-	this.getAdventureMapView = function () {
-		return this._adventureMapView;
-	};
+  this.getModel = function () {
+    return this._model;
+  };
 
-	this.getAdventureMapLayers = function () {
-		return this._adventureMapView.getAdventureMapLayers();
-	};
+  this.getAdventureMapView = function () {
+    return this._adventureMapView;
+  };
 
-	this.setScale = function (scale) {
-		this._adventureMapView.setScale(scale);
-	};
+  this.getAdventureMapLayers = function () {
+    return this._adventureMapView.getAdventureMapLayers();
+  };
 
-	this.load = function (data) {
-		this._model.load(data);
-		this._adventureMapView.onUpdate(this._model.getData());
-	};
+  this.setScale = function (scale) {
+    this._adventureMapView.setScale(scale);
+  };
 
-	this.hide = function () {
-		this._adventureMapView.hide();
-	};
+  this.load = function (data) {
+    this._model.load(data);
+    this._adventureMapView.onUpdate(this._model.getData());
+  };
 
-	this.show = function () {
-		this._adventureMapView.show();
-	};
+  this.hide = function () {
+    this._adventureMapView.hide();
+  };
 
-	this.refreshTile = function (tileX, tileY) {
-		this._adventureMapView.refreshTile(tileX, tileY);
-	};
+  this.show = function () {
+    this._adventureMapView.show();
+  };
 
-	this.onClickTag = function (tag, tile, view) {
-		this.emit('ClickTag', tag, tile, view);
-	};
+  this.refreshTile = function (tileX, tileY) {
+    this._adventureMapView.refreshTile(tileX, tileY);
+  };
+  this.refreshAll =  function() {
+    this._adventureMapLayers.refreshAll();
+  };
 
-	this.onClickNode = function (tile) {
-		this.emit('ClickNode', tile);
-	};
+  this.onClickTag = function (tag, tile, view) {
+    this.emit('ClickTag', tag, tile, view);
+  };
 
-	this.focusNodeById = function (id) {
-		var node = this._model.getNodesById()[id];
-		node && this._adventureMapView.focusNodeById(node);
-	};
+  this.onClickNode = function (tile) {
+    this.emit('ClickNode', tile);
+  };
+
+  this.focusNodeById = function (id) {
+    var node = this._model.getNodesById()[id];
+    node && this._adventureMapView.focusNodeById(node);
+  };
 });
