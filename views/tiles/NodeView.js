@@ -76,8 +76,8 @@ exports = Class(ImageView, function (supr) {
 				} else {
 					this._idText = new ScoreView({
 						superview: this._itemView,
-						x: 0,
-						y: (node.height - node.characterSettings.height) * 0.5,
+						x: -20,
+						y: (node.height - node.characterSettings.height) * 0.5-25,
 						width: node.width,
 						height: node.characterSettings.height || node.height,
 						text: tile.id,
