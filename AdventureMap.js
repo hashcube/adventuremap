@@ -24,12 +24,11 @@ exports = Class(Emitter, function (supr) {
     this._tileSettings = tileSettings;
     this._pathSettings = opts.pathSettings;
     this._nodeSettings = opts.nodeSettings;
-
     if (tileSettings.tiles === 'CREATE_GRID') {
       tileSettings.tiles = [];
       for (var y = 0; y < gridSettings.height; y++) {
 	for (var x = 0; x < gridSettings.width; x++) {
-	  tileSettings.tiles.push('resources/images/tiles/'+tileSettings.map+"/" + String.fromCharCode(97 + y) + x + '.jpg');
+	  tileSettings.tiles.push('resources/images/tiles/'+tileSettings.map+"/" + String.fromCharCode(97 + y) + x + '.png');
 	}
       }
     }

@@ -21,7 +21,7 @@ var OPTION_ZOOM = 9;
 
 exports = Class(Emitter, function () {
 	this.init = function (opts) {
-		this._adventureMap = opts.adventureMap;
+	  this._adventureMap = opts.adventureMap[opts.tileSettings.map];
 		this._adventureMapModel = this._adventureMap.getModel();
 		this._map = this._adventureMapModel.getMap();
 
@@ -275,7 +275,7 @@ exports = Class(Emitter, function () {
 
 	this.saveMap = function () {
 		var data = this._adventureMapModel.toJSON();
-		localStorage.setItem('MAP_DATA', JSON.stringify(data));		
+		localStorage.setItem('MAP_DATA', JSON.stringify(data));
 	};
 
 	this.onCursorInputSelect = function(event) {

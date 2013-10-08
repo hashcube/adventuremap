@@ -7,7 +7,7 @@ var DEFAULT_TILE_VALUES = {
 		right: 0,
 		bottom: 0,
 		rightTop: 0,
-		rightBottom: 0,		
+		rightBottom: 0,
 		doodad: 0,
 		doodadX: 0.5,
 		doodadY: 0.5,
@@ -237,7 +237,7 @@ exports = Class(Emitter, function (supr) {
 				var saveTile = {};
 
 				for (var i in tile) {
-					if ((i in DEFAULT_TILE_VALUES) && 
+					if ((i in DEFAULT_TILE_VALUES) &&
 						((DEFAULT_TILE_VALUES[i] === 'anything') || (tile[i] !== DEFAULT_TILE_VALUES[i]))) {
 						saveTile[i] = tile[i];
 					}
