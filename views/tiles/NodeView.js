@@ -82,7 +82,7 @@ exports = Class(ImageView, function (supr) {
 						height: node.characterSettings.height || node.height,
 						text: tile.id,
 						blockEvents: true,
-					  characterData: tile.id<=this._tileSettings.max_ms ? node.characterSettings.data: ""
+						characterData: node.characterSettings.data
 					});
 					this._characterSettings = node.characterSettings.data
 				}
