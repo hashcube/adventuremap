@@ -28,8 +28,8 @@ exports = Class(ScrollView, function (supr) {
 	  maxY: this._totalHeight * scale
 	},
 	bounce: false,
-	minScale: 0.5,
-	maxScale: 2
+	minScale: 0.27,
+	maxScale: 0.5
       }
     );
 
