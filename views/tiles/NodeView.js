@@ -64,7 +64,7 @@ exports = Class(ImageView, function (supr) {
 
 			this._itemView.setImage(node.image);
 
-			if (tile.id && node.characterSettings) {
+			if (tile.id && node.characterSettings && !tile.tags.locked) {
 				if (this._idText) {
 					this._idText.style.width = node.width;
 					this._idText.style.height = node.characterSettings.height || node.height;
