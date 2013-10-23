@@ -110,23 +110,7 @@ exports = Class(ScrollView, function (supr) {
 
   this.onInputStart = function (evt, pt) {
     supr(this, 'onInputStart', arguments);
-    switch (this._touchIDs.length) {
-    case 1:
-      this._fingerOne = this._touchIDs[0];
-      this._pinchPoints[this._fingerOne] = {x: evt.srcPoint.x, y: evt.srcPoint.y};
-      break;
-    case 2:
-      this._fingerTwo = this._touchIDs[1];
-      this._pinchPoints[this._fingerTwo] = {x: evt.srcPoint.x, y: evt.srcPoint.y};
-      break;
-    }
-    if (this._touchIDs.length === 2) {
-      this._pinchScale = this.getScale();
-      this._pinchStartDistance = this.getPinchDistance();
-      this._pinch = true;
-    } else {
-      this._pinch = false;
-    }
+    this._pinch = false;
   };
 
   this.onDrag = function (dragEvt, moveEvt, delta) {
@@ -139,23 +123,7 @@ exports = Class(ScrollView, function (supr) {
   };
 
   this.onDragStop = function (dragEvt, selectEvt) {
-    if (this._pinch) {
-      if ('id' in dragEvt) {
-	delete this._touch['_' + dragEvt.id];
-	this._touchIDs = Object.keys(this._touch);
-      }
-      if ('id' in selectEvt) {
-	delete this._touch['_' + selectEvt.id];
-	this._touchIDs = Object.keys(this._touch);
-      }
-
-    } else {
-      supr(this, 'onDragStop', arguments);
-    }
-  };
-
-  this.setOffset = function (x, y) {
-    (this._touchIDs.length <= 1) && supr(this, 'setOffset', arguments);
+    supr(this, 'onDragStop', arguments);
   };
 
   this.getAdventureMapLayers = function () {
