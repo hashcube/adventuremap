@@ -84,7 +84,14 @@ exports = Class(ImageView, function (supr) {
 						blockEvents: true,
 						characterData: node.characterSettings.data
 					});
-					this._characterSettings = node.characterSettings.data
+				}
+				this._idText.style.width = node.width;
+				this._idText.style.height = node.characterSettings.height || node.height;
+				this._idText.style.x = node.characterSettings.x || 0;
+				this._idText.style.y = node.characterSettings.y || 0;
+				if (node.characterSettings !== this._characterSettings) {
+					this._idText.setCharacterData(node.characterSettings.data);
+					this._characterSettings = node.characterSettings.data;
 				}
 			}
 
@@ -98,14 +105,18 @@ exports = Class(ImageView, function (supr) {
 
 		if (tile && tile.doodad) {
 			var doodad = this._doodads[tile.doodad - 1];
-			var style = this._doodadView.style;
+			if (doodad) {
+				var style = this._doodadView.style;
 
-			this._doodadView.setImage(doodad.image);
-			style.x = tile.doodadX * this._tileSettings.tileWidth - doodad.width * 0.5;
-			style.y = tile.doodadY * this._tileSettings.tileHeight - doodad.height * 0.5;
-			style.width = doodad.width;
-			style.height = doodad.height;
-			style.visible = true;
+				this._doodadView.setImage(doodad.image);
+				style.x = tile.doodadX * this._tileSettings.tileWidth - doodad.width * 0.5;
+				style.y = tile.doodadY * this._tileSettings.tileHeight - doodad.height * 0.5;
+				style.width = doodad.width;
+				style.height = doodad.height;
+				style.visible = true;
+			} else {
+				this._doodadView.style.visible = false;
+			}
 		} else {
 			this._doodadView.style.visible = false;
 		}
