@@ -76,14 +76,14 @@ exports = Class(ImageView, function (supr) {
 				} else {
 					this._idText = new ScoreView({
 						superview: this._itemView,
-						x: -20,
-						y: (node.height - node.characterSettings.height) * 0.5-25,
 						width: node.width,
 						height: node.characterSettings.height || node.height,
 						text: tile.id,
 						blockEvents: true,
 						characterData: node.characterSettings.data
 					});
+					this._idText._container.style.x = -20;
+					this._idText._container.style.y = (node.height - node.characterSettings.height) * 0.5-25;
 				}
 				this._idText.style.width = node.width;
 				this._idText.style.height = node.characterSettings.height || node.height;
