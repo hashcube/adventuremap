@@ -81,7 +81,7 @@ exports = Class(ImageView, function (supr) {
 
 			for (var tag in tile.tags) {
 				if (this._itemCtors[tag]) {
-					var itemView = tile.itemViews[tag];
+					var itemView = this._adventureMapView._playerView;
 					if (!itemView) {
 						itemView = new this._itemCtors[tag]({
 							superview: this._superview,
@@ -90,9 +90,15 @@ exports = Class(ImageView, function (supr) {
 							tag: tag,
 							tile: tile
 						});
-						itemView.on('InputSelect', bind(this, 'onSelectTag', tag, tile, itemView));
-						itemViews[tag] = itemView;
+						this._adventureMapView._playerView = itemView;
 					}
+					else {
+						itemView.updateOpts({
+							tile: tile
+						});
+						itemView.removeAllListeners('InputSelect');
+					}
+					itemView.on('InputSelect', bind(this, 'onSelectTag', tag, tile, itemView));
 
 					if (!('centerTag' in this._tileSettings) || this._tileSettings.centerTag) {
 						itemView.style.x = this.style.x + x - itemView.style.width * 0.5 + (itemView.offsetX || 0);
