@@ -66,8 +66,7 @@ exports = Class(ScrollView, function (supr) {
 		var ctors = [
 				AdventureMapBackgroundView,
 				AdventureMapPathsView,
-				AdventureMapNodesView,
-				AdventureMapDoodadsView
+				AdventureMapNodesView
 			];
 		for (var i = 0; i < ctors.length; i++) {
 			this._adventureMapLayers.push(new ctors[i]({
@@ -100,7 +99,7 @@ exports = Class(ScrollView, function (supr) {
 
 		this._showTimeout = this._showTimeout || setTimeout(
 			bind(this, function () {
-				for (var i = 0; i < 4; i++) {
+				for (var i = 0; i < 3; i++) {
 					this._adventureMapLayers[i].style.visible = true;
 				}
 			}),
