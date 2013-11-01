@@ -108,11 +108,11 @@ exports = Class(ImageView, function (supr) {
 					itemView.on('InputSelect', bind(this, 'onSelectTag', tag, tile, itemView));
 
 					if (!('centerTag' in this._tileSettings) || this._tileSettings.centerTag) {
-						itemView.style.x = this.style.x - style.x + x - itemView.style.width * 0.5 + (itemView.offsetX || 0);
-						itemView.style.y = this.style.y - style.y + y - itemView.style.height * 0.5 + (itemView.offsetY || 0);
+						itemView.style.x = this.style.x + (this.style.width * 0.15);
+						itemView.style.y = this.style.y - (itemView.style.height * 0.3 + this.style.height);
 					} else {
-						itemView.style.x = this.style.x - style.x + x + (itemView.offsetX || 0);
-						itemView.style.y = this.style.y - style.y + y + (itemView.offsetY || 0);
+						itemView.style.x = this.style.x + (this.style.width * 0.15);
+						itemView.style.y = this.style.y - (itemView.style.height * 0.3 + this.style.height);
 					}
 					itemView.update && itemView.update(tile);
 
