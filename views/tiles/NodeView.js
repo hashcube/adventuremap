@@ -72,6 +72,61 @@ exports = Class(ImageView, function (supr) {
 
 			this._itemView.setImage(node.image);
 
+			this._hideViews = {};
+			var itemViews = tile.itemViews;
+			if (!itemViews) {
+				itemViews = {};
+				tile.itemViews = itemViews;
+			}
+
+			var hideViews = this._hideViews;
+			for (var tag in itemViews) {
+				var itemView = itemViews[tag];
+				if (itemView.style.visible) {
+					hideViews[tag] = itemView;
+				}
+			}
+
+			for (var tag in tile.tags) {
+				if (this._itemCtors[tag]) {
+					var itemView = this._adventureMapView._playerView;
+					if (!itemView) {
+						itemView = new this._itemCtors[tag]({
+							superview: this._superview,
+							adventureMapView: this._adventureMapView,
+							zIndex: 999999999,
+							tag: tag,
+							tile: tile
+						});
+						this._adventureMapView._playerView = itemView;
+					}
+					else {
+						itemView.updateOpts({
+							tile: tile
+						});
+						itemView.removeAllListeners('InputSelect');
+					}
+					itemView.on('InputSelect', bind(this, 'onSelectTag', tag, tile, itemView));
+
+					if (!('centerTag' in this._tileSettings) || this._tileSettings.centerTag) {
+						itemView.style.x = this.style.x + x - itemView.style.width * 0.5 + (itemView.offsetX || 0);
+						itemView.style.y = this.style.y + y - itemView.style.height * 0.5 + (itemView.offsetY || 0);
+					} else {
+						itemView.style.x = this.style.x + x + (itemView.offsetX || 0);
+						itemView.style.y = this.style.y + y + (itemView.offsetY || 0);
+					}
+					itemView.update && itemView.update(tile);
+
+					hideViews[tag] = null;
+				}
+			}
+
+			for (var tag in hideViews) {
+				if (hideViews[tag]) {
+					hideViews[tag].style.visible = false;
+				}
+			}
+
 			if (tile.id && node.characterSettings && !tile.tags.locked) {
 				if (this._idText) {
 					this._idText.style.width = node.width;
@@ -130,6 +185,10 @@ exports = Class(ImageView, function (supr) {
 		}
 
 		this.style.visible = tile.node;
+	};
+
+	this.onSelectTag = function (tag, tile, itemView) {
+		this._adventureMapView.emit('ClickTag', tag, tile, itemView);
 	};
 
 	this.onSelectNode = function (tile) {
