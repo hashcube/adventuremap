@@ -31,7 +31,7 @@ exports = Class(ImageView, function (supr) {
 		this.style.visible = true;
 	};
 
-	/*this.onInputSelect = function () {
+	this.onInputSelect = function () {
 		this._superview.emit('Select', this._tileX, this._tileY);
-	};*/
+	};
 });

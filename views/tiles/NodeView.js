@@ -42,7 +42,7 @@ exports = Class(ImageView, function (supr) {
 		this._doodads = opts.tileSettings.doodads;
 		this._nodes = opts.nodeSettings.nodes;
 
-		this.canHandleEvents(true);
+		this.canHandleEvents(false);
 	};
 
 	this.update = function (grid, tileX, tileY) {
