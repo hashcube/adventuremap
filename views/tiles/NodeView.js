@@ -23,9 +23,9 @@ exports = Class(ImageView, function (supr) {
 
 		this._editMode = opts.editMode;
 
-		this._doodadView = new ImageView({
+		/*this._doodadView = new ImageView({
 			superview: this
-		});
+		});*/
 		this._itemView = new ImageView({
 			superview: this
 		});
@@ -38,7 +38,7 @@ exports = Class(ImageView, function (supr) {
 		this._hideViews = {};
 
 		this._tileSettings = opts.tileSettings;
-		this._doodads = opts.tileSettings.doodads;
+		/*this._doodads = opts.tileSettings.doodads;*/
 		this._nodes = opts.nodeSettings.nodes;
 
 		this.canHandleEvents(false);
@@ -152,7 +152,7 @@ exports = Class(ImageView, function (supr) {
 			this._itemView.style.visible = false;
 		}
 
-		if (tile && tile.doodad) {
+		/*if (tile && tile.doodad) {
 			var doodad = this._doodads[tile.doodad - 1];
 			if (doodad) {
 				var style = this._doodadView.style;
@@ -168,7 +168,7 @@ exports = Class(ImageView, function (supr) {
 			}
 		} else {
 			this._doodadView.style.visible = false;
-		}
+		}*/
 
 		this.style.visible = tile.node;
 	};
