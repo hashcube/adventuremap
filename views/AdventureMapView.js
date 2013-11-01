@@ -17,6 +17,9 @@ exports = Class(ScrollView, function (supr) {
 		this._touch = {};
 		this._touchIDs = [];
 
+		//playerview, to track a player
+		this._playerView = null;
+
 		var scale = opts.scale || 1;
 
 		opts = merge(
@@ -242,7 +245,7 @@ exports = Class(ScrollView, function (supr) {
 
 		while (i) {
 			this._adventureMapLayers[--i].refreshTile(tileX, tileY);
-		}		
+		}
 	};
 
 	this.focusNodeById = function (node) {
