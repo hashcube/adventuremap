@@ -53,11 +53,10 @@ exports = Class(ImageView, function (supr) {
 		if (tile && tile.node) {
 			var node = this._nodes[tile.node - 1];
 			var style = this._itemView.style;
+			var x = this.style.width * tile.x;
+			var y = this.style.height * tile.y;
 			if(!this._locSet)
 			{
-				var x = this.style.width * tile.x;
-				var y = this.style.height * tile.y;
-
 				style.x = x - node.width * 0.5;
 				style.y = y - node.height * 0.5;
 				this.style.x = this.style.x + style.x;
@@ -109,11 +108,11 @@ exports = Class(ImageView, function (supr) {
 					itemView.on('InputSelect', bind(this, 'onSelectTag', tag, tile, itemView));
 
 					if (!('centerTag' in this._tileSettings) || this._tileSettings.centerTag) {
-						itemView.style.x = this.style.x + x - itemView.style.width * 0.5 + (itemView.offsetX || 0);
-						itemView.style.y = this.style.y + y - itemView.style.height * 0.5 + (itemView.offsetY || 0);
+						itemView.style.x = this.style.x - style.x + x - itemView.style.width * 0.5 + (itemView.offsetX || 0);
+						itemView.style.y = this.style.y - style.y + y - itemView.style.height * 0.5 + (itemView.offsetY || 0);
 					} else {
-						itemView.style.x = this.style.x + x + (itemView.offsetX || 0);
-						itemView.style.y = this.style.y + y + (itemView.offsetY || 0);
+						itemView.style.x = this.style.x - style.x + x + (itemView.offsetX || 0);
+						itemView.style.y = this.style.y - style.y + y + (itemView.offsetY || 0);
 					}
 					itemView.update && itemView.update(tile);
 
