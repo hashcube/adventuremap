@@ -33,6 +33,7 @@ exports = Class(ImageView, function (supr) {
 		this._idText = null;
 		this._characterSettings = null;
 		this._addItemEmitter = true;
+		this._locSet = false;
 
 		this._itemCtors = opts.nodeSettings.itemCtors;
 		this._hideViews = {};
@@ -50,17 +51,24 @@ exports = Class(ImageView, function (supr) {
 
 		var tile = grid[tileY][tileX];
 		if (tile && tile.node) {
-			var x = this.style.width * tile.x;
-			var y = this.style.height * tile.y;
-
 			var node = this._nodes[tile.node - 1];
 			var style = this._itemView.style;
+			if(!this._locSet)
+			{
+				var x = this.style.width * tile.x;
+				var y = this.style.height * tile.y;
 
-			style.x = x - node.width * 0.5;
-			style.y = y - node.height * 0.5;
-			style.width = node.width;
-			style.height = node.height;
-			style.visible = true;
+				style.x = x - node.width * 0.5;
+				style.y = y - node.height * 0.5;
+				this.style.x = this.style.x + style.x;
+				this.style.y = this.style.y + style.y;
+				style.x = 0;
+				style.y = 0
+				style.width = node.width;
+				style.height = node.height;
+				style.visible = true;
+				this._locSet = true;
+			}
 
 			this._itemView.setImage(node.image);
 
