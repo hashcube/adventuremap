@@ -65,10 +65,10 @@ exports = Class(ImageView, function (supr) {
 				style.y = 0
 				style.width = node.width;
 				style.height = node.height;
-				style.visible = true;
 				this._locSet = true;
 			}
 
+			style.visible = true;
 			this._itemView.setImage(node.image);
 
 			this._hideViews = {};
