@@ -126,6 +126,7 @@ exports = Class(ScrollView, function (supr) {
 				evt.cancel();
 			}
 		}
+		/*
 		this._touch['_' + evt.id] = true;
 		this._touchIDs = Object.keys(this._touch);
 		switch (this._touchIDs.length) {
@@ -145,13 +146,16 @@ exports = Class(ScrollView, function (supr) {
 		} else {
 			this._pinch = false;
 		}
+		*/
 	};
 
 	this.onInputSelect = this.onInputOut = function (evt) {
+		/*
 		if ('id' in evt) {
 			delete this._touch['_' + evt.id];
 			this._touchIDs = Object.keys(this._touch);
 		}
+		*/
 	};
 
 	this.onDrag = function (dragEvt, moveEvt, delta) {
