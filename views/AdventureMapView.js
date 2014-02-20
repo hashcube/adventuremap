@@ -252,6 +252,12 @@ exports = Class(ScrollView, function (supr) {
 		}
 	};
 
+	this.refreshNode = function (tileX, tileY) {
+		var adventureMapLayers = this._adventureMapLayers;
+		// 2 is node view
+		this._adventureMapLayers[2].refreshNode(tileX, tileY);
+	};
+
 	this.focusNodeById = function (node) {
 		var scale = this._content.style.scale;
 		var x = Math.max((node.tileX * this._tileSettings.tileWidth) * scale - this.style.width * 0.5, 0);

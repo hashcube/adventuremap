@@ -67,6 +67,7 @@ exports = Class(Emitter, function () {
 		this._menuBarView.on('Clear', bind(this, 'onClear'));
 		this._menuBarView.on('Export', bind(this, 'onExport'));
 		this._menuBarView.on('Close', bind(this, 'onCloseEditor'));
+		this._menuBarView.on('Position', bind(this, 'onPositionChange'));
 
 		this._lists = [];
 		this._tool = -1;
@@ -439,6 +440,19 @@ exports = Class(Emitter, function () {
 
 			data.grid[this._tileY][this._tileX].id = id;
 			this.update();
+		}
+	};
+
+	this.onPositionChange = function (pos) {
+		var pos = pos.split(" ");
+		if (this._tileX !== null) {
+			var adventureMapModel = this._adventureMapModel;
+			var data = adventureMapModel.getData();
+			data.grid[this._tileY][this._tileX].x = parseInt(pos[0], 10)/10;
+			data.grid[this._tileY][this._tileX].y = parseInt(pos[1], 10)/10;
+			adventureMapModel.emit("UpdateNode", this._tileX, this._tileY);
+			this.update();
+			this.saveMap();
 		}
 	};
 

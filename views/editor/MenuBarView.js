@@ -24,15 +24,16 @@ exports = Class(TopBar, function (supr) {
 		this._size = size;
 
 		var options = [
+				{title: 'Position', method: 'onPosition', style: 'GREEN'},
+				{title: 'Node', method: 'onNode', style: 'GREEN'},
+				{title: 'Tags', method: 'onTags', style: 'GREEN'},
+				{title: 'Id', method: 'onId', style: 'GREEN'},
 				{title: 'Bottom', method: 'onBottom', style: 'GREEN'},
 				{title: 'Right', method: 'onRight', style: 'GREEN'},
 				{title: 'Rt Top', method: 'onRightTop', style: 'GREEN'},
 				{title: 'Rt Botm', method: 'onRightBottom', style: 'GREEN'},
-				{title: 'Node', method: 'onNode', style: 'GREEN'},
 				{title: 'Tile', method: 'onTile', style: 'GREEN'},
 				{title: 'Doodad', method: 'onDoodad', style: 'GREEN'},
-				{title: 'Tags', method: 'onTags', style: 'GREEN'},
-				{title: 'Id', method: 'onId', style: 'GREEN'},
 				{title: 'Text', method: 'onText', style: 'GREEN'},
 				{title: 'Zoom', method: 'onZoom', style: 'GREEN'},
 				{title: 'Clear', method: 'onClear', style: 'RED'},
@@ -92,6 +93,13 @@ exports = Class(TopBar, function (supr) {
 			isPassword: false,
 			onChange: bind(this, 'onChangeId')
 		});
+
+		this._promptPosition = new InputPrompt({
+			prompt: 'Enter the x y (with space):',
+			autoShowKeyboard: true,
+			isPassword: false,
+			onChange: bind(this, 'onChangePosition')
+		});
 	};
 
 	this.onRight = function () {
@@ -134,6 +142,14 @@ exports = Class(TopBar, function (supr) {
 
 	this.onChangeId = function (value) {
 		value && this.emit('Id', value);
+	};
+
+	this.onPosition = function () {
+		this._promptPosition.show();
+	};
+
+	this.onChangePosition = function (value) {
+		value && this.emit('Position', value);
 	};
 
 	this.onText = function () {
