@@ -28,6 +28,7 @@ exports = Class(TopBar, function (supr) {
 				{title: 'Node', method: 'onNode', style: 'GREEN'},
 				{title: 'Tags', method: 'onTags', style: 'GREEN'},
 				{title: 'Id', method: 'onId', style: 'GREEN'},
+				{title: 'Rotate', method: 'onRotate', style: 'GREEN'},
 				{title: 'Bottom', method: 'onBottom', style: 'GREEN'},
 				{title: 'Right', method: 'onRight', style: 'GREEN'},
 				{title: 'Rt Top', method: 'onRightTop', style: 'GREEN'},
@@ -134,6 +135,10 @@ exports = Class(TopBar, function (supr) {
 
 	this.onTags = function () {
 		this.emit('Tags');
+	};
+
+	this.onRotate = function () {
+		this.emit('Rotate');
 	};
 
 	this.onId = function () {

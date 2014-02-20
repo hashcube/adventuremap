@@ -2,6 +2,7 @@ import event.Emitter as Emitter;
 
 import .tools.ImageListView as ImageListView;
 import .tools.TagListView as TagListView;
+import .tools.RotateListView as RotateListView;
 import .tools.ZoomView as ZoomView;
 import .tools.TextEditView as TextEditView;
 
@@ -18,6 +19,7 @@ var OPTION_RIGHT_BOTTOM_PATH = 6;
 var OPTION_TAGS = 7;
 var OPTION_TEXT_EDIT = 8;
 var OPTION_ZOOM = 9;
+var OPTION_ROTATE = 10;
 
 exports = Class(Emitter, function () {
 	this.init = function (opts) {
@@ -68,6 +70,7 @@ exports = Class(Emitter, function () {
 		this._menuBarView.on('Export', bind(this, 'onExport'));
 		this._menuBarView.on('Close', bind(this, 'onCloseEditor'));
 		this._menuBarView.on('Position', bind(this, 'onPositionChange'));
+		this._menuBarView.on('Rotate', bind(this, 'onRotateEdit'));
 
 		this._lists = [];
 		this._tool = -1;
@@ -219,6 +222,23 @@ exports = Class(Emitter, function () {
 		this._zoomView.on('ZoomIn', bind(this, 'onZoomIn'));
 		this._zoomView.on('ZoomOut', bind(this, 'onZoomOut'));
 
+		// Rotate Curr MS View
+		this._lists.push(new RotateListView({
+			superview: opts.superview,
+			x: 0,
+			y: opts.height - 96,
+			width: opts.width,
+			height: 96,
+			tags: opts.gridSettings.rotate,
+			visible: false,
+			canCancel: true,
+			padding: 10,
+			title: 'Rotate',
+			editor: this,
+			adventureMap: this._adventureMap,
+			adventureMapModel: this._adventureMapModel
+		}));
+
 		this._selectTime = 0;
 		this._adventureMap.getAdventureMapLayers()[0].on(
 			'Select',
@@ -347,6 +367,10 @@ exports = Class(Emitter, function () {
 
 	this.onTagsEdit = function () {
 		this.showList(OPTION_TAGS);
+	};
+
+	this.onRotateEdit = function () {
+		this.showList(OPTION_ROTATE);
 	};
 
 	this.onTextEdit = function () {
