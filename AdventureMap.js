@@ -51,6 +51,7 @@ exports = Class(Emitter, function (supr) {
 		this._model.on('NeedsPopulate', bind(this._adventureMapView, 'needsPopulate'));
 		this._model.on('Update', bind(this._adventureMapView, 'onUpdate'));
 		this._model.on('UpdateTile', bind(this._adventureMapView, 'refreshTile'));
+		this._model.on('UpdateNode', bind(this._adventureMapView, 'refreshNode'));
 
 		this._adventureMapView.tick = bind(this, function(dt) {
 			this._adventureMapView.style.visible && this._model.tick(dt);
