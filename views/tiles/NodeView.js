@@ -57,12 +57,13 @@ exports = Class(ImageView, function (supr) {
 			var y = this.style.height * tile.y;
 			if(!this._locSet)
 			{
+				this.initial = [this.style.x, this.style.y];
 				style.x = x - node.width * 0.5;
 				style.y = y - node.height * 0.5;
 				this.style.x = this.style.x + style.x;
 				this.style.y = this.style.y + style.y;
 				style.x = 0;
-				style.y = 0
+				style.y = 0;
 				style.width = node.width;
 				style.height = node.height;
 				this._locSet = true;
@@ -192,5 +193,11 @@ exports = Class(ImageView, function (supr) {
 
 	this.onSelectNode = function (tile) {
 		this._adventureMapView.emit('ClickNode', tile);
+	};
+
+	this.refreshLoc = function() {
+		this.style.x = this.initial[0];
+		this.style.y = this.initial[1];
+		this._locSet = false;
 	};
 });

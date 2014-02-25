@@ -14,7 +14,8 @@ var DEFAULT_TILE_VALUES = {
 		tags: 'anything',
 		text: '',
 		title: '',
-		id: ''
+		id: '',
+		position: ''
 	};
 
 exports = Class(Emitter, function (supr) {
