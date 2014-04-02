@@ -266,6 +266,18 @@ exports = Class(ScrollView, function (supr) {
 		this.scrollTo(x, y, 300);
 	};
 
+	this.getNodePosition = function (node) {
+		//return this._adventureMapLayers[2]._views[node.tileY][node.tileX].getPosition();
+		var pos = this._adventureMapLayers[2]._views[node.tileY][node.tileX].getPosition(),
+			scale = this._content.style.scale,
+			tileWidth = this._tileSettings.tileWidth,
+			tileHeight = this._tileSettings.tileHeight;
+		return {
+			x: pos.x + tileWidth*scale*(node.x-1),
+			y: pos.y + tileHeight*scale*(node.y-1)
+		};
+	};
+
 	this.removeItemViews = function () {
 		this._adventureMapLayers[3].removeItemViews();
 	};

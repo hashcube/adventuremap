@@ -99,6 +99,10 @@ exports = Class(Emitter, function (supr) {
 		this.emit('ClickTag', tag, tile, view);
 	};
 
+	this.getPlayerPosition = function(view) {
+		return this._adventureMapView._playerView.getPosition(view);
+	};
+
 	this.onClickNode = function (tile) {
 		this.emit('ClickNode', tile);
 	};
@@ -106,5 +110,10 @@ exports = Class(Emitter, function (supr) {
 	this.focusNodeById = function (id) {
 		var node = this._model.getNodesById()[id];
 		node && this._adventureMapView.focusNodeById(node);
+	};
+
+	this.getNodePosition = function(id) {
+		var node = this._model.getNodesById()[id];
+		return node && this._adventureMapView.getNodePosition(node);
 	};
 });
