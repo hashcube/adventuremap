@@ -267,7 +267,6 @@ exports = Class(ScrollView, function (supr) {
 	};
 
 	this.getNodePosition = function (node) {
-		//return this._adventureMapLayers[2]._views[node.tileY][node.tileX].getPosition();
 		var pos = this._adventureMapLayers[2]._views[node.tileY][node.tileX].getPosition(),
 			scale = this._content.style.scale,
 			tileWidth = this._tileSettings.tileWidth,
