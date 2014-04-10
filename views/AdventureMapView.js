@@ -258,12 +258,23 @@ exports = Class(ScrollView, function (supr) {
 		this._adventureMapLayers[2].refreshNode(tileX, tileY);
 	};
 
-	this.focusNodeById = function (node) {
+	this.focusNodeById = function (node, cb) {
 		var scale = this._content.style.scale;
 		var x = Math.max((node.tileX * this._tileSettings.tileWidth) * scale - this.style.width * 0.5, 0);
 		var y = Math.max((node.tileY * this._tileSettings.tileHeight) * scale - this.style.height * 0.5, 0);
 
-		this.scrollTo(x, y, 300);
+		this.scrollTo(x, y, 300, cb);
+	};
+
+	this.getNodePosition = function (node) {
+		var pos = this._adventureMapLayers[2]._views[node.tileY][node.tileX].getPosition(),
+			scale = this._content.style.scale,
+			tileWidth = this._tileSettings.tileWidth,
+			tileHeight = this._tileSettings.tileHeight;
+		return {
+			x: pos.x + tileWidth*scale*(node.x-1),
+			y: pos.y + tileHeight*scale*(node.y-1)
+		};
 	};
 
 	this.removeItemViews = function () {
