@@ -107,9 +107,9 @@ exports = Class(Emitter, function (supr) {
 		this.emit('ClickNode', tile);
 	};
 
-	this.focusNodeById = function (id) {
+	this.focusNodeById = function (id, cb) {
 		var node = this._model.getNodesById()[id];
-		node && this._adventureMapView.focusNodeById(node);
+		node && this._adventureMapView.focusNodeById(node, cb);
 	};
 
 	this.getNodePosition = function(id) {
