@@ -145,7 +145,7 @@ exports = Class(ImageView, function (supr) {
 						blockEvents: true,
 						characterData: node.characterSettings.data
 					});
-					this._idText._container.style.x = -20;
+					this._idText._container.style.x = 0;
 					this._idText._container.style.y = (node.height - node.characterSettings.height) * 0.5-25;
 				}
 				this._idText.style.width = node.width;
