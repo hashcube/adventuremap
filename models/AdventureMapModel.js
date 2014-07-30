@@ -11,6 +11,12 @@ var DEFAULT_TILE_VALUES = {
 		doodad: 0,
 		doodadX: 0.5,
 		doodadY: 0.5,
+		doodadDirection: 'horizontal',
+		doodadJustify: 'start',
+		doodadPosition: 'right',
+		doodadWidth: 200,
+		doodadHeight: 200,
+		doodadR: 0,
 		tags: 'anything',
 		text: '',
 		title: '',
@@ -169,6 +175,14 @@ exports = Class(Emitter, function (supr) {
 				tile.tags = {};
 			}
 			tile.tags[tag] = true;
+			this.emit('UpdateTile', tile.tileX, tile.tileY);
+		}
+	};
+
+	this.addDoodad = function (id, views) {
+		var tile = this._nodesById[id];
+		if (tile) {
+			tile.doodads = views
 			this.emit('UpdateTile', tile.tileX, tile.tileY);
 		}
 	};

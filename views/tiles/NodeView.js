@@ -23,11 +23,9 @@ exports = Class(ImageView, function (supr) {
 
 		this._editMode = opts.editMode;
 
-		/*this._doodadView = new ImageView({
-			superview: this
-		});*/
 		this._itemView = new ImageView({
-			superview: this
+			superview: this,
+			zIndex: 10
 		});
 
 		this._idText = null;
@@ -39,7 +37,7 @@ exports = Class(ImageView, function (supr) {
 		this._hideViews = {};
 
 		this._tileSettings = opts.tileSettings;
-		/*this._doodads = opts.tileSettings.doodads;*/
+		this._doodads = opts.tileSettings.doodads;
 		this._nodes = opts.nodeSettings.nodes;
 
 		this.canHandleEvents(false);
@@ -166,23 +164,43 @@ exports = Class(ImageView, function (supr) {
 			this._itemView.style.visible = false;
 		}
 
-		/*if (tile && tile.doodad) {
-			var doodad = this._doodads[tile.doodad - 1];
-			if (doodad) {
-				var style = this._doodadView.style;
+		var doodadView = this._doodadView;
+		if (tile && tile.doodads) {
+			var doodad = this._doodads,
+				views = tile.doodads,
+				len = tile.doodads.length,
+				tileSettings = this._tileSettings,
+				doodadWidth = tile.doodadWidth,
+				doodadHeight = tile.doodadHeight,
+				position = tile.doodadPosition;
 
-				this._doodadView.setImage(doodad.image);
-				style.x = tile.doodadX * this._tileSettings.tileWidth - doodad.width * 0.5;
-				style.y = tile.doodadY * this._tileSettings.tileHeight - doodad.height * 0.5;
-				style.width = doodad.width;
-				style.height = doodad.height;
-				style.visible = true;
-			} else {
-				this._doodadView.style.visible = false;
+			if (!doodadView) {
+				doodadView = this._doodadView = new View({
+					superview: this,
+					layout: 'linear',
+					direction: tile.doodadDirection,
+					justifyContent: tile.doodadJustify,
+					zIndex: 5
+				});
 			}
-		} else {
-			this._doodadView.style.visible = false;
-		}*/
+
+			while (len > 0) {
+				doodadView.addSubview(views[--len]);
+			}
+
+			doodadView.updateOpts({
+				x: tile.doodadX * tileSettings.tileWidth - (position === 'left' ? doodadWidth : 0),
+				y: tile.doodadY * tileSettings.tileHeight - (position === 'top' ? doodadHeight : 0),
+				r: tile.doodadR,
+				anchorX: doodadWidth / 2,
+				anchorY: doodadHeight / 2,
+				width: doodadWidth,
+				height: doodadHeight,
+				visible: true
+			});
+		} else if (doodadView){
+			doodadView.hide();
+		}
 
 		this.style.visible = tile.node;
 	};
