@@ -37,7 +37,6 @@ exports = Class(ImageView, function (supr) {
 		this._hideViews = {};
 
 		this._tileSettings = opts.tileSettings;
-		this._doodads = opts.tileSettings.doodads;
 		this._nodes = opts.nodeSettings.nodes;
 
 		this.canHandleEvents(false);
@@ -166,8 +165,7 @@ exports = Class(ImageView, function (supr) {
 
 		var doodadView = this._doodadView;
 		if (tile && tile.doodads) {
-			var doodad = this._doodads,
-				views = tile.doodads,
+			var views = tile.doodads,
 				len = tile.doodads.length,
 				tileSettings = this._tileSettings,
 				doodadWidth = tile.doodadWidth,
