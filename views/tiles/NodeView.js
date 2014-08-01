@@ -23,9 +23,12 @@ exports = Class(ImageView, function (supr) {
 
 		this._editMode = opts.editMode;
 
+		/*this._doodadView = new ImageView({
+			superview: this
+		});*/
 		this._itemView = new ImageView({
 			superview: this,
-			zIndex: 10
+			zIndex: 1
 		});
 
 		this._idText = null;
@@ -37,6 +40,7 @@ exports = Class(ImageView, function (supr) {
 		this._hideViews = {};
 
 		this._tileSettings = opts.tileSettings;
+		/*this._doodads = opts.tileSettings.doodads;*/
 		this._nodes = opts.nodeSettings.nodes;
 
 		this.canHandleEvents(false);
@@ -163,41 +167,59 @@ exports = Class(ImageView, function (supr) {
 			this._itemView.style.visible = false;
 		}
 
-		var doodadView = this._doodadView;
-		if (tile && tile.doodads) {
-			var views = tile.doodads,
-				len = tile.doodads.length,
-				tileSettings = this._tileSettings,
-				doodadWidth = tile.doodadWidth,
-				doodadHeight = tile.doodadHeight,
-				position = tile.doodadPosition;
+		/*if (tile && tile.doodad) {
+			var doodad = this._doodads[tile.doodad - 1];
+			if (doodad) {
+				var style = this._doodadView.style;
 
-			if (!doodadView) {
-				doodadView = this._doodadView = new View({
+				this._doodadView.setImage(doodad.image);
+				style.x = tile.doodadX * this._tileSettings.tileWidth - doodad.width * 0.5;
+				style.y = tile.doodadY * this._tileSettings.tileHeight - doodad.height * 0.5;
+				style.width = doodad.width;
+				style.height = doodad.height;
+				style.visible = true;
+			} else {
+				this._doodadView.style.visible = false;
+			}
+		} else {
+			this._doodadView.style.visible = false;
+		}*/
+
+		var friendsView = this._friendsView;
+		if (tile && tile.friends.views) {
+			var friends = tile.friends,
+				views = friends.views,
+				len = views.length,
+				tileSettings = this._tileSettings,
+				friendsWidth = friends.width,
+				friendsHeight = friends.height,
+				position = friends.position;
+
+			if (!friendsView) {
+				friendsView = this._doodadView = new View({
 					superview: this,
 					layout: 'linear',
-					direction: tile.doodadDirection,
-					justifyContent: tile.doodadJustify,
-					zIndex: 5
+					direction: friends.direction,
+					justifyContent: friends.justify
 				});
 			}
 
 			while (len > 0) {
-				doodadView.addSubview(views[--len]);
+				friendsView.addSubview(views[--len]);
 			}
 
-			doodadView.updateOpts({
-				x: tile.doodadX * tileSettings.tileWidth - (position === 'left' ? doodadWidth : 0),
-				y: tile.doodadY * tileSettings.tileHeight - (position === 'top' ? doodadHeight : 0),
-				r: tile.doodadR,
-				anchorX: doodadWidth / 2,
-				anchorY: doodadHeight / 2,
-				width: doodadWidth,
-				height: doodadHeight,
+			friendsView.updateOpts({
+				x: friends.x * tileSettings.tileWidth - (position === 'left' ? friendsWidth : 0),
+				y: friends.y * tileSettings.tileHeight - (position === 'top' ? friendsHeight : 0),
+				r: friends.r,
+				anchorX: friendsWidth / 2,
+				anchorY: friendsHeight / 2,
+				width: friendsWidth,
+				height: friendsHeight,
 				visible: true
 			});
-		} else if (doodadView){
-			doodadView.hide();
+		} else if (friendsView){
+			friendsView.hide();
 		}
 
 		this.style.visible = tile.node;

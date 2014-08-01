@@ -11,12 +11,16 @@ var DEFAULT_TILE_VALUES = {
 		doodad: 0,
 		doodadX: 0.5,
 		doodadY: 0.5,
-		doodadDirection: 'horizontal',
-		doodadJustify: 'start',
-		doodadPosition: 'right',
-		doodadWidth: 200,
-		doodadHeight: 200,
-		doodadR: 0,
+		friends: {
+			x: 0.5,
+			y: 0.5,
+			width: 200,
+			height: 200,
+			r: 0,
+			direction: 'horizontal',
+			justify: 'start',
+			position: 'right'
+		},
 		tags: 'anything',
 		text: '',
 		title: '',
@@ -179,10 +183,10 @@ exports = Class(Emitter, function (supr) {
 		}
 	};
 
-	this.addDoodad = function (id, views) {
+	this.addFriends = function (id, views) {
 		var tile = this._nodesById[id];
 		if (tile) {
-			tile.doodads = views
+			tile.friends.views = views;
 			this.emit('UpdateTile', tile.tileX, tile.tileY);
 		}
 	};
@@ -341,8 +345,11 @@ exports = Class(Emitter, function (supr) {
 				}
 				for (var i in DEFAULT_TILE_VALUES) {
 					// If there's no value and the value can't be "anything" then set the default:
-					if (!(i in tile) && (DEFAULT_TILE_VALUES[i] !== 'anything')) {
-						tile[i] = DEFAULT_TILE_VALUES[i];
+					var value = DEFAULT_TILE_VALUES[i];
+					if (!(i in tile) && (value !== 'anything')) {
+						tile[i] = value;
+					} else if (typeof value == 'object') {
+						merge(tile[i], value);
 					}
 				}
 				delete tile.map;
