@@ -196,7 +196,7 @@ exports = Class(ImageView, function (supr) {
 				position = friends.position;
 
 			if (!friendsView) {
-				friendsView = this._doodadView = new View({
+				friendsView = this._friendsView = new View({
 					superview: this,
 					layout: 'linear',
 					direction: friends.direction,
