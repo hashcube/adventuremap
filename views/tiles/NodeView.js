@@ -257,8 +257,8 @@ exports = Class(ImageView, function (supr) {
 				x: this.style.x + friends.x * tileSettings.tileWidth - friendsLeft + friendsRight,
 				y: this.style.y + friends.y * tileSettings.tileHeight - friendsTop + friendsBottom,
 				r: friends.r,
-				anchorX: friendsWidth / 2,
-				anchorY: friendsHeight / 2,
+				anchorX: (top || bottom ? friendsWidth / 2 : (left ? friendsWidth : 0)),
+				anchorY: (left || right ? friendsHeight / 2 : (top ? friendsHeight : 0)),
 				width: friendsWidth,
 				height: friendsHeight,
 				visible: true
