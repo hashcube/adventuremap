@@ -4,17 +4,19 @@ import ui.View as View;
 import ui.ImageView as ImageView;
 import ui.TextView as TextView;
 import ui.ScoreView as ScoreView;
+import animate;
 
 import ..ViewPool;
 
 exports = Class(ImageView, function (supr) {
 	this.init = function (opts) {
-		opts.width = opts.tileSettings.tileWidth,
-		opts.height = opts.tileSettings.tileHeight,
+		opts.width = opts.tileSettings.tileWidth;
+		opts.height = opts.tileSettings.tileHeight;
 
 		supr(this, 'init', [opts]);
 
 		this._adventureMapView = opts.adventureMapView;
+		this._superview = opts.superview;
 
 		this._itemView = null;
 
@@ -190,27 +192,64 @@ exports = Class(ImageView, function (supr) {
 			var friends = tile.friends,
 				views = friends.views,
 				len = views.length,
+				position = friends.position,
+				horizontal = (position === 'left' || position === 'right' ? true : false),
 				tileSettings = this._tileSettings,
-				friendsWidth = friends.width,
-				friendsHeight = friends.height,
-				position = friends.position;
+				friendsWidth =  (horizontal ? friends.width : friends.height),
+				friendsHeight = (horizontal ? friends.height : friends.width),
+				deltaX = (position === 'left' ? -1 : (position === 'right' ? 1 : 0)),
+				deltaY = (position === 'top' ? -1 : (position === 'bottom' ? 1 : 0)),
+				ongoing = false;
 
 			if (!friendsView) {
 				friendsView = this._friendsView = new View({
-					superview: this,
-					layout: 'linear',
-					direction: friends.direction,
-					justifyContent: friends.justify
+					superview: this._superview
+				});
+				friendsView.on('InputSelect', function() {
+					if(ongoing) {
+						return;
+					}
+					ongoing = true;
+					var sub = friendsView.getSubviews(),
+						len = sub.length,
+						i = len;
+
+					while (i > 0) {
+						var valueX = tileSettings.friendWidth * deltaX * (len - i),
+							valueY = tileSettings.friendHeight * deltaY * (len - i),
+							view = views[--i],
+							x = view.style.x,
+							y = view.style.y;
+
+						animate(view).then({
+							x: x + valueX,
+							y: y + valueY,
+						}).then({}, 1000).then({
+							x: x,
+							y: y
+						}).then(function() {
+							ongoing = false;
+						});
+					}
 				});
 			}
 
+			var x = (deltaX === -1 ? friendsWidth - tileSettings.friendWidth + 25 : 0);
+				y = (deltaY === -1 ? friendsHeight - tileSettings.friendHeight + 25 : 0);
+
 			while (len > 0) {
-				friendsView.addSubview(views[--len]);
+				var view = views[--len];
+				view.updateOpts({
+					x: x += (25 * deltaX),
+					y: y += (25 * deltaY),
+					zIndex: len
+				});
+				friendsView.addSubview(view);
 			}
 
 			friendsView.updateOpts({
-				x: friends.x * tileSettings.tileWidth - (position === 'left' ? friendsWidth : 0),
-				y: friends.y * tileSettings.tileHeight - (position === 'top' ? friendsHeight : 0),
+				x: this.style.x + friends.x * tileSettings.tileWidth - (position === 'left' ? friendsWidth : 0),
+				y: this.style.y + friends.y * tileSettings.tileHeight - (position === 'top' ? friendsHeight : 0),
 				r: friends.r,
 				anchorX: friendsWidth / 2,
 				anchorY: friendsHeight / 2,
