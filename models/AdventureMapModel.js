@@ -18,7 +18,6 @@ var DEFAULT_TILE_VALUES = {
 			height: 120,
 			r: 0,
 			direction: 'horizontal',
-			justify: 'start',
 			position: 'right'
 		},
 		tags: 'anything',
