@@ -12,13 +12,12 @@ var DEFAULT_TILE_VALUES = {
 		doodadX: 0.5,
 		doodadY: 0.5,
 		friends: {
-			x: 0,
-			y: 0,
+			x: '',
+			y: '',
 			width: 600,
 			height: 120,
 			r: 0,
-			direction: 'horizontal',
-			position: 'right'
+			position: ''
 		},
 		tags: 'anything',
 		text: '',

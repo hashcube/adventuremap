@@ -9,6 +9,19 @@ import animate;
 import ..ViewPool;
 
 exports = Class(ImageView, function (supr) {
+	var invert = function(direction) {
+		var ret,
+			pos = {
+				left: 'right',
+				right: 'left'
+			};
+
+		if (direction !== '') {
+			ret = pos[direction];
+		}
+		return ret;
+	};
+
 	this.init = function (opts) {
 		opts.width = opts.tileSettings.tileWidth;
 		opts.height = opts.tileSettings.tileHeight;
@@ -192,14 +205,35 @@ exports = Class(ImageView, function (supr) {
 		if (tile && tile.friends.views) {
 			var friends = tile.friends,
 				views = friends.views,
-				len = views.length,
-				position = friends.position,
-				horizontal = (position === 'left' || position === 'right' ? true : false),
 				tileSettings = this._tileSettings,
-				friendsWidth =  (horizontal ? friends.width : friends.height),
-				friendsHeight = (horizontal ? friends.height : friends.width),
-				deltaX = (position === 'left' ? -1 : (position === 'right' ? 1 : 0)),
-				deltaY = (position === 'top' ? -1 : (position === 'bottom' ? 1 : 0));
+				position = friends.position || invert(tile.position) || 'right',
+				left = (position === 'left'),
+				right = (position === 'right'),
+				top = (position === 'top'),
+				bottom = (position === 'bottom'),
+				deltaX = (left ? -1 : (right ? 1 : 0)),
+				deltaY = (top ? -1 : (bottom ? 1 : 0)),
+				// with and height of the container
+				friendsWidth =  (left || right ? friends.width : friends.height),
+				friendsHeight = (left || right ? friends.height : friends.width),
+				// position of the container if it is after the milestone icon
+				friendsRight = (right && isNaN(parseFloat(friends.x)) && node ? node.width : 0),
+				friendsBottom = (bottom && isNaN(parseFloat(friends.y)) && node ? node.height : 0),
+				// position of the container if it is before the milestone icon
+				friendsLeft = (left ? friendsWidth : 0),
+				friendsTop = (top ? friendsHeight : 0),
+				// x and y value for inner views
+				x = (deltaX === -1 ? friendsWidth - tileSettings.friendWidth : 0),
+				y = (deltaY === -1 ? friendsHeight - tileSettings.friendHeight : 0),
+				padding = 25,
+				len = views.length,
+				view,
+				// to avoid adding padding to the first view
+				opts = {
+					x: x,
+					y: y,
+					zIndex: len
+				};
 
 			if (!friendsView) {
 				friendsView = this._friendsView = new View({
@@ -208,22 +242,20 @@ exports = Class(ImageView, function (supr) {
 				friendsView.on('InputSelect', bind(this, 'onSelectFriends', views, deltaX, deltaY));
 			}
 
-			var x = (deltaX === -1 ? friendsWidth - tileSettings.friendWidth + 25 : 0);
-				y = (deltaY === -1 ? friendsHeight - tileSettings.friendHeight + 25 : 0);
-
 			while (len > 0) {
-				var view = views[--len];
-				view.updateOpts({
-					x: x += (25 * deltaX),
-					y: y += (25 * deltaY),
-					zIndex: len
-				});
+				view = views[--len];
+				view.updateOpts(opts);
 				friendsView.addSubview(view);
+				opts = {
+					x: x += (padding * deltaX),
+					y: y += (padding * deltaY),
+					zIndex: len
+				};
 			}
 
 			friendsView.updateOpts({
-				x: this.style.x + friends.x * tileSettings.tileWidth - (position === 'left' ? friendsWidth : 0),
-				y: this.style.y + friends.y * tileSettings.tileHeight - (position === 'top' ? friendsHeight : 0),
+				x: this.style.x + friends.x * tileSettings.tileWidth - friendsLeft + friendsRight,
+				y: this.style.y + friends.y * tileSettings.tileHeight - friendsTop + friendsBottom,
 				r: friends.r,
 				anchorX: friendsWidth / 2,
 				anchorY: friendsHeight / 2,
