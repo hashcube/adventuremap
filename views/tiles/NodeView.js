@@ -17,6 +17,7 @@ exports = Class(ImageView, function (supr) {
 
 		this._adventureMapView = opts.adventureMapView;
 		this._superview = opts.superview;
+		this._ongoing = false;
 
 		this._itemView = null;
 
@@ -198,40 +199,13 @@ exports = Class(ImageView, function (supr) {
 				friendsWidth =  (horizontal ? friends.width : friends.height),
 				friendsHeight = (horizontal ? friends.height : friends.width),
 				deltaX = (position === 'left' ? -1 : (position === 'right' ? 1 : 0)),
-				deltaY = (position === 'top' ? -1 : (position === 'bottom' ? 1 : 0)),
-				ongoing = false;
+				deltaY = (position === 'top' ? -1 : (position === 'bottom' ? 1 : 0));
 
 			if (!friendsView) {
 				friendsView = this._friendsView = new View({
 					superview: this._superview
 				});
-				friendsView.on('InputSelect', function() {
-					if(ongoing) {
-						return;
-					}
-					ongoing = true;
-					var sub = friendsView.getSubviews(),
-						len = sub.length,
-						i = len;
-
-					while (i > 0) {
-						var valueX = tileSettings.friendWidth * deltaX * (len - i),
-							valueY = tileSettings.friendHeight * deltaY * (len - i),
-							view = views[--i],
-							x = view.style.x,
-							y = view.style.y;
-
-						animate(view).then({
-							x: x + valueX,
-							y: y + valueY,
-						}).then({}, 1000).then({
-							x: x,
-							y: y
-						}).then(function() {
-							ongoing = false;
-						});
-					}
-				});
+				friendsView.on('InputSelect', bind(this, 'onSelectFriends', views, deltaX, deltaY));
 			}
 
 			var x = (deltaX === -1 ? friendsWidth - tileSettings.friendWidth + 25 : 0);
@@ -270,6 +244,37 @@ exports = Class(ImageView, function (supr) {
 
 	this.onSelectNode = function (tile) {
 		this._adventureMapView.emit('ClickNode', tile);
+	};
+
+	this.onSelectFriends = function (views, deltaX, deltaY) {
+		if(this._ongoing) {
+			return;
+		}
+
+		var sub = this._friendsView.getSubviews(),
+			len = sub.length,
+			i = len,
+			tileSettings = this._tileSettings;
+
+		this._ongoing = true;
+
+		while (i > 0) {
+			var valueX = tileSettings.friendWidth * deltaX * (len - i),
+				valueY = tileSettings.friendHeight * deltaY * (len - i),
+				view = views[--i],
+				x = view.style.x,
+				y = view.style.y;
+
+			animate(view, 'friends').then({
+				x: x + valueX,
+				y: y + valueY,
+			}).then({}, 1000).then({
+				x: x,
+				y: y
+			}).then(bind(this, function() {
+				this._ongoing = false;
+			}));
+		}
 	};
 
 	this.refreshLoc = function() {
