@@ -256,6 +256,8 @@ exports = Class(Emitter, function (supr) {
 				for (var i in tile) {
 					if ((i in DEFAULT_TILE_VALUES) &&
 						((DEFAULT_TILE_VALUES[i] === 'anything') || (tile[i] !== DEFAULT_TILE_VALUES[i]))) {
+						// delete views for friends
+						delete tile[i].views;
 						saveTile[i] = tile[i];
 					}
 				}
