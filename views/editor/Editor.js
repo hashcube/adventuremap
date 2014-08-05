@@ -70,6 +70,7 @@ exports = Class(Emitter, function () {
 		this._menuBarView.on('Export', bind(this, 'onExport'));
 		this._menuBarView.on('Close', bind(this, 'onCloseEditor'));
 		this._menuBarView.on('Position', bind(this, 'onPositionChange'));
+		this._menuBarView.on('Friends', bind(this, 'onFriendsChange'));
 		this._menuBarView.on('Rotate', bind(this, 'onRotateEdit'));
 
 		this._lists = [];
@@ -474,6 +475,30 @@ exports = Class(Emitter, function () {
 			var data = adventureMapModel.getData();
 			data.grid[this._tileY][this._tileX].x = parseInt(pos[0], 10)/10;
 			data.grid[this._tileY][this._tileX].y = parseInt(pos[1], 10)/10;
+			adventureMapModel.emit("UpdateNode", this._tileX, this._tileY);
+			this.update();
+			this.saveMap();
+		}
+	};
+
+	this.onFriendsChange = function (pos) {
+		var pos = pos.split(" "),
+			adventureMapModel = this._adventureMapModel,
+			data = adventureMapModel.getData(),
+			x = parseInt(pos[0], 10),
+			y = parseInt(pos[1], 10),
+			r = parseFloat(pos[2]);
+
+		if (this._tileX !== null) {
+			if (!isNaN(x)) {
+				data.grid[this._tileY][this._tileX].friends.x = x/10;
+			}
+			if (!isNaN(y)) {
+				data.grid[this._tileY][this._tileX].friends.y = y/10;
+			}
+			if (!isNaN(r)) {
+				data.grid[this._tileY][this._tileX].friends.r = r;
+			}
 			adventureMapModel.emit("UpdateNode", this._tileX, this._tileY);
 			this.update();
 			this.saveMap();

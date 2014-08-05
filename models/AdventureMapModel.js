@@ -250,15 +250,22 @@ exports = Class(Emitter, function (supr) {
 
 			result.grid[y] = [];
 			for (var x = 0; x < data.width; x++) {
-				var tile = gridLine[x];
-				var saveTile = {};
+				var tile = gridLine[x],
+					saveTile = {},
+					prop, temp;
 
 				for (var i in tile) {
 					if ((i in DEFAULT_TILE_VALUES) &&
 						((DEFAULT_TILE_VALUES[i] === 'anything') || (tile[i] !== DEFAULT_TILE_VALUES[i]))) {
 						// delete views for friends
-						delete tile[i].views;
-						saveTile[i] = tile[i];
+						prop = tile[i];
+						if (typeof prop === 'object') {
+							temp = {};
+							merge(temp, prop);
+							delete temp.views;
+							prop = temp;
+						}
+						saveTile[i] = prop;
 					}
 				}
 

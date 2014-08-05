@@ -29,6 +29,7 @@ exports = Class(TopBar, function (supr) {
 				{title: 'Tags', method: 'onTags', style: 'GREEN'},
 				{title: 'Id', method: 'onId', style: 'GREEN'},
 				{title: 'Rotate', method: 'onRotate', style: 'GREEN'},
+				{title: 'Friends', method: 'onFriends', style: 'GREEN'},
 				{title: 'Bottom', method: 'onBottom', style: 'GREEN'},
 				{title: 'Right', method: 'onRight', style: 'GREEN'},
 				{title: 'Rt Top', method: 'onRightTop', style: 'GREEN'},
@@ -101,6 +102,13 @@ exports = Class(TopBar, function (supr) {
 			isPassword: false,
 			onChange: bind(this, 'onChangePosition')
 		});
+
+		this._promptFriends = new InputPrompt({
+			prompt: 'Enter the x y r (with space):',
+			autoShowKeyboard: true,
+			isPassword: false,
+			onChange: bind(this, 'onChangeFriends')
+		});
 	};
 
 	this.onRight = function () {
@@ -155,6 +163,14 @@ exports = Class(TopBar, function (supr) {
 
 	this.onChangePosition = function (value) {
 		value && this.emit('Position', value);
+	};
+
+	this.onFriends = function () {
+		this._promptFriends.show();
+	};
+
+	this.onChangeFriends = function (value) {
+		value && this.emit('Friends', value);
 	};
 
 	this.onText = function () {
