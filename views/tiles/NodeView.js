@@ -227,7 +227,7 @@ exports = Class(ImageView, function (supr) {
 				y = (deltaY === -1 ? friendsHeight - tileSettings.friendHeight : 0),
 				padding = 25,
 				len = views.length,
-				view;
+				view, i;
 
 			if (!friendsView) {
 				friendsView = this._friendsView = new View({
@@ -235,17 +235,22 @@ exports = Class(ImageView, function (supr) {
 				});
 				friendsView.on('InputSelect', bind(this, 'onSelectFriends', views, deltaX, deltaY));
 
-				while (len > 0) {
-					view = views[--len];
-					view.updateOpts({
-						x: x,
-						y: y,
-						zIndex: len
-					});
-					friendsView.addSubview(view);
-					x += (padding * deltaX);
-					y += (padding * deltaY);
+				i = len;
+				while (i > 0) {
+					friendsView.addSubview(views[--i]);
 				}
+			}
+
+			i = len;
+			while (i > 0) {
+				view = views[--i];
+				view.updateOpts({
+					x: x,
+					y: y,
+					zIndex: i
+				});
+				x += (padding * deltaX);
+				y += (padding * deltaY);
 			}
 
 			friendsView.updateOpts({
