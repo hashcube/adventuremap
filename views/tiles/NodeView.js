@@ -217,8 +217,8 @@ exports = Class(ImageView, function (supr) {
 				friendsWidth =  (left || right ? friends.width : friends.height),
 				friendsHeight = (left || right ? friends.height : friends.width),
 				// position of the container if it is after the milestone icon
-				friendsRight = (right && isNaN(parseFloat(friends.x)) && node ? node.width : 0),
-				friendsBottom = (bottom && isNaN(parseFloat(friends.y)) && node ? node.height : 0),
+				friendsRight = (right && isNaN(parseFloat(friends.x)) && node ? node.width : tileSettings.friendsX),
+				friendsBottom = (bottom && isNaN(parseFloat(friends.y)) && node ? node.height : tileSettings.friendsY),
 				// position of the container if it is before the milestone icon
 				friendsLeft = (left ? friendsWidth : 0),
 				friendsTop = (top ? friendsHeight : 0),
