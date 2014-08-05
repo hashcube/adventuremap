@@ -97,14 +97,14 @@ exports = Class(TopBar, function (supr) {
 		});
 
 		this._promptPosition = new InputPrompt({
-			prompt: 'Enter the x y (with space):',
+			prompt: 'Enter x y positions (with space):',
 			autoShowKeyboard: true,
 			isPassword: false,
 			onChange: bind(this, 'onChangePosition')
 		});
 
 		this._promptFriends = new InputPrompt({
-			prompt: 'Enter the x y r (with space):',
+			prompt: 'Enter x y r direction (with spaces):',
 			autoShowKeyboard: true,
 			isPassword: false,
 			onChange: bind(this, 'onChangeFriends')
@@ -120,12 +120,10 @@ exports = Class(TopBar, function (supr) {
 	};
 
 	this.onRightTop = function () {
-		console.log(1);
 		this.emit('RightTop');
 	};
 
 	this.onRightBottom = function () {
-		console.log(2);
 		this.emit('RightBottom');
 	};
 

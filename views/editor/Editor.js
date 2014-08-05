@@ -469,37 +469,47 @@ exports = Class(Emitter, function () {
 	};
 
 	this.onPositionChange = function (pos) {
-		var pos = pos.split(" ");
+		pos = pos.split(' ');
+
 		if (this._tileX !== null) {
-			var adventureMapModel = this._adventureMapModel;
-			var data = adventureMapModel.getData();
+			var adventureMapModel = this._adventureMapModel,
+				data = adventureMapModel.getData();
+
 			data.grid[this._tileY][this._tileX].x = parseInt(pos[0], 10)/10;
 			data.grid[this._tileY][this._tileX].y = parseInt(pos[1], 10)/10;
-			adventureMapModel.emit("UpdateNode", this._tileX, this._tileY);
+			adventureMapModel.emit('UpdateNode', this._tileX, this._tileY);
 			this.update();
 			this.saveMap();
 		}
 	};
 
-	this.onFriendsChange = function (pos) {
-		var pos = pos.split(" "),
-			adventureMapModel = this._adventureMapModel,
-			data = adventureMapModel.getData(),
-			x = parseInt(pos[0], 10),
-			y = parseInt(pos[1], 10),
-			r = parseFloat(pos[2]);
+	this.onFriendsChange = function (input) {
+		input = input.split(' ');
 
 		if (this._tileX !== null) {
+			var adventureMapModel = this._adventureMapModel,
+				data = adventureMapModel.getData(),
+				x = parseInt(input[0], 10),
+				y = parseInt(input[1], 10),
+				r = parseFloat(input[2]),
+				tileX = this._tileX,
+				tileY = this._tileY,
+				position = input[3],
+				tile = data.grid[tileY][tileX].friends;
+
 			if (!isNaN(x)) {
-				data.grid[this._tileY][this._tileX].friends.x = x/10;
+				tile.x = x / 10;
 			}
 			if (!isNaN(y)) {
-				data.grid[this._tileY][this._tileX].friends.y = y/10;
+				tile.y = y / 10;
 			}
 			if (!isNaN(r)) {
-				data.grid[this._tileY][this._tileX].friends.r = r;
+				tile.r = r;
 			}
-			adventureMapModel.emit("UpdateNode", this._tileX, this._tileY);
+			if (position !== undefined && position !== '') {
+				tile.position = position;
+			}
+			adventureMapModel.emit('UpdateNode', tileX, tileY);
 			this.update();
 			this.saveMap();
 		}
