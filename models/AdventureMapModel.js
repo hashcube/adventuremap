@@ -14,7 +14,7 @@ var DEFAULT_TILE_VALUES = {
 		friends: {
 			x: '',
 			y: '',
-			width: 600,
+			width: 220,
 			height: 120,
 			r: 0,
 			position: ''
