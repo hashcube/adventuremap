@@ -346,10 +346,13 @@ exports = Class(Emitter, function (supr) {
 				for (var i in DEFAULT_TILE_VALUES) {
 					// If there's no value and the value can't be "anything" then set the default:
 					var value = DEFAULT_TILE_VALUES[i];
-					if (!(i in tile) && (value !== 'anything')) {
-						tile[i] = value;
-					} else if (typeof value == 'object') {
+					if (typeof value == 'object') {
+						if (!tile[i]) {
+							tile[i] = {};
+						}
 						merge(tile[i], value);
+					} else if (!(i in tile) && (value !== 'anything')) {
+						tile[i] = value;
 					}
 				}
 				delete tile.map;
