@@ -227,30 +227,25 @@ exports = Class(ImageView, function (supr) {
 				y = (deltaY === -1 ? friendsHeight - tileSettings.friendHeight : 0),
 				padding = 25,
 				len = views.length,
-				view,
-				// to avoid adding padding to the first view
-				opts = {
-					x: x,
-					y: y,
-					zIndex: len
-				};
+				view;
 
 			if (!friendsView) {
 				friendsView = this._friendsView = new View({
 					superview: this._superview
 				});
 				friendsView.on('InputSelect', bind(this, 'onSelectFriends', views, deltaX, deltaY));
-			}
 
-			while (len > 0) {
-				view = views[--len];
-				view.updateOpts(opts);
-				friendsView.addSubview(view);
-				opts = {
-					x: x += (padding * deltaX),
-					y: y += (padding * deltaY),
-					zIndex: len
-				};
+				while (len > 0) {
+					view = views[--len];
+					view.updateOpts({
+						x: x,
+						y: y,
+						zIndex: len
+					});
+					friendsView.addSubview(view);
+					x += (padding * deltaX);
+					y += (padding * deltaY);
+				}
 			}
 
 			friendsView.updateOpts({
@@ -286,16 +281,17 @@ exports = Class(ImageView, function (supr) {
 		var sub = this._friendsView.getSubviews(),
 			len = sub.length,
 			i = len,
-			tileSettings = this._tileSettings;
+			tileSettings = this._tileSettings,
+			valueX, valueY, view, x, y;
 
 		this._ongoing = true;
 
 		while (i > 0) {
-			var valueX = tileSettings.friendWidth * deltaX * (len - i),
-				valueY = tileSettings.friendHeight * deltaY * (len - i),
-				view = views[--i],
-				x = view.style.x,
-				y = view.style.y;
+			valueX = tileSettings.friendWidth * deltaX * (len - i);
+			valueY = tileSettings.friendHeight * deltaY * (len - i);
+			view = views[--i];
+			x = view.style.x;
+			y = view.style.y;
 
 			animate(view, 'friends').then({
 				x: x + valueX,
