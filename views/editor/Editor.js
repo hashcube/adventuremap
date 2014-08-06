@@ -504,7 +504,7 @@ exports = Class(Emitter, function () {
 				tile.y = y / 10;
 			}
 			if (!isNaN(r)) {
-				tile.r = r;
+				tile.r = r / 10;
 			}
 			if (position !== undefined && position !== '') {
 				tile.position = position;
