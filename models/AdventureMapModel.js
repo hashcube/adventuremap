@@ -200,7 +200,7 @@ exports = Class(Emitter, function (supr) {
 	};
 
 	this.removeTag = function (tag) {
-		if (typeof tag === 'Object') {
+		if (typeof tag === 'object') {
 			var tags = tag;
 			for (var id in this._nodesById) {
 				var tile = this._nodesById[id];
@@ -353,7 +353,7 @@ exports = Class(Emitter, function (supr) {
 				for (var i in DEFAULT_TILE_VALUES) {
 					// If there's no value and the value can't be "anything" then set the default:
 					var value = DEFAULT_TILE_VALUES[i];
-					if (typeof value == 'object') {
+					if (typeof value === 'object') {
 						if (!tile[i]) {
 							tile[i] = {};
 						}
