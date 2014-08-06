@@ -263,7 +263,7 @@ exports = Class(ImageView, function (supr) {
 				height: friendsHeight,
 				visible: true
 			});
-		} else if (friendsView){
+		} else if (friendsView) {
 			friendsView.hide();
 		}
 
@@ -298,15 +298,13 @@ exports = Class(ImageView, function (supr) {
 			x = view.style.x;
 			y = view.style.y;
 
-			animate(view, 'friends').then({
-				x: x + valueX,
-				y: y + valueY,
-			}).then({}, 1000).then({
-				x: x,
-				y: y
-			}).then(bind(this, function() {
-				this._ongoing = false;
-			}));
+			animate(view, 'friends')
+				.then({x: x + valueX, y: y + valueY})
+				.then({}, 1000)
+				.then({x: x, y: y})
+				.then(bind(this, function() {
+					this._ongoing = false;
+				}));
 		}
 	};
 
