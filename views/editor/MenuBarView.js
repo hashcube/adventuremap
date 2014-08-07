@@ -29,6 +29,7 @@ exports = Class(TopBar, function (supr) {
 				{title: 'Tags', method: 'onTags', style: 'GREEN'},
 				{title: 'Id', method: 'onId', style: 'GREEN'},
 				{title: 'Rotate', method: 'onRotate', style: 'GREEN'},
+				{title: 'Friends', method: 'onFriends', style: 'GREEN'},
 				{title: 'Bottom', method: 'onBottom', style: 'GREEN'},
 				{title: 'Right', method: 'onRight', style: 'GREEN'},
 				{title: 'Rt Top', method: 'onRightTop', style: 'GREEN'},
@@ -96,10 +97,17 @@ exports = Class(TopBar, function (supr) {
 		});
 
 		this._promptPosition = new InputPrompt({
-			prompt: 'Enter the x y (with space):',
+			prompt: 'Enter x y positions (with space):',
 			autoShowKeyboard: true,
 			isPassword: false,
 			onChange: bind(this, 'onChangePosition')
+		});
+
+		this._promptFriends = new InputPrompt({
+			prompt: 'Enter x y r direction (with spaces):',
+			autoShowKeyboard: true,
+			isPassword: false,
+			onChange: bind(this, 'onChangeFriends')
 		});
 	};
 
@@ -112,12 +120,10 @@ exports = Class(TopBar, function (supr) {
 	};
 
 	this.onRightTop = function () {
-		console.log(1);
 		this.emit('RightTop');
 	};
 
 	this.onRightBottom = function () {
-		console.log(2);
 		this.emit('RightBottom');
 	};
 
@@ -155,6 +161,14 @@ exports = Class(TopBar, function (supr) {
 
 	this.onChangePosition = function (value) {
 		value && this.emit('Position', value);
+	};
+
+	this.onFriends = function () {
+		this._promptFriends.show();
+	};
+
+	this.onChangeFriends = function (value) {
+		value && this.emit('Friends', value);
 	};
 
 	this.onText = function () {

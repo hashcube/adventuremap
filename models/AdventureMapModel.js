@@ -11,6 +11,14 @@ var DEFAULT_TILE_VALUES = {
 		doodad: 0,
 		doodadX: 0.5,
 		doodadY: 0.5,
+		friends: {
+			x: '',
+			y: '',
+			width: 220,
+			height: 120,
+			r: 0,
+			position: ''
+		},
 		tags: 'anything',
 		text: '',
 		title: '',
@@ -173,6 +181,14 @@ exports = Class(Emitter, function (supr) {
 		}
 	};
 
+	this.addFriends = function (id, views) {
+		var tile = this._nodesById[id];
+		if (tile) {
+			tile.friends.views = views;
+			this.emit('UpdateTile', tile.tileX, tile.tileY);
+		}
+	};
+
 	this.removeTagById = function (id, tag) {
 		var tile = this._nodesById[id];
 		if (tile) {
@@ -184,7 +200,7 @@ exports = Class(Emitter, function (supr) {
 	};
 
 	this.removeTag = function (tag) {
-		if (typeof tag === 'Object') {
+		if (typeof tag === 'object') {
 			var tags = tag;
 			for (var id in this._nodesById) {
 				var tile = this._nodesById[id];
@@ -234,13 +250,22 @@ exports = Class(Emitter, function (supr) {
 
 			result.grid[y] = [];
 			for (var x = 0; x < data.width; x++) {
-				var tile = gridLine[x];
-				var saveTile = {};
+				var tile = gridLine[x],
+					saveTile = {},
+					prop, temp;
 
 				for (var i in tile) {
 					if ((i in DEFAULT_TILE_VALUES) &&
 						((DEFAULT_TILE_VALUES[i] === 'anything') || (tile[i] !== DEFAULT_TILE_VALUES[i]))) {
-						saveTile[i] = tile[i];
+						// delete views for friends
+						prop = tile[i];
+						if (typeof prop === 'object') {
+							temp = {};
+							merge(temp, prop);
+							delete temp.views;
+							prop = temp;
+						}
+						saveTile[i] = prop;
 					}
 				}
 
@@ -327,8 +352,14 @@ exports = Class(Emitter, function (supr) {
 				}
 				for (var i in DEFAULT_TILE_VALUES) {
 					// If there's no value and the value can't be "anything" then set the default:
-					if (!(i in tile) && (DEFAULT_TILE_VALUES[i] !== 'anything')) {
-						tile[i] = DEFAULT_TILE_VALUES[i];
+					var value = DEFAULT_TILE_VALUES[i];
+					if (typeof value === 'object') {
+						if (!tile[i]) {
+							tile[i] = {};
+						}
+						merge(tile[i], value);
+					} else if (!(i in tile) && (value !== 'anything')) {
+						tile[i] = value;
 					}
 				}
 				delete tile.map;
