@@ -238,11 +238,11 @@ exports = Class(ImageView, function (supr) {
 					superview: this._superview
 				});
 				friendsView.on('InputSelect', bind(this, 'onSelectFriends', views, deltaX, deltaY));
+			}
 
-				i = len;
-				while (i > 0) {
-					friendsView.addSubview(views[--i]);
-				}
+			i = len;
+			while (i > 0) {
+				friendsView.addSubview(views[--i]);
 			}
 
 			i = len;
