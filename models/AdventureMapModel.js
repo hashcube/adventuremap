@@ -189,6 +189,13 @@ exports = Class(Emitter, function (supr) {
 		}
 	};
 
+	this.removeFriends = function (id) {
+		var tile = this._nodesById[id];
+		if (tile) {
+			tile.friends.views = [];
+		}
+	};
+
 	this.removeTagById = function (id, tag) {
 		var tile = this._nodesById[id];
 		if (tile) {
