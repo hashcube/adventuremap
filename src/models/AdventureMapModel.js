@@ -351,8 +351,12 @@ exports = Class(Emitter, function (supr) {
 			var gridLine = grid[y];
 
 			for (var x = 0; x < width; x++) {
-				var tile = gridLine[Math.min(x, gridLine.length - 1)];
-				if (typeof tile === 'number') { // If it's only a background then set the background and make a new tile...
+				var len = gridLine.length || 1,
+					tile = gridLine[Math.min(x, len - 1)];
+				if (!tile) {
+					map[y][x] = width * y + x;
+					tile = {};
+				} else if (typeof tile === 'number') { // If it's only a background then set the background and make a new tile...
 					map[y][x] = tile;
 					tile = {};
 				} else {
