@@ -323,6 +323,7 @@ exports = Class(Emitter, function (supr) {
 				tile.title = '';
 				tile.text = '';
 				tile.tags = {};
+				delete tile.friends;
 
 				mapLine[x] = this._defaultTile;
 			}
