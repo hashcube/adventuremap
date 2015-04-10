@@ -276,7 +276,7 @@ exports = Class(Emitter, function (supr) {
 					}
 				}
 
-				var mapValue = data.width * y + x;
+				var mapValue = map[y][x];
 
 				// If there's anything interesting then save the object...
 				if (Object.keys(saveTile).length) {
