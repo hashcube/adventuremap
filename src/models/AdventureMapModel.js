@@ -348,11 +348,12 @@ exports = Class(Emitter, function (supr) {
 		this._minNodeId = 999999;
 
 		for (var y = 0; y < height; y++) {
-			var gridLine = grid[y];
+			var gridLine = grid[y] || [];
 
 			for (var x = 0; x < width; x++) {
 				var len = gridLine.length || 1,
 					tile = gridLine[Math.min(x, len - 1)];
+
 				if (!tile) {
 					map[y][x] = width * y + x;
 					tile = {};
