@@ -29,7 +29,7 @@ exports = Class(Emitter, function (supr) {
 			tileSettings.tiles = [];
 			for (var y = 0; y < gridSettings.height; y++) {
 				for (var x = 0; x < gridSettings.width; x++) {
-					tileSettings.tiles.push('resources/images/tiles/'+tileSettings.map+"/" + String.fromCharCode(97 + y) + x + '.png');
+					tileSettings.tiles.push('resources/images/tiles/' + tileSettings.map + '/' + y + '_' + x + '.png');
 				}
 			}
 		}
