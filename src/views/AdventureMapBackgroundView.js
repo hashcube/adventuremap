@@ -12,9 +12,6 @@ exports = Class(AdventureMapLayerView, function (supr) {
   this.init = function (opts) {
     supr(this, 'init', [opts]);
 
-    this._tiles = opts.tileSettings.tiles ?
-      this._loadTiles(opts.tileSettings.tiles) : [];
-
     var margin = opts.editMode ? 8 : 0;
     var tileWidth = opts.tileSettings.tileWidth;
     var tileHeight = opts.tileSettings.tileHeight;
@@ -39,7 +36,7 @@ exports = Class(AdventureMapLayerView, function (supr) {
       x: x * tileWidth,
       y: y * tileHeight
     });
-    view.update(x, y);
+    view.update(null, x, y);
     return view;
   }
 
@@ -54,17 +51,6 @@ exports = Class(AdventureMapLayerView, function (supr) {
     }
     this._views[y][x] = this.setTile(x, y);
   }
-
-  this._loadTiles = function (tiles) {
-    var i = tiles.length;
-    while (i) { if (typeof tiles[--i] === 'string') {
-        //console.log('loadtile', i);
-        tiles[i] = new View({});
-        //tiles[i] = new Image({url: tiles[i]});
-      }
-    }
-    return tiles;
-  };
 
   this.populateView = function (data) {
     var grid = data.grid;
@@ -93,10 +79,5 @@ exports = Class(AdventureMapLayerView, function (supr) {
 
   this.getMap = function () {
     return this._map;
-  };
-
-  this.refreshTile = function (tileX, tileY) {
-    console.log('refreshTile', tileX, tileY);
-    //this._views[tileY][tileX].setImage(this._tiles[this._map[tileY][tileX]]);
   };
 });

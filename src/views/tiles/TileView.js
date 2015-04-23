@@ -13,7 +13,7 @@ exports = Class(ImageView, function (supr) {
 		this._path = opts.tileSettings.directory;
 	};
 
-	this.update = function (tileX, tileY) {
+	this.update = function (grid, tileX, tileY) {
 		this._tileX = tileX;
 		this._tileY = tileY;
 
