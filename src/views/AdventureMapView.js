@@ -33,6 +33,7 @@ exports = Class(ScrollView, function (supr) {
 					maxX: this._totalWidth * scale,
 					maxY: this._totalHeight * scale
 				},
+				inertia: false,
 				bounce: false,
 				minScale: 0.5,
 				maxScale: 2
@@ -90,6 +91,26 @@ exports = Class(ScrollView, function (supr) {
 				blockEvents: opts.editMode ? (i !== 0) : (i < 2)
 			}));
 		}
+
+		this.on('Scrolled', bind(this, function (x) {
+			var adventureMapLayer = this._adventureMapLayers[0];
+			var scale = Math.ceil(this.getScale() * GC.app.view.style.scale * this._tileSettings.tileWidth);
+			var posX = Math.ceil(Math.abs(x.x));
+			var posY = Math.ceil(Math.abs(x.y));
+
+
+			if (x.x < 0) {
+				adventureMapLayer.populateRow(posX, scale);
+			} else if (x.x > 0) {
+				adventureMapLayer.populateRowLeft(posX, scale);
+			}
+
+			if (x.y < 0) {
+				adventureMapLayer.populateColumn(posY, scale);
+			} else if (x.y > 0) {
+				adventureMapLayer.populateColumnTop(posY, scale);
+			}
+		}));
 	};
 
 	this.onUpdate = function (data) {
@@ -118,6 +139,7 @@ exports = Class(ScrollView, function (supr) {
 		if (!this._touchIDs.length) {
 			if (this._opts.drag) {
 				this.startDrag({radius: this._opts.dragRadius * this._snapPixels});
+				//console.log(this._opts.dragRadius * this._snapPixels);
 
 				if (this._anim && this._anim.hasFrames()) {
 					this._anim.clear();
@@ -264,6 +286,32 @@ exports = Class(ScrollView, function (supr) {
 		var y = Math.max((node.tileY * this._tileSettings.tileHeight) * scale - this.style.height * 0.5, 0);
 
 		this.scrollTo(x, y, 300, cb);
+
+			var adventureMapLayer = this._adventureMapLayers[0];
+			var current = adventureMapLayer.getPosition();
+
+			console.log(x, y, current.h, current.v, node.tileX, node.tileY);
+			if (node.tileX > current.h[1]) {
+				    x = x * -1;
+			}
+			if (node.tileY > current.v[1]) {
+				    y = y * -1;
+			}
+			console.log(x, y);
+			var posX = Math.ceil(Math.abs(x));
+			var posY = Math.ceil(Math.abs(y));
+
+			if (x < 0) {
+				adventureMapLayer.populateRow(posX);
+			} else if (x > 0) {
+				adventureMapLayer.populateRowLeft(posX);
+			}
+
+			if (y < 0) {
+				adventureMapLayer.populateColumn(posY);
+			} else if (y > 0) {
+				adventureMapLayer.populateColumnTop(posY);
+			}
 	};
 
 	this.getNodePosition = function (node) {

@@ -10,25 +10,14 @@ exports = Class(ImageView, function (supr) {
 	this.init = function (opts) {
 		supr(this, 'init', [opts]);
 
-		this._index = 0;
-		this._pointSize = 24;
-		this._pointDistance = 20;
-
-		this._tileX = 0;
-		this._tileY = 0;
-		this._map = opts.map;
-		this._tiles = opts.tileSettings.tiles;
+		this._path = opts.tileSettings.directory;
 	};
 
-	this.update = function (grid, tileX, tileY) {
+	this.update = function (tileX, tileY) {
 		this._tileX = tileX;
 		this._tileY = tileY;
 
-		if (this._map[tileY] && (this._map[tileY][tileX] !== undefined)) {
-			this.setImage(this._tiles[this._map[tileY][tileX]]);
-		}
-
-		this.style.visible = true;
+		this.setImage(this._path + '/' + tileY + '_' + tileX + '.png');
 	};
 
 	this.onInputSelect = function () {
