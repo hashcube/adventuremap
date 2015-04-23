@@ -53,7 +53,6 @@ exports = Class(ScrollView, function (supr) {
 					maxX: this._totalWidth * scale,
 					maxY: this._totalHeight * scale
 				},
-				inertia: false,
 				bounce: false,
 				minScale: 0.5,
 				maxScale: 2
