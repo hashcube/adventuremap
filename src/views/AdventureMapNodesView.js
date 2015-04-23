@@ -14,7 +14,7 @@ exports = Class(AdventureMapLayerView, function (supr) {
 
     this._pool = new ViewPool({
       ctor: NodeView,
-      initCount: 150,
+      initCount: 50,
       initOpts: {
         width: tileWidth,
         height: tileHeight,
