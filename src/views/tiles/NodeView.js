@@ -317,4 +317,9 @@ exports = Class(ImageView, function (supr) {
 		this.style.y = this.initial[1];
 		this._locSet = false;
 	};
+
+	this.onRelease = function () {
+		this._addItemEmitter = true;
+		this._itemView.removeAllListeners('InputSelect');
+	}
 });
