@@ -320,6 +320,7 @@ exports = Class(ImageView, function (supr) {
 
 	this.onRelease = function () {
 		this._addItemEmitter = true;
+		this.refreshLoc();
 		this._itemView.removeAllListeners('InputSelect');
 	}
 });
