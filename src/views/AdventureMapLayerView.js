@@ -43,7 +43,7 @@ exports = Class(View, function (supr) {
 	};
 
 	this.refreshTile = function (tileX, tileY) {
-		var view = this._views[tileY][tileX];
+		var view = this._views[tileY] && this._views[tileY][tileX];
 		view && view.update(this._grid, tileX, tileY);
 	};
 });

@@ -37,7 +37,7 @@ exports = Class(Emitter, function (supr) {
 
 		opts.map = this._model.getMap();
 
-		this._adventureMapView = new AdventureMapView(opts);
+		this._adventureMapView = new AdventureMapView(opts, this._model);
 		this._pinchSet = 0;
 		this._pinchUp = 0;
 		this._pinchReset = 0;

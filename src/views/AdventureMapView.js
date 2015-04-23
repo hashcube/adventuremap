@@ -7,9 +7,28 @@ import .AdventureMapNodesView;
 import .AdventureMapDoodadsView;
 
 exports = Class(ScrollView, function (supr) {
-	this.init = function (opts) {
+	var calls = 0;
+	var calls_lf = 0;
+
+	var h_padding = 0;
+	var v_padding = 10;
+
+	var h_slider_head = 12;
+	var h_slider_tail = 0;
+	var v_slider_head = 20;
+	var v_slider_tail = 0;
+
+	var v_head = 20 + v_padding*2;
+	var v_tail = 0;
+	var h_head = 12 + h_padding*2;
+	var h_tail = 0;
+
+	this.init = function (opts, model) {
+		this._model = model;
 		this._tileWidth = opts.tileSettings.tileWidth;
 		this._tileHeight = opts.tileSettings.tileHeight;
+
+		this._gridSettings = opts.gridSettings;
 
 		this._totalWidth = opts.gridSettings.width * this._tileWidth;
 		this._totalHeight = opts.gridSettings.height * this._tileHeight;
@@ -88,7 +107,8 @@ exports = Class(ScrollView, function (supr) {
 				nodeSettings: opts.nodeSettings,
 				pathSettings: opts.pathSettings,
 				editMode: opts.editMode,
-				blockEvents: opts.editMode ? (i !== 0) : (i < 2)
+				blockEvents: opts.editMode ? (i !== 0) : (i < 2),
+				poolSize: v_head * h_head
 			}));
 		}
 
@@ -100,20 +120,21 @@ exports = Class(ScrollView, function (supr) {
 
 
 			if (x.x < 0) {
-				adventureMapLayer.populateRow(posX, scale);
+				this.populateRow(posX, scale);
 			} else if (x.x > 0) {
-				adventureMapLayer.populateRowLeft(posX, scale);
+				this.populateRowLeft(posX, scale);
 			}
 
 			if (x.y < 0) {
-				adventureMapLayer.populateColumn(posY, scale);
+				this.populateColumn(posY, scale);
 			} else if (x.y > 0) {
-				adventureMapLayer.populateColumnTop(posY, scale);
+				this.populateColumnTop(posY, scale);
 			}
 		}));
 	};
 
 	this.onUpdate = function (data) {
+		data.pos = this.getPosition();
 		for (var i = 0; i < 4; i++) {
 			var adventureMapLayer = this._adventureMapLayers[i];
 			if (adventureMapLayer && adventureMapLayer.onUpdate) {
@@ -288,29 +309,29 @@ exports = Class(ScrollView, function (supr) {
 		this.scrollTo(x, y, 300, cb);
 
 			var adventureMapLayer = this._adventureMapLayers[0];
-			var current = adventureMapLayer.getPosition();
+			var current = this.getPosition();
 
 			console.log(x, y, current.h, current.v, node.tileX, node.tileY);
 			if (node.tileX > current.h[1]) {
-				    x = x * -1;
+						x = x * -1;
 			}
 			if (node.tileY > current.v[1]) {
-				    y = y * -1;
+						y = y * -1;
 			}
 			console.log(x, y);
 			var posX = Math.ceil(Math.abs(x));
 			var posY = Math.ceil(Math.abs(y));
 
 			if (x < 0) {
-				adventureMapLayer.populateRow(posX);
+				this.populateRow(posX);
 			} else if (x > 0) {
-				adventureMapLayer.populateRowLeft(posX);
+				this.populateRowLeft(posX);
 			}
 
 			if (y < 0) {
-				adventureMapLayer.populateColumn(posY);
+				this.populateColumn(posY);
 			} else if (y > 0) {
-				adventureMapLayer.populateColumnTop(posY);
+				this.populateColumnTop(posY);
 			}
 	};
 
@@ -328,4 +349,260 @@ exports = Class(ScrollView, function (supr) {
 	this.removeItemViews = function () {
 		this._adventureMapLayers[3].removeItemViews();
 	};
+
+	this.populateRow = function (count) {
+		var tileWidth = this._tileWidth;
+		var tileHeight = this._tileHeight;
+		var width = this._gridSettings.height;
+		var height = this._gridSettings.height;
+
+		var margin = this._editMode ? 8 : 0;
+		var num = 1;
+		var swap = false;
+		var cell_size = tileWidth;
+		var tile = this._adventureMapLayers[0];
+
+		calls += count;
+		//console.log('------------------------------------');
+		//console.log('calls', calls, '/', cell_size);
+		if (calls < cell_size) {
+			return;
+		} else {
+			num = Math.floor(calls/cell_size);
+			calls = Math.floor(calls % cell_size);
+			//console.log('row: create', num);
+		}
+
+		if (h_slider_head + num > width) {
+			h_slider_tail = width - (h_slider_head - h_slider_tail);
+			h_slider_head = width;
+		} else {
+			h_slider_tail += num;
+			h_slider_head += num;
+		}
+
+		// right end condition
+		if (h_head + num > width) {
+			num = width - h_head;
+		}
+
+		// left end condition
+		if (h_slider_tail - h_padding > h_tail) {
+
+			var end = h_head + num - 1;
+			for (var y = v_tail; y < v_head; y++) {
+				var line = this._views[y];
+
+				//console.log('loop', h_head, '->', end);
+				for (var x = h_head; x <= end; x++) {
+					var rel = h_tail + (end - x);
+						if(y===0) {
+							//console.log('row: creating', x, 'releasing', rel, 'tail', h_tail, 'head', h_head);
+						}
+			this.create(x, y, rel);
+				}
+				this._views[y] = line;
+			}
+			h_head += num;
+			h_tail += num;
+		}
+
+		//console.log('tail', h_tail, 'head', h_head, 'num', num, 'slider', slider_tail, slider_head);
+		//console.log('------------------------------------');
+	};
+
+	this.populateRowLeft = function (count) {
+		var tileWidth = this._tileWidth;
+		var tileHeight = this._tileHeight;
+		var width = this._gridSettings.height;
+		var height = this._gridSettings.height;
+
+		var margin = this._editMode ? 8 : 0;
+		var num = 1;
+		var swap = false;
+		var cell_size = tileWidth;
+		var tile = this._adventureMapLayers[0];
+
+		calls += count;
+		//console.log('------------------------------------');
+		//console.log('calls', calls, '/', cell_size);
+		if (calls < cell_size) {
+			return;
+		} else {
+			num = Math.floor(calls/cell_size);
+			calls = Math.floor(calls % cell_size);
+			//console.log('row-left: create', num);
+		}
+
+		if (h_slider_tail - num < 0) {
+			h_slider_head = (h_slider_head - h_slider_tail);
+			h_slider_tail = 0;
+		} else {
+			h_slider_tail -= num;
+			h_slider_head -= num;
+		}
+
+		// left end condition
+		if (h_tail - num < 0) {
+			num = h_tail;
+		}
+
+		//console.log('slider', slider_head, slider_tail, num);
+
+		// right end condition
+		if (h_slider_tail - h_padding < h_tail) {
+			var end = h_tail - num;
+
+			for (var y = v_tail; y < v_head; y++) {
+				var line = this._views[y];
+
+				//console.log('loop', tail - 1, '->', end);
+				for (var x = h_tail - 1; x >= end; x--) {
+					var rel = h_head - (h_tail - x);
+						if(y===0) {
+							//console.log('row-left: creating', x, 'releasing', rel, 'tail', h_tail, 'head', h_head);
+						}
+			this.create(x, y, rel);
+				}
+				this._views[y] = line;
+			}
+			h_head -= num;
+			h_tail -= num;
+		}
+
+		//console.log('tail', tail, 'head', head, 'num', num, 'slider', slider_tail, slider_head);
+		//console.log('------------------------------------');
+	};
+
+	this.populateColumn = function (count) {
+		var tileWidth = this._tileWidth;
+		var tileHeight = this._tileHeight;
+		var width = this._gridSettings.height;
+		var height = this._gridSettings.height;
+
+		var margin = this._editMode ? 8 : 0;
+		var num = 1;
+		var swap = false;
+		var cell_size = tileHeight;
+		var tile = this._adventureMapLayers[0];
+
+		calls_lf += count;
+		//console.log('------------------------------------');
+		//console.log('calls_lf', calls_lf, '/', cell_size);
+		if (calls_lf < cell_size) {
+			return;
+		} else {
+			num = Math.floor(calls_lf/cell_size);
+			calls_lf = Math.floor(calls_lf % cell_size);
+			//console.log('colum: create', num);
+		}
+
+		// right end
+		if (v_slider_head + num > height) {
+			v_slider_tail = height - (v_slider_head - v_slider_tail);
+			v_slider_head = height;
+		} else {
+			v_slider_tail += num;
+			v_slider_head += num;
+		}
+		// right end condition
+		if (v_head + num > height) {
+			num = height - v_head;
+		}
+
+		// left end condition
+		if (v_slider_tail - v_padding > v_tail) {
+			var end = v_head + num - 1;
+
+			for (var y = v_head; y <= end; y++) {
+				for (var x = h_tail; x < h_head; x++) {
+					var rel = v_tail + (y - v_head);
+						if(x===0) {
+							//console.log('column: creating', y, 'releasing', rel, [v_tail, v_head]);
+						}
+			this.create(x, y, rel);
+				}
+			}
+			v_head += num;
+			v_tail += num;
+		}
+
+		//console.log('slider', [v_slider_tail, v_slider_head], [v_tail, v_head]);
+		//console.log('------------------------------------');
+	};
+
+	this.populateColumnTop = function (count) {
+		var tileWidth = this._tileWidth;
+		var tileHeight = this._tileHeight;
+		var width = this._gridSettings.height;
+		var height = this._gridSettings.height;
+
+		var margin = this._editMode ? 8 : 0;
+		var num = 1;
+		var swap = false;
+		var cell_size = tileHeight;
+		var tile = this._adventureMapLayers[0];
+
+		calls_lf += count;
+		//console.log('------------------------------------');
+		//console.log('calls_lf', calls_lf, '/', cell_size);
+		if (calls_lf < cell_size) {
+			return;
+		} else {
+			num = Math.floor(calls_lf/cell_size);
+			calls_lf = Math.floor(calls_lf % cell_size);
+			//console.log('column-top: create', num);
+		}
+
+		if (v_slider_tail - num < 0) {
+			v_slider_head = (v_slider_head - v_slider_tail);
+			v_slider_tail = 0;
+		} else {
+			v_slider_tail -= num;
+			v_slider_head -= num;
+		}
+		// left end condition
+		if (v_tail - num < 0) {
+			num = v_tail;
+		}
+		//console.log('slider', v_slider_head, v_slider_tail, num);
+
+		// right end condition
+		if (v_slider_head + v_padding < v_head) {
+			var end = v_tail - num;
+
+			for (var y = v_tail - 1; y >= end; y--) {
+				//console.log('loop', v_tail -1, '->', end);
+				for (var x = h_tail; x < h_head; x++) {
+					var rel = v_head - (v_tail - y);
+						if(x===0) {
+							//console.log('column-top: creating', y, 'releasing', rel, [v_tail, v_head]);
+						}
+
+		this.create(x, y, rel);
+				}
+			}
+			v_head -= num;
+			v_tail -= num;
+		}
+
+		//console.log('slider', [v_slider_tail, v_slider_head], [v_tail, v_head]);
+		//console.log('------------------------------------');
+	};
+
+	this.create = function (x, y, rel) {
+	var data = this._model.getData().grid;
+	this._adventureMapLayers.forEach(function (tile) {
+		tile.release && tile.release(x, rel);
+		tile.create && tile.create(x, y, data);
+	});
+	};
+
+	this.getPosition = function () {
+		return {
+			v: [v_tail, v_head],
+			h: [h_tail, h_head]
+		};
+	};
+
 });
