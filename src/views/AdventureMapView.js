@@ -5,6 +5,7 @@ import .AdventureMapBackgroundView;
 import .AdventureMapPathsView;
 import .AdventureMapNodesView;
 import .AdventureMapDoodadsView;
+import math.geom.Point as Point;
 
 exports = Class(ScrollView, function (supr) {
 	var calls = 0;
@@ -100,7 +101,6 @@ exports = Class(ScrollView, function (supr) {
 				width: this._totalWidth,
 				height: this._totalHeight,
 				map: opts.map,
-				gridSettings: opts.gridSettings,
 				tileCtor: ctors[i],
 				tileSettings: opts.tileSettings,
 				gridSettings: opts.gridSettings,
@@ -114,22 +114,7 @@ exports = Class(ScrollView, function (supr) {
 
 		this.on('Scrolled', bind(this, function (x) {
 			var adventureMapLayer = this._adventureMapLayers[0];
-			var scale = Math.ceil(this.getScale() * GC.app.view.style.scale * this._tileSettings.tileWidth);
-			var posX = Math.ceil(Math.abs(x.x));
-			var posY = Math.ceil(Math.abs(x.y));
-
-
-			if (x.x < 0) {
-				this.populateRow(posX, scale);
-			} else if (x.x > 0) {
-				this.populateRowLeft(posX, scale);
-			}
-
-			if (x.y < 0) {
-				this.populateColumn(posY, scale);
-			} else if (x.y > 0) {
-				this.populateColumnTop(posY, scale);
-			}
+			this.move(x.x, x.y);
 		}));
 	};
 
@@ -303,36 +288,20 @@ exports = Class(ScrollView, function (supr) {
 
 	this.focusNodeById = function (node, cb) {
 		var scale = this._content.style.scale;
+		var pos = this.getPosition('slider');
+
 		var x = Math.max((node.tileX * this._tileSettings.tileWidth) * scale - this.style.width * 0.5, 0);
+
 		var y = Math.max((node.tileY * this._tileSettings.tileHeight) * scale - this.style.height * 0.5, 0);
 
 		this.scrollTo(x, y, 300, cb);
 
-			var adventureMapLayer = this._adventureMapLayers[0];
-			var current = this.getPosition();
+		var x_head = Math.max((pos.h[1] * this._tileSettings.tileWidth) * scale - this.style.width * 0.5, 0);
+		var y_head = Math.max((pos.v[1] * this._tileSettings.tileHeight) * scale - this.style.height * 0.5, 0);
+		var point = new Point(x_head, y_head);
+		point.subtract(x, y);
 
-			console.log(x, y, current.h, current.v, node.tileX, node.tileY);
-			if (node.tileX > current.h[1]) {
-						x = x * -1;
-			}
-			if (node.tileY > current.v[1]) {
-						y = y * -1;
-			}
-			console.log(x, y);
-			var posX = Math.ceil(Math.abs(x));
-			var posY = Math.ceil(Math.abs(y));
-
-			if (x < 0) {
-				this.populateRow(posX);
-			} else if (x > 0) {
-				this.populateRowLeft(posX);
-			}
-
-			if (y < 0) {
-				this.populateColumn(posY);
-			} else if (y > 0) {
-				this.populateColumnTop(posY);
-			}
+		this.move(point.x, point.y);
 	};
 
 	this.getNodePosition = function (node) {
@@ -349,6 +318,23 @@ exports = Class(ScrollView, function (supr) {
 	this.removeItemViews = function () {
 		this._adventureMapLayers[3].removeItemViews();
 	};
+
+	this.move = function (x, y) {
+		var posX = Math.ceil(Math.abs(x));
+		var posY = Math.ceil(Math.abs(y));
+
+		if (x < 0) {
+			this.populateRow(posX);
+		} else if (x > 0) {
+			this.populateRowLeft(posX);
+		}
+
+		if (y < 0) {
+			this.populateColumn(posY);
+		} else if (y > 0) {
+			this.populateColumnTop(posY);
+		}
+	}
 
 	this.populateRow = function (count) {
 		var tileWidth = this._tileWidth;
@@ -388,7 +374,6 @@ exports = Class(ScrollView, function (supr) {
 
 		// left end condition
 		if (h_slider_tail - h_padding > h_tail) {
-
 			var end = h_head + num - 1;
 			for (var y = v_tail; y < v_head; y++) {
 				var line = this._views[y];
@@ -396,17 +381,16 @@ exports = Class(ScrollView, function (supr) {
 				//console.log('loop', h_head, '->', end);
 				for (var x = h_head; x <= end; x++) {
 					var rel = h_tail + (end - x);
-						if(y===0) {
-							//console.log('row: creating', x, 'releasing', rel, 'tail', h_tail, 'head', h_head);
-						}
-			this.create(x, y, rel);
+					if(y===0) {
+						//console.log('row: creating', x, 'releasing', rel, 'tail', h_tail, 'head', h_head);
+					}
+					this.create(x, y, rel);
 				}
 				this._views[y] = line;
 			}
 			h_head += num;
 			h_tail += num;
 		}
-
 		//console.log('tail', h_tail, 'head', h_head, 'num', num, 'slider', slider_tail, slider_head);
 		//console.log('------------------------------------');
 	};
@@ -459,17 +443,16 @@ exports = Class(ScrollView, function (supr) {
 				//console.log('loop', tail - 1, '->', end);
 				for (var x = h_tail - 1; x >= end; x--) {
 					var rel = h_head - (h_tail - x);
-						if(y===0) {
-							//console.log('row-left: creating', x, 'releasing', rel, 'tail', h_tail, 'head', h_head);
-						}
-			this.create(x, y, rel);
+					if(y===0) {
+						//console.log('row-left: creating', x, 'releasing', rel, 'tail', h_tail, 'head', h_head);
+					}
+					this.create(x, y, rel);
 				}
 				this._views[y] = line;
 			}
 			h_head -= num;
 			h_tail -= num;
 		}
-
 		//console.log('tail', tail, 'head', head, 'num', num, 'slider', slider_tail, slider_head);
 		//console.log('------------------------------------');
 	};
@@ -517,16 +500,15 @@ exports = Class(ScrollView, function (supr) {
 			for (var y = v_head; y <= end; y++) {
 				for (var x = h_tail; x < h_head; x++) {
 					var rel = v_tail + (y - v_head);
-						if(x===0) {
-							//console.log('column: creating', y, 'releasing', rel, [v_tail, v_head]);
-						}
-			this.create(x, y, rel);
+					if(x===0) {
+						//console.log('column: creating', y, 'releasing', rel, [v_tail, v_head]);
+					}
+					this.create(x, y, rel);
 				}
 			}
 			v_head += num;
 			v_tail += num;
 		}
-
 		//console.log('slider', [v_slider_tail, v_slider_head], [v_tail, v_head]);
 		//console.log('------------------------------------');
 	};
@@ -575,34 +557,43 @@ exports = Class(ScrollView, function (supr) {
 				//console.log('loop', v_tail -1, '->', end);
 				for (var x = h_tail; x < h_head; x++) {
 					var rel = v_head - (v_tail - y);
-						if(x===0) {
-							//console.log('column-top: creating', y, 'releasing', rel, [v_tail, v_head]);
-						}
+					if(x===0) {
+						//console.log('column-top: creating', y, 'releasing', rel, [v_tail, v_head]);
+					}
 
-		this.create(x, y, rel);
+					this.create(x, y, rel);
 				}
 			}
 			v_head -= num;
 			v_tail -= num;
 		}
-
 		//console.log('slider', [v_slider_tail, v_slider_head], [v_tail, v_head]);
 		//console.log('------------------------------------');
 	};
 
 	this.create = function (x, y, rel) {
-	var data = this._model.getData().grid;
-	this._adventureMapLayers.forEach(function (tile) {
-		tile.release && tile.release(x, rel);
-		tile.create && tile.create(x, y, data);
-	});
+		var data = this._model.getData().grid;
+		this._adventureMapLayers.forEach(function (layer) {
+			layer.release && layer.release(x, rel);
+			layer.create && layer.create(x, y, data);
+		});
 	};
 
-	this.getPosition = function () {
-		return {
-			v: [v_tail, v_head],
-			h: [h_tail, h_head]
-		};
-	};
+	this.getPosition = function (type) {
+		var ret;
 
+		if (type === 'slider') {
+			ret = {
+				v: [v_slider_tail, v_slider_head],
+				h: [h_slider_tail, h_slider_head]
+			};
+		} else {
+			ret = {
+				v: [v_tail, v_head],
+				h: [h_tail, h_head]
+			};
+		}
+
+		return ret;
+	};
 });
