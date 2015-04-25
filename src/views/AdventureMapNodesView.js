@@ -79,7 +79,6 @@ exports = Class(AdventureMapLayerView, function (supr) {
     if (!this._views[y]) {
       this._views[y] = [];
     }
-    //console.log('create tile', x, y);
     var view = this._pool.obtainView({
       superview: this,
       x: x * tileWidth,
