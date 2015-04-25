@@ -29,7 +29,6 @@ exports = Class(ImageView, function (supr) {
 		supr(this, 'init', [opts]);
 
 		this._adventureMapView = opts.adventureMapView;
-		this._superview = opts.superview;
 		this._ongoing = false;
 
 		this._itemView = null;
@@ -47,7 +46,12 @@ exports = Class(ImageView, function (supr) {
 			zIndex: 1
 		});
 
-		this._idText = null;
+		this._idText = new ScoreView({
+			superview: this._itemView,
+			visible: false,
+			blockEvents: true,
+		});
+
 		this._characterSettings = null;
 		this._addItemEmitter = true;
 		this._locSet = false;
@@ -109,7 +113,7 @@ exports = Class(ImageView, function (supr) {
 					var itemView = this._adventureMapView._playerView;
 					if (!itemView) {
 						itemView = new this._itemCtors[tag]({
-							superview: this._superview,
+							superview: this.getSuperview(),
 							adventureMapView: this._adventureMapView,
 							zIndex: 999999999,
 							tag: tag,
@@ -145,34 +149,21 @@ exports = Class(ImageView, function (supr) {
 			}
 
 			if (tile.id && node.characterSettings && !tile.tags.locked) {
-				if (this._idText) {
-					this._idText.style.width = node.width;
-					this._idText.style.height = node.characterSettings.height || node.height;
-					this._idText.setText(tile.id);
-					if (node.characterSettings !== this._characterSettings) {
-						this._idText.setCharacterData(node.characterSettings.data);
-						this._characterSettings = node.characterSettings.data;
-					}
-				} else {
-					this._idText = new ScoreView({
-						superview: this._itemView,
+				//if (this._idText) {
+					this._idText.updateOpts({
+						x: node.characterSettings.x || 0,
+						y: node.characterSettings.y || 0,
 						width: node.width,
 						height: node.characterSettings.height || node.height,
-						text: tile.id,
-						blockEvents: true,
-						characterData: node.characterSettings.data
+						visible: true
 					});
+					this._idText.setCharacterData(node.characterSettings.data);
+					this._idText.setText(tile.id);
+					if (node.characterSettings !== this._characterSettings) {
+						this._characterSettings = node.characterSettings.data;
+					}
 					this._idText._container.style.x = -10;
 					this._idText._container.style.y = (node.height - node.characterSettings.height) * 0.5-30;
-				}
-				this._idText.style.width = node.width;
-				this._idText.style.height = node.characterSettings.height || node.height;
-				this._idText.style.x = node.characterSettings.x || 0;
-				this._idText.style.y = node.characterSettings.y || 0;
-				if (node.characterSettings !== this._characterSettings) {
-					this._idText.setCharacterData(node.characterSettings.data);
-					this._characterSettings = node.characterSettings.data;
-				}
 			}
 
 			if (this._addItemEmitter) {
@@ -235,7 +226,7 @@ exports = Class(ImageView, function (supr) {
 
 			if (!friendsView) {
 				friendsView = this._friendsView = new View({
-					superview: this._superview
+					superview: this.getSuperview()
 				});
 				friendsView.on('InputSelect', bind(this, 'onSelectFriends', views, deltaX, deltaY));
 			}
@@ -320,6 +311,7 @@ exports = Class(ImageView, function (supr) {
 
 	this.onRelease = function () {
 		this._addItemEmitter = true;
+		this._idText.hide();
 		this.refreshLoc();
 		this._itemView.removeAllListeners('InputSelect');
 	}
