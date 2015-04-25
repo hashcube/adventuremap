@@ -289,7 +289,6 @@ exports = Class(ScrollView, function (supr) {
 		var pos = this.getPosition('slider');
 
 		var x = Math.max((node.tileX * this._tileSettings.tileWidth) * scale - this.style.width * 0.5, 0);
-
 		var y = Math.max((node.tileY * this._tileSettings.tileHeight) * scale - this.style.height * 0.5, 0);
 
 		this.scrollTo(x, y, 300, cb);
