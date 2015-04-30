@@ -24,17 +24,6 @@ exports = Class(Emitter, function (supr) {
 		this._pathSettings = opts.pathSettings;
 		this._nodeSettings = opts.nodeSettings;
 
-		if (tileSettings.tiles === 'CREATE_GRID') {
-			var path = tileSettings.path;
-
-			tileSettings.tiles = [];
-			for (var y = 0; y < gridSettings.height; y++) {
-				for (var x = 0; x < gridSettings.width; x++) {
-					tileSettings.tiles.push(path + tileSettings.map + '/' + y + '_' + x + '.png');
-				}
-			}
-		}
-
 		opts.map = this._model.getMap();
 
 		this._adventureMapView = new AdventureMapView(opts, this._model);
