@@ -149,21 +149,20 @@ exports = Class(ImageView, function (supr) {
 			}
 
 			if (tile.id && node.characterSettings && !tile.tags.locked) {
-				//if (this._idText) {
-					this._idText.updateOpts({
-						x: node.characterSettings.x || 0,
-						y: node.characterSettings.y || 0,
-						width: node.width,
-						height: node.characterSettings.height || node.height,
-						visible: true
-					});
-					this._idText.setCharacterData(node.characterSettings.data);
-					this._idText.setText(tile.id);
-					if (node.characterSettings !== this._characterSettings) {
-						this._characterSettings = node.characterSettings.data;
-					}
-					this._idText._container.style.x = -10;
-					this._idText._container.style.y = (node.height - node.characterSettings.height) * 0.5-30;
+				this._idText.updateOpts({
+					x: node.characterSettings.x || 0,
+					y: node.characterSettings.y || 0,
+					width: node.width,
+					height: node.characterSettings.height || node.height,
+					visible: true
+				});
+				this._idText.setCharacterData(node.characterSettings.data);
+				this._idText.setText(tile.id);
+				if (node.characterSettings !== this._characterSettings) {
+					this._characterSettings = node.characterSettings.data;
+				}
+				this._idText._container.style.x = -10;
+				this._idText._container.style.y = (node.height - node.characterSettings.height) * 0.5-30;
 			}
 
 			if (this._addItemEmitter) {
