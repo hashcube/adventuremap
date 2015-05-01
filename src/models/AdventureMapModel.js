@@ -87,15 +87,6 @@ exports = Class(Emitter, function (supr) {
 		return result;
 	};
 
-	this.tick = function (dt) {
-		if (this._needsPopulate) {
-			this._needsPopulate = false;
-			this.emit('NeedsPopulate');
-		}
-
-		this.emit('Update', this._data);
-	};
-
 	this.update = function () {
 		var data = this._data;
 		var grid = data.grid;
