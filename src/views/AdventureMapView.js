@@ -111,9 +111,9 @@ exports = Class(ScrollView, function (supr) {
 			}));
 		}
 
-		this.on('Scrolled', bind(this, function (x) {
+		this.on('Scrolled', bind(this, function (point) {
 			var adventureMapLayer = this._adventureMapLayers[0];
-			this.move(x.x, x.y);
+			this.move(point.x, point.y);
 		}));
 	};
 
