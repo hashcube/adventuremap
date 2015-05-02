@@ -92,8 +92,6 @@ exports = Class(Emitter, function (supr) {
 			this._needsPopulate = false;
 			this.emit('NeedsPopulate');
 		}
-
-		this.emit('Update', this._data);
 	};
 
 	this.update = function () {
