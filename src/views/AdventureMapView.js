@@ -11,28 +11,52 @@ exports = Class(ScrollView, function (supr) {
 	var calls = 0;
 	var calls_lf = 0;
 
-	var h_padding = 0;
+	var h_padding = 10;
 	var v_padding = 10;
 
-	var h_slider_head = 12;
+	var h_slider_head = 20;
 	var h_slider_tail = 0;
 	var v_slider_head = 20;
 	var v_slider_tail = 0;
 
 	var v_head = 20 + v_padding*2;
 	var v_tail = 0;
-	var h_head = 12 + h_padding*2;
+	var h_head = 20 + h_padding*2;
 	var h_tail = 0;
 
 	this.init = function (opts, model) {
+		var width, height;
+
 		this._model = model;
 		this._tileWidth = opts.tileSettings.tileWidth;
 		this._tileHeight = opts.tileSettings.tileHeight;
 
 		this._gridSettings = opts.gridSettings;
 
-		this._totalWidth = opts.gridSettings.width * this._tileWidth;
-		this._totalHeight = opts.gridSettings.height * this._tileHeight;
+		width = opts.gridSettings.width;
+		height = opts.gridSettings.height;
+		this._totalWidth = width * this._tileWidth;
+		this._totalHeight = height * this._tileHeight;
+
+		if (h_slider_head > width) {
+			h_slider_head = width;
+			h_head = width;
+			h_padding = 0;
+		}
+		if (v_slider_head > height) {
+			v_slider_head = height;
+			v_head = height;
+			v_padding = 0;
+		}
+
+		if (h_head > width) {
+			h_head = width;
+			h_padding = width - h_slider_head;
+		}
+		if (v_head > height) {
+			v_head =  height;
+			v_padding = height - v_slider_head;
+		}
 
 		this._touch = {};
 		this._touchIDs = [];
