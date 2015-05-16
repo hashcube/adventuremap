@@ -136,8 +136,11 @@ exports = Class(ScrollView, function (supr) {
 		}
 
 		this.on('Scrolled', bind(this, function (point) {
+			var x = point.x || 0,
+				y = point.y || 0;
+
 			var adventureMapLayer = this._adventureMapLayers[0];
-			this.move(point.x, point.y);
+			this.move(x, y);
 		}));
 	};
 
@@ -176,7 +179,6 @@ exports = Class(ScrollView, function (supr) {
 				evt.cancel();
 			}
 		}
-		/*
 		this._touch['_' + evt.id] = true;
 		this._touchIDs = Object.keys(this._touch);
 		switch (this._touchIDs.length) {
@@ -196,16 +198,13 @@ exports = Class(ScrollView, function (supr) {
 		} else {
 			this._pinch = false;
 		}
-		*/
 	};
 
 	this.onInputSelect = this.onInputOut = function (evt) {
-		/*
 		if ('id' in evt) {
 			delete this._touch['_' + evt.id];
 			this._touchIDs = Object.keys(this._touch);
 		}
-		*/
 	};
 
 	this.onDrag = function (dragEvt, moveEvt, delta) {
@@ -355,7 +354,7 @@ exports = Class(ScrollView, function (supr) {
 		} else if (y > 0) {
 			this.populateColumnTop(posY);
 		}
-	}
+	};
 
 	this.populateRow = function (count) {
 		var tileWidth = this._tileWidth;
