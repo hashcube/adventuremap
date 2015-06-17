@@ -75,7 +75,12 @@ exports = Class(ImageView, function (supr) {
 			var node = this._nodes[tile.node - 1];
 			var style = this._itemView.style;
 			var x = this.style.width * tile.x;
-			var y = this.style.height * tile.y;
+		        var y = this.style.height * tile.y;
+
+                        this.updateOpts({
+                                width: node.width,
+                                height: node.height
+                        });
 			if(!this._locSet)
 			{
 				this.initial = [this.style.x, this.style.y];
@@ -84,9 +89,9 @@ exports = Class(ImageView, function (supr) {
 				this.style.x = this.style.x + style.x;
 				this.style.y = this.style.y + style.y;
 				style.x = 0;
-				style.y = 0;
-				style.width = node.width;
-				style.height = node.height;
+			        style.y = 0;
+			        style.width = node.width;
+                          	style.height = node.height;
 				this._locSet = true;
 			}
 
