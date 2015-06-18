@@ -76,6 +76,11 @@ exports = Class(ImageView, function (supr) {
 			var style = this._itemView.style;
 			var x = this.style.width * tile.x;
 			var y = this.style.height * tile.y;
+
+			this.updateOpts({
+				width: node.width,
+				height: node.height
+			});
 			if(!this._locSet)
 			{
 				this.initial = [this.style.x, this.style.y];
