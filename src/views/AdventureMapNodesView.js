@@ -43,7 +43,7 @@ exports = Class(AdventureMapLayerView, function (supr) {
           view = this._pool.obtainView({
             superview: this,
             x: x * tileWidth,
-            y: y * tileHeight,
+            y: y * tileHeight
           });
 
           view.update(grid, x, y);

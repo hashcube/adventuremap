@@ -23,15 +23,10 @@ exports = Class(ImageView, function (supr) {
 	};
 
 	this.init = function (opts) {
-		opts.width = opts.tileSettings.tileWidth;
-		opts.height = opts.tileSettings.tileHeight;
-
 		supr(this, 'init', [opts]);
 
 		this._adventureMapView = opts.adventureMapView;
 		this._ongoing = false;
-
-		this._itemView = null;
 
 		this._tileX = 0;
 		this._tileY = 0;
@@ -74,8 +69,8 @@ exports = Class(ImageView, function (supr) {
 		if (tile && tile.node) {
 			var node = this._nodes[tile.node - 1];
 			var style = this._itemView.style;
-			var x = this.style.width * tile.x;
-			var y = this.style.height * tile.y;
+			var x = this._tileSettings.tileWidth * tile.x;
+			var y = this._tileSettings.tileHeight * tile.y;
 
 			this.updateOpts({
 				width: node.width,
