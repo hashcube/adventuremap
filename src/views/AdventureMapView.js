@@ -179,8 +179,16 @@ exports = Class(ScrollView, function (supr) {
 				evt.cancel();
 			}
 		}
-		this._touch['_' + evt.id] = true;
-		this._touchIDs = Object.keys(this._touch);
+
+		// Take only the first tap/finger
+		// TODO: additional condition to allow pinch
+		if (this._touchIDs.length === 0) {
+			this._touch['_' + evt.id] = true;
+			this._touchIDs = Object.keys(this._touch);
+		} else {
+			return;
+		}
+
 		switch (this._touchIDs.length) {
 			case 1:
 				this._fingerOne = this._touchIDs[0];
@@ -219,27 +227,21 @@ exports = Class(ScrollView, function (supr) {
 	};
 
 	this.onDragStop = function (dragEvt, selectEvt) {
+		if ('id' in dragEvt) {
+			delete this._touch['_' + dragEvt.id];
+			this._touchIDs = Object.keys(this._touch);
+		}
+		if ('id' in selectEvt) {
+			delete this._touch['_' + selectEvt.id];
+			this._touchIDs = Object.keys(this._touch);
+		}
+
 		if (this._pinch) {
-			if ('id' in dragEvt) {
-				delete this._touch['_' + dragEvt.id];
-				this._touchIDs = Object.keys(this._touch);
-			}
-			if ('id' in selectEvt) {
-				delete this._touch['_' + selectEvt.id];
-				this._touchIDs = Object.keys(this._touch);
-			}
 			if (this._touchIDs.length < 2) {
 				this._pinch = false;
 			}
+			this._contentView.getInput().blockEvents = false;
 		} else {
-			if ('id' in dragEvt) {
-				delete this._touch['_' + dragEvt.id];
-				this._touchIDs = Object.keys(this._touch);
-			}
-			if ('id' in selectEvt) {
-				delete this._touch['_' + selectEvt.id];
-				this._touchIDs = Object.keys(this._touch);
-			}
 			supr(this, 'onDragStop', arguments);
 		}
 	};
