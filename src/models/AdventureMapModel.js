@@ -220,14 +220,11 @@ exports = Class(Emitter, function (supr) {
 					found && this.emit('UpdateTile', tile.tileX, tile.tileY);
 				}
 			}
-		} else {
-			for (var id in this._nodesById) {
-				var tile = this._nodesById[id];
-				if (tile.tags && tile.tags[tag]) {
-					delete tile.tags[tag];
-					this.emit('UpdateTile', tile.tileX, tile.tileY);
-				}
-			}
+		} else if (this._nodesByTag[tag]) {
+			this._nodesByTag[tag].forEach(bind(this, function (tile) {
+				delete tile.tags[tag];
+				this.emit('UpdateTile', tile.tileX, tile.tileY);
+			}));
 		}
 	};
 
