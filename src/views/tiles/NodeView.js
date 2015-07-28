@@ -48,7 +48,6 @@ exports = Class(ImageView, function (supr) {
 		});
 
 		this._characterSettings = null;
-		this._addItemEmitter = true;
 		this._locSet = false;
 
 		this._itemCtors = opts.nodeSettings.itemCtors;
@@ -167,10 +166,8 @@ exports = Class(ImageView, function (supr) {
 				this._idText.hide();
 			}
 
-			if (this._addItemEmitter) {
-				this._addItemEmitter = false;
-				this._itemView.on('InputSelect', bind(this, 'onSelectNode', tile));
-			}
+			this._itemView.removeAllListeners('InputSelect');
+			this._itemView.on('InputSelect', bind(this, 'onSelectNode', tile));
 		} else {
 			this._itemView.style.visible = false;
 		}
@@ -311,7 +308,6 @@ exports = Class(ImageView, function (supr) {
 	};
 
 	this.onRelease = function () {
-		this._addItemEmitter = true;
 		this._idText.hide();
 		this.refreshLoc();
 		this._itemView.removeAllListeners('InputSelect');
