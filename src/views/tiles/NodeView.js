@@ -163,6 +163,8 @@ exports = Class(ImageView, function (supr) {
 				}
 				this._idText._container.style.x = -10;
 				this._idText._container.style.y = (node.height - node.characterSettings.height) * 0.5-30;
+			} else {
+				this._idText.hide();
 			}
 
 			if (this._addItemEmitter) {
