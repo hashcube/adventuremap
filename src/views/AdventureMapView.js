@@ -44,6 +44,8 @@ exports = Class(ScrollView, function (supr) {
 			h_padding = 0;
 		}
 		if (v_slider_head > height) {
+			v_slider_head = height;
+			v_head = height;
 			v_padding = 0;
 		}
 
@@ -51,10 +53,10 @@ exports = Class(ScrollView, function (supr) {
 			bottom corner, Horizontal sliders are already at left, so the map
 			start rendering from bottom-left corner
 		*/
+		v_slider_tail = height - v_slider_head;
 		v_slider_head = height;
+		v_tail = height - v_head - 2 * v_padding;
 		v_head = height;
-		v_slider_tail = height - 20;
-		v_tail = height - 20 - 2 * v_padding;
 
 		if (h_head > width) {
 			h_head = width;
