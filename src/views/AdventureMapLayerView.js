@@ -25,7 +25,7 @@ exports = Class(View, function (supr) {
 		var height = this._gridSettings.height;
 
 		for (var y = 0; y < height; y++) {
-			var line = views[y];
+			var line = this._views[y] || [];
 			for (var x = 0; x < width; x++) {
 				var view = line[x];
 				view && view.update && view.update(grid, x, y);

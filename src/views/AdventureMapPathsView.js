@@ -13,7 +13,7 @@ exports = Class(AdventureMapLayerView, function (supr) {
 		var tileHeight = this._tileSettings.tileHeight;
 
 		for (var y = 0; y < height; y++) {
-			var line = [];
+			var line = this._views[y] || [];
 			for (var x = 0; x < width; x++) {
 				var tile = grid[y][x];
 				var view = null;
@@ -34,7 +34,7 @@ exports = Class(AdventureMapLayerView, function (supr) {
 				line[x] = view;
 			}
 
-			this._views.push(line);
+			this._views[y] = line;
 		}
 
 		this._grid = grid;

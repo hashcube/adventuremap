@@ -44,10 +44,17 @@ exports = Class(ScrollView, function (supr) {
 			h_padding = 0;
 		}
 		if (v_slider_head > height) {
-			v_slider_head = height;
-			v_head = height;
 			v_padding = 0;
 		}
+
+		/*	By setting v_slider values to height we are moving the scroller to
+			bottom corner, Horizontal sliders are already at left, so the map
+			start rendering from bottom-left corner
+		*/
+		v_slider_head = height;
+		v_head = height;
+		v_slider_tail = height - 20;
+		v_tail = height - 20 - 2*v_padding;
 
 		if (h_head > width) {
 			h_head = width;
@@ -103,6 +110,11 @@ exports = Class(ScrollView, function (supr) {
 			width: this._totalWidth,
 			height: this._totalHeight,
 			scale: scale
+		});
+
+		// Scrolled to the bottom initally
+		this._contentView.updateOpts({
+			y: -this.getStyleBounds().maxY,
 		});
 
 		this._pinch = false;
@@ -319,8 +331,9 @@ exports = Class(ScrollView, function (supr) {
 
 		this.scrollTo(x, y, 300, cb);
 
-		var x_head = Math.max((pos.h[1] * this._tileSettings.tileWidth) * scale - this.style.width * 0.5, 0);
-		var y_head = Math.max((pos.v[1] * this._tileSettings.tileHeight) * scale - this.style.height * 0.5, 0);
+		// Taking the average distance b/w slider head/tail and the center
+		var x_head = Math.max((((pos.h[0] + pos.h[1]) / 2) * this._tileSettings.tileWidth) * scale - this.style.width * 0.5, 0);
+		var y_head = Math.max((((pos.v[0] + pos.v[1]) / 2) * this._tileSettings.tileHeight) * scale - this.style.height * 0.5, 0);
 		var point = new Point(x_head, y_head);
 		point.subtract(x, y);
 
