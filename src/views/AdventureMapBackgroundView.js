@@ -29,7 +29,7 @@ exports = Class(AdventureMapLayerView, function (supr) {
 
   this.setTile = function (x, y) {
     var tileWidth = this._tileSettings.tileWidth;
-    var tileHeight = this._tileSettings.tileHeight
+    var tileHeight = this._tileSettings.tileHeight;
 
     var view = pool.obtainView({
       superview: this,
@@ -66,11 +66,11 @@ exports = Class(AdventureMapLayerView, function (supr) {
       for (var x = pos.h[0]; x < pos.h[1]; x++) {
         if(!line[x]) {
           var view = this.setTile(x, y);
-          line.push(view);
+          line[x] = view;
         }
       }
 
-      this._views.push(line);
+      this._views[y] = line;
     }
 
     this._grid = grid;

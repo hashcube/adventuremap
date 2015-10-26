@@ -7,10 +7,10 @@ exports = Class(AdventureMapLayerView, function (supr) {
 		var width = this._gridSettings.width;
 		var height = this._gridSettings.height;
 		var tileWidth = this._tileSettings.tileWidth;
-		var tileHeight = this._tileSettings.tileHeight
+		var tileHeight = this._tileSettings.tileHeight;
 
 		for (var y = 0; y < height; y++) {
-			var line = [];
+			var line = this._views[y] || [];
 			for (var x = 0; x < width; x++) {
 				var view = null;
 				var tile = grid[y][x];
@@ -30,10 +30,10 @@ exports = Class(AdventureMapLayerView, function (supr) {
 					view.update(grid, x, y);
 				}
 
-				line.push(view);
+				line[x] = view;
 			}
 
-			this._views.push(line);
+			this._views[y] = line;
 		}
 
 		this._grid = grid;

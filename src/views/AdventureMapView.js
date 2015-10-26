@@ -49,6 +49,15 @@ exports = Class(ScrollView, function (supr) {
 			v_padding = 0;
 		}
 
+		/*	By setting v_slider values to height we are moving the scroller to
+			bottom corner, Horizontal sliders are already at left, so the map
+			start rendering from bottom-left corner
+		*/
+		v_slider_tail = height - v_slider_head;
+		v_slider_head = height;
+		v_tail = v_slider_tail - 2 * v_padding;
+		v_head = height;
+
 		if (h_head > width) {
 			h_head = width;
 			h_padding = width - h_slider_head;
@@ -103,6 +112,11 @@ exports = Class(ScrollView, function (supr) {
 			width: this._totalWidth,
 			height: this._totalHeight,
 			scale: scale
+		});
+
+		// Scrolled to the bottom initally
+		this._contentView.updateOpts({
+			y: -this.getStyleBounds().maxY,
 		});
 
 		this._pinch = false;
@@ -313,14 +327,18 @@ exports = Class(ScrollView, function (supr) {
 	this.focusNodeById = function (node, cb) {
 		var scale = this._content.style.scale;
 		var pos = this.getPosition('slider');
+		var x_head, y_head;
+		var h_dir = node.tileX - pos.h[1] > 0 ? 1 : 0;
+		var v_dir = node.tileY - pos.v[1] > 0 ? 1 : 0;
 
 		var x = Math.max((node.tileX * this._tileSettings.tileWidth) * scale - this.style.width * 0.5, 0);
 		var y = Math.max((node.tileY * this._tileSettings.tileHeight) * scale - this.style.height * 0.5, 0);
 
 		this.scrollTo(x, y, 300, cb);
 
-		var x_head = Math.max((pos.h[1] * this._tileSettings.tileWidth) * scale - this.style.width * 0.5, 0);
-		var y_head = Math.max((pos.v[1] * this._tileSettings.tileHeight) * scale - this.style.height * 0.5, 0);
+		// based on the direction of scroll we need to move the map & fill the tiles
+		x_head = Math.max((pos.h[h_dir] * this._tileSettings.tileWidth) * scale - this.style.width * 0.5, 0);
+		y_head = Math.max((pos.v[v_dir] * this._tileSettings.tileHeight) * scale - this.style.height * 0.5, 0);
 		var point = new Point(x_head, y_head);
 		point.subtract(x, y);
 
@@ -360,16 +378,9 @@ exports = Class(ScrollView, function (supr) {
 	};
 
 	this.populateRow = function (count) {
-		var tileWidth = this._tileWidth;
-		var tileHeight = this._tileHeight;
-		var width = this._gridSettings.height;
-		var height = this._gridSettings.height;
-
-		var margin = this._editMode ? 8 : 0;
+		var width = this._gridSettings.width;
 		var num = 1;
-		var swap = false;
-		var cell_size = tileWidth;
-		var tile = this._adventureMapLayers[0];
+		var cell_size = this._tileWidth;
 
 		calls += count;
 		if (calls < cell_size) {
@@ -395,14 +406,12 @@ exports = Class(ScrollView, function (supr) {
 		// left end condition
 		if (h_slider_tail - h_padding > h_tail) {
 			var end = h_head + num - 1;
-			for (var y = v_tail; y < v_head; y++) {
-				var line = this._views[y];
 
+			for (var y = v_tail; y < v_head; y++) {
 				for (var x = h_head; x <= end; x++) {
 					var rel = h_tail + (end - x);
 					this.create(x, y, rel);
 				}
-				this._views[y] = line;
 			}
 			h_head += num;
 			h_tail += num;
@@ -410,16 +419,8 @@ exports = Class(ScrollView, function (supr) {
 	};
 
 	this.populateRowLeft = function (count) {
-		var tileWidth = this._tileWidth;
-		var tileHeight = this._tileHeight;
-		var width = this._gridSettings.height;
-		var height = this._gridSettings.height;
-
-		var margin = this._editMode ? 8 : 0;
 		var num = 1;
-		var swap = false;
-		var cell_size = tileWidth;
-		var tile = this._adventureMapLayers[0];
+		var cell_size = this._tileWidth;
 
 		calls += count;
 		if (calls < cell_size) {
@@ -447,13 +448,10 @@ exports = Class(ScrollView, function (supr) {
 			var end = h_tail - num;
 
 			for (var y = v_tail; y < v_head; y++) {
-				var line = this._views[y];
-
 				for (var x = h_tail - 1; x >= end; x--) {
 					var rel = h_head - (h_tail - x);
 					this.create(x, y, rel);
 				}
-				this._views[y] = line;
 			}
 			h_head -= num;
 			h_tail -= num;
@@ -461,16 +459,9 @@ exports = Class(ScrollView, function (supr) {
 	};
 
 	this.populateColumn = function (count) {
-		var tileWidth = this._tileWidth;
-		var tileHeight = this._tileHeight;
-		var width = this._gridSettings.height;
 		var height = this._gridSettings.height;
-
-		var margin = this._editMode ? 8 : 0;
 		var num = 1;
-		var swap = false;
-		var cell_size = tileHeight;
-		var tile = this._adventureMapLayers[0];
+		var cell_size = this._tileHeight;
 
 		calls_lf += count;
 		if (calls_lf < cell_size) {
@@ -509,16 +500,9 @@ exports = Class(ScrollView, function (supr) {
 	};
 
 	this.populateColumnTop = function (count) {
-		var tileWidth = this._tileWidth;
-		var tileHeight = this._tileHeight;
-		var width = this._gridSettings.height;
 		var height = this._gridSettings.height;
-
-		var margin = this._editMode ? 8 : 0;
 		var num = 1;
-		var swap = false;
-		var cell_size = tileHeight;
-		var tile = this._adventureMapLayers[0];
+		var cell_size = this._tileHeight;
 
 		calls_lf += count;
 		if (calls_lf < cell_size) {
