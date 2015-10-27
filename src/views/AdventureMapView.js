@@ -57,6 +57,9 @@ exports = Class(ScrollView, function (supr) {
 		v_slider_head = height;
 		v_tail = v_slider_tail - 2 * v_padding;
 		v_head = height;
+		if (v_tail < 0) {
+			v_tail = 0;
+		}
 
 		if (h_head > width) {
 			h_head = width;
