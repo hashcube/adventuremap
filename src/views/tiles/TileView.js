@@ -4,8 +4,6 @@ import ui.View as View;
 import ui.ImageView as ImageView;
 import ui.TextView as TextView;
 
-import ..ViewPool;
-
 exports = Class(ImageView, function (supr) {
 	this.init = function (opts) {
 		supr(this, 'init', [opts]);
