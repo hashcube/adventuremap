@@ -6,8 +6,6 @@ import ui.TextView as TextView;
 import ui.ScoreView as ScoreView;
 import animate;
 
-import ..ViewPool;
-
 exports = Class(ImageView, function (supr) {
 	var invert = function(direction) {
 		var ret,
