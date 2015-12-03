@@ -259,19 +259,20 @@ exports = Class(Emitter, function (supr) {
 				for (var i in tile) {
 					if ((i in DEFAULT_TILE_VALUES) &&
 						((DEFAULT_TILE_VALUES[i] === 'anything') || (tile[i] !== DEFAULT_TILE_VALUES[i]))) {
-						// delete views for friends
-						prop = tile[i];
-						if (typeof prop === 'object') {
-							temp = {};
-							merge(temp, prop);
-							delete temp.views;
-							prop = temp;
-						}
-						saveTile[i] = prop;
+						if (i !== 'friends') {
+							prop = tile[i];
+							if (typeof prop === 'object') {
+								temp = {};
+								merge(temp, prop);
+								delete temp.views;
+								prop = temp;
+							}
+							saveTile[i] = prop;
+ 						}
 					}
 				}
 
-				var mapValue = map[y][x];
+				var mapValue = data.width * y + x;
 
 				// If there's anything interesting then save the object...
 				if (Object.keys(saveTile).length) {
@@ -318,9 +319,14 @@ exports = Class(Emitter, function (supr) {
 				tile.title = '';
 				tile.text = '';
 				tile.tags = {};
+
+				delete tile.tags;
+				delete tile.id;
+				delete tile.map;
+				delete tile.position;
 				delete tile.friends;
 
-				mapLine[x] = this._defaultTile;
+				mapLine[x] = data.width * y + x;
 			}
 		}
 	};

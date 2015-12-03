@@ -189,7 +189,7 @@ exports = Class(ImageView, function (supr) {
 		}*/
 
 		var friendsView = this._friendsView;
-		if (tile && tile.friends.views) {
+		if (tile && tile.friends && tile.friends.views) {
 			var friends = tile.friends,
 				views = friends.views,
 				tileSettings = this._tileSettings,
