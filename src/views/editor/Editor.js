@@ -23,7 +23,7 @@ var OPTION_ROTATE = 10;
 
 exports = Class(Emitter, function () {
 	this.init = function (opts) {
-	  this._adventureMap = opts.adventureMap;
+		this._adventureMap = opts.adventureMap;
 		this._adventureMapModel = this._adventureMap.getModel();
 		this._map = this._adventureMapModel.getMap();
 
