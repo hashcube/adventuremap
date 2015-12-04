@@ -1,4 +1,5 @@
 import event.Emitter as Emitter;
+import util.underscore as _;
 
 var DEFAULT_TILE_VALUES = {
 		x: 0.5,
@@ -259,8 +260,8 @@ exports = Class(Emitter, function (supr) {
 				for (var i in tile) {
 					if ((i in DEFAULT_TILE_VALUES) &&
 						((DEFAULT_TILE_VALUES[i] === 'anything') || (tile[i] !== DEFAULT_TILE_VALUES[i]))) {
+						prop = tile[i];
 						if (i !== 'friends') {
-							prop = tile[i];
 							if (typeof prop === 'object') {
 								temp = {};
 								merge(temp, prop);
@@ -268,7 +269,17 @@ exports = Class(Emitter, function (supr) {
 								prop = temp;
 							}
 							saveTile[i] = prop;
- 						}
+						} else {
+							temp = {};
+							_.each(DEFAULT_TILE_VALUES[i], function (val, key) {
+								if (prop[key] !== val) {
+									temp[key] = prop[key];
+								}
+							});
+							if (!_.isEmpty(temp)) {
+								saveTile[i] = temp;
+							}
+						}
 					}
 				}
 
