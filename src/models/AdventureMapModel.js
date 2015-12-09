@@ -329,7 +329,6 @@ exports = Class(Emitter, function (supr) {
 				tile.y = 0.5;
 				tile.title = '';
 				tile.text = '';
-				tile.tags = {};
 
 				delete tile.tags;
 				delete tile.id;
