@@ -1,4 +1,5 @@
 import event.Emitter as Emitter;
+import util.underscore as _;
 
 var DEFAULT_TILE_VALUES = {
 		x: 0.5,
@@ -259,19 +260,30 @@ exports = Class(Emitter, function (supr) {
 				for (var i in tile) {
 					if ((i in DEFAULT_TILE_VALUES) &&
 						((DEFAULT_TILE_VALUES[i] === 'anything') || (tile[i] !== DEFAULT_TILE_VALUES[i]))) {
-						// delete views for friends
 						prop = tile[i];
-						if (typeof prop === 'object') {
+						if (i !== 'friends') {
+							if (typeof prop === 'object') {
+								temp = {};
+								merge(temp, prop);
+								delete temp.views;
+								prop = temp;
+							}
+							saveTile[i] = prop;
+						} else {
 							temp = {};
-							merge(temp, prop);
-							delete temp.views;
-							prop = temp;
+							_.each(DEFAULT_TILE_VALUES[i], function (val, key) {
+								if (prop[key] !== val) {
+									temp[key] = prop[key];
+								}
+							});
+							if (!_.isEmpty(temp)) {
+								saveTile[i] = temp;
+							}
 						}
-						saveTile[i] = prop;
 					}
 				}
 
-				var mapValue = map[y][x];
+				var mapValue = data.width * y + x;
 
 				// If there's anything interesting then save the object...
 				if (Object.keys(saveTile).length) {
@@ -317,10 +329,14 @@ exports = Class(Emitter, function (supr) {
 				tile.y = 0.5;
 				tile.title = '';
 				tile.text = '';
-				tile.tags = {};
+
+				delete tile.tags;
+				delete tile.id;
+				delete tile.map;
+				delete tile.position;
 				delete tile.friends;
 
-				mapLine[x] = this._defaultTile;
+				mapLine[x] = data.width * y + x;
 			}
 		}
 	};

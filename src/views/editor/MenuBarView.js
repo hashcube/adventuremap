@@ -93,21 +93,21 @@ exports = Class(TopBar, function (supr) {
 			prompt: 'Enter the node Id:',
 			autoShowKeyboard: true,
 			isPassword: false,
-			onChange: bind(this, 'onChangeId')
+			onSubmit: bind(this, 'onChangeId')
 		});
 
 		this._promptPosition = new InputPrompt({
 			prompt: 'Enter x y positions (with space):',
 			autoShowKeyboard: true,
 			isPassword: false,
-			onChange: bind(this, 'onChangePosition')
+			onSubmit: bind(this, 'onChangePosition')
 		});
 
 		this._promptFriends = new InputPrompt({
 			prompt: 'Enter x y r direction (with spaces):',
 			autoShowKeyboard: true,
 			isPassword: false,
-			onChange: bind(this, 'onChangeFriends')
+			onSubmit: bind(this, 'onChangeFriends')
 		});
 	};
 
