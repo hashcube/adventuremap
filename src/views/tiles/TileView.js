@@ -15,7 +15,11 @@ exports = Class(ImageView, function (supr) {
 		this._tileX = tileX;
 		this._tileY = tileY;
 
-		this.setImage(this._path + '/' + tileY + '_' + tileX + '.png');
+		if (typeof(this._path) === 'string') {
+			this.setImage(this._path + '/' + tileY + '_' + tileX + '.png');
+		} else {
+			this.setImage(this._path(tileX, tileY));
+		}
 	};
 
 	this.onInputSelect = function () {
