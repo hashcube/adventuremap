@@ -15,10 +15,10 @@ exports = Class(ImageView, function (supr) {
 		this._tileX = tileX;
 		this._tileY = tileY;
 
-		if (typeof(this._path) === 'string') {
-			this.setImage(this._path + '/' + tileY + '_' + tileX + '.png');
-		} else {
+		if (typeof(this._path) === 'function') {
 			this.setImage(this._path(tileX, tileY));
+		} else {
+			this.setImage(this._path + '/' + tileY + '_' + tileX + '.png');
 		}
 	};
 
