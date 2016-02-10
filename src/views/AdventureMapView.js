@@ -368,19 +368,19 @@ exports = Class(ScrollView, function (supr) {
 		var posY = Math.ceil(Math.abs(y));
 
 		if (x < 0) {
-			this.populateRow(posX);
+			this.populateRight(posX);
 		} else if (x > 0) {
-			this.populateRowLeft(posX);
+			this.populateLeft(posX);
 		}
 
 		if (y < 0) {
-			this.populateColumn(posY);
+			this.populateBottom(posY);
 		} else if (y > 0) {
-			this.populateColumnTop(posY);
+			this.populateTop(posY);
 		}
 	};
 
-	this.populateRow = function (count) {
+	this.populateRight = function (count) {
 		var width = this._gridSettings.width;
 		var num = 1;
 		var cell_size = this._tileWidth;
@@ -421,7 +421,7 @@ exports = Class(ScrollView, function (supr) {
 		}
 	};
 
-	this.populateRowLeft = function (count) {
+	this.populateLeft = function (count) {
 		var num = 1;
 		var cell_size = this._tileWidth;
 
@@ -461,7 +461,7 @@ exports = Class(ScrollView, function (supr) {
 		}
 	};
 
-	this.populateColumn = function (count) {
+	this.populateBottom = function (count) {
 		var height = this._gridSettings.height;
 		var num = 1;
 		var cell_size = this._tileHeight;
@@ -502,7 +502,7 @@ exports = Class(ScrollView, function (supr) {
 		}
 	};
 
-	this.populateColumnTop = function (count) {
+	this.populateTop = function (count) {
 		var height = this._gridSettings.height;
 		var num = 1;
 		var cell_size = this._tileHeight;
