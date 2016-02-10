@@ -8,8 +8,8 @@ import .AdventureMapDoodadsView;
 import math.geom.Point as Point;
 
 exports = Class(ScrollView, function (supr) {
-	var calls = 0;
-	var calls_lf = 0;
+	var h_calls = 0;
+	var v_calls = 0;
 
 	var h_padding = 10;
 	var v_padding = 10;
@@ -385,12 +385,12 @@ exports = Class(ScrollView, function (supr) {
 		var num = 1;
 		var cell_size = this._tileWidth;
 
-		calls += count;
-		if (calls < cell_size) {
+		h_calls += count;
+		if (h_calls < cell_size) {
 			return;
 		} else {
-			num = Math.floor(calls/cell_size);
-			calls = Math.floor(calls % cell_size);
+			num = Math.floor(h_calls/cell_size);
+			h_calls = Math.floor(h_calls % cell_size);
 		}
 
 		if (h_slider_head + num > width) {
@@ -424,13 +424,14 @@ exports = Class(ScrollView, function (supr) {
 	this.populateLeft = function (count) {
 		var num = 1;
 		var cell_size = this._tileWidth;
+		var old = h_calls;
 
-		calls += count;
-		if (calls < cell_size) {
+		h_calls -= count;
+		if (old * h_calls >=0 && h_calls * -1 < cell_size) {
 			return;
 		} else {
-			num = Math.floor(calls/cell_size);
-			calls = Math.floor(calls % cell_size);
+			num = Math.floor(h_calls * -1 / cell_size);
+			h_calls = Math.floor(h_calls % cell_size);
 		}
 
 		if (h_slider_tail - num < 0) {
@@ -466,15 +467,14 @@ exports = Class(ScrollView, function (supr) {
 		var num = 1;
 		var cell_size = this._tileHeight;
 
-		calls_lf += count;
-		if (calls_lf < cell_size) {
+		v_calls += count;
+		if (v_calls < cell_size) {
 			return;
 		} else {
-			num = Math.floor(calls_lf/cell_size);
-			calls_lf = Math.floor(calls_lf % cell_size);
+			num = Math.floor(v_calls/cell_size);
+			v_calls = Math.floor(v_calls % cell_size);
 		}
 
-		// right end
 		if (v_slider_head + num > height) {
 			v_slider_tail = height - (v_slider_head - v_slider_tail);
 			v_slider_head = height;
@@ -482,12 +482,11 @@ exports = Class(ScrollView, function (supr) {
 			v_slider_tail += num;
 			v_slider_head += num;
 		}
-		// right end condition
+
 		if (v_head + num > height) {
 			num = height - v_head;
 		}
 
-		// left end condition
 		if (v_slider_tail - v_padding > v_tail) {
 			var end = v_head + num - 1;
 
@@ -506,13 +505,15 @@ exports = Class(ScrollView, function (supr) {
 		var height = this._gridSettings.height;
 		var num = 1;
 		var cell_size = this._tileHeight;
+		var old = v_calls;
 
-		calls_lf += count;
-		if (calls_lf < cell_size) {
+		v_calls -= count;
+
+		if (old * v_calls >= 0 && v_calls * -1 < cell_size) {
 			return;
 		} else {
-			num = Math.floor(calls_lf/cell_size);
-			calls_lf = Math.floor(calls_lf % cell_size);
+			num = Math.floor(v_calls * -1 /cell_size);
+			v_calls = Math.floor(v_calls % cell_size);
 		}
 
 		if (v_slider_tail - num < 0) {
@@ -522,12 +523,11 @@ exports = Class(ScrollView, function (supr) {
 			v_slider_tail -= num;
 			v_slider_head -= num;
 		}
-		// left end condition
+
 		if (v_tail - num < 0) {
 			num = v_tail;
 		}
 
-		// right end condition
 		if (v_slider_head + v_padding < v_head) {
 			var end = v_tail - num;
 
