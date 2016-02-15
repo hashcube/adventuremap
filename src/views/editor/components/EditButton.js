@@ -1,6 +1,6 @@
-import menus.views.components.ButtonView as ButtonView;
+import .ButtonView as ButtonView;
 
-import menus.constants.menuConstants as menuConstants;
+import ..constants.menuConstants as menuConstants;
 
 exports = Class(ButtonView, function(supr) {
 	this.init = function(opts) {

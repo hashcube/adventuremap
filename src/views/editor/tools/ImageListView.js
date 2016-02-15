@@ -4,7 +4,7 @@ import ui.ImageScaleView as ImageScaleView;
 
 import ui.resource.Image as Image;
 
-import menus.constants.menuConstants as menuConstants;
+import ..constants.menuConstants as menuConstants;
 
 import ..components.BottomBar as BottomBar;
 import ..components.EditButton as EditButton;
