@@ -152,6 +152,8 @@ exports = Class(ScrollView, function (supr) {
 			}));
 		}
 
+		this.editMode = opts.editMode;
+
 		this.on('Scrolled', bind(this, function (point) {
 			var x = point.x || 0,
 				y = point.y || 0;
@@ -162,6 +164,17 @@ exports = Class(ScrollView, function (supr) {
 	};
 
 	this.onUpdate = function (data) {
+		var width = this._gridSettings.width,
+			height = this._gridSettings.height;
+
+		if (this.editMode) {
+			for (var y = 0; y < height; y++) {
+				for (var x = 0; x < width; x++) {
+					this.create(x, y);
+				}
+			}
+		}
+
 		data.pos = this.getPosition();
 		for (var i = 0; i < 4; i++) {
 			var adventureMapLayer = this._adventureMapLayers[i];
@@ -545,7 +558,9 @@ exports = Class(ScrollView, function (supr) {
 	this.create = function (x, y, rel) {
 		var data = this._model.getData().grid;
 		this._adventureMapLayers.forEach(function (layer) {
-			layer.release && layer.release(x, rel);
+			if (rel && layer.release) {
+				layer.release(x, rel);
+			}
 			layer.create && layer.create(x, y, data);
 		});
 	};
