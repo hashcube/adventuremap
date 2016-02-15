@@ -87,4 +87,25 @@ exports = Class(AdventureMapLayerView, function (supr) {
     view.update(grid, x, y);
     this._views[y][x] = view;
   };
+
+  this.refreshAll = function () {
+    var views = this._views,
+      grid = this._grid,
+      width = this._gridSettings.width,
+      height = this._gridSettings.height,
+      view, tile, x, y;
+
+    for (y = 0; y < height; y++) {
+      for (x = 0; x < width; x++) {
+        view = views[y] && views[y][x];
+        tile = grid[y][x];
+
+        if (!view && tile.node) {
+          this.create(x, y, grid);
+        } else if (view && view.update) {
+          view.update(grid, x, y);
+        }
+      }
+    }
+  };
 });
