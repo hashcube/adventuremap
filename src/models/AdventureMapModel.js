@@ -369,6 +369,10 @@ exports = Class(Emitter, function (supr) {
 					map[y][x] = width * y + x;
 					tile = {};
 				} else if (typeof tile === 'number') { // If it's only a background then set the background and make a new tile...
+					if (!map[y]) {
+						map[y] = [];
+						this._data.grid[y] = [];
+					}
 					map[y][x] = tile;
 					tile = {};
 				} else {
