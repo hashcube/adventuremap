@@ -33,11 +33,6 @@ exports = Class(View, function (supr) {
 		}
 	};
 
-	this.refreshNode = function (x, y) {
-		var views = this._views;
-		this._views[y][x].refreshLoc();
-	};
-
 	this.onUpdate = function (data) {
 		this._needsPopulate && this.populateView(data);
 	};
