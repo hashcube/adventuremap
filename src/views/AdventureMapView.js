@@ -25,7 +25,8 @@ exports = Class(ScrollView, function (supr) {
 	var h_tail = 0;
 
 	this.init = function (opts, model) {
-		var width, height;
+		var width, height,
+			editMode = opts.editMode;
 
 		this._model = model;
 		this._tileWidth = opts.tileSettings.tileWidth;
@@ -146,21 +147,23 @@ exports = Class(ScrollView, function (supr) {
 				gridSettings: opts.gridSettings,
 				nodeSettings: opts.nodeSettings,
 				pathSettings: opts.pathSettings,
-				editMode: opts.editMode,
+				editMode: editMode,
 				blockEvents: opts.editMode ? (i !== 0) : (i < 2),
 				poolSize: v_head * h_head
 			}));
 		}
 
-		this.editMode = opts.editMode;
+		this.editMode = editMode;
 
-		this.on('Scrolled', bind(this, function (point) {
-			var x = point.x || 0,
-				y = point.y || 0;
+		if (!editMode) {
+			this.on('Scrolled', bind(this, function (point) {
+				var x = point.x || 0,
+					y = point.y || 0;
 
-			var adventureMapLayer = this._adventureMapLayers[0];
-			this.move(x, y);
-		}));
+				var adventureMapLayer = this._adventureMapLayers[0];
+				this.move(x, y);
+			}));
+		}
 	};
 
 	this.onUpdate = function (data) {
