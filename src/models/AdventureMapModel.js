@@ -361,6 +361,11 @@ exports = Class(Emitter, function (supr) {
 		for (var y = 0; y < height; y++) {
 			var gridLine = grid[y] || [];
 
+			if (!map[y]) {
+				map[y] = [];
+				this._data.grid[y] = [];
+			}
+
 			for (var x = 0; x < width; x++) {
 				var len = gridLine.length || 1,
 					tile = gridLine[Math.min(x, len - 1)];
@@ -369,10 +374,6 @@ exports = Class(Emitter, function (supr) {
 					map[y][x] = width * y + x;
 					tile = {};
 				} else if (typeof tile === 'number') { // If it's only a background then set the background and make a new tile...
-					if (!map[y]) {
-						map[y] = [];
-						this._data.grid[y] = [];
-					}
 					map[y][x] = tile;
 					tile = {};
 				} else {
