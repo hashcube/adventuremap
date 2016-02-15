@@ -77,7 +77,7 @@ exports = Class(TopBar, function (supr) {
 			width: size - 8,
 			height: size - 8,
 			icon: {
-				image: 'resources/images/ui/buttonClose.png',
+				image: 'modules/adventuremap/images/ui/buttonClose.png',
 				x: (size - 8) * 0.2,
 				y: (size - 8) * 0.18,
 				width: (size - 8) * 0.6,

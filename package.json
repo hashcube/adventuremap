@@ -4,6 +4,9 @@
   "devkit": {
     "clientPaths": {
       "adventuremap": "src"
+    },
+    "extensions": {
+      "build": "build"
     }
   }
 }
