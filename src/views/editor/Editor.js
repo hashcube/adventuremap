@@ -85,7 +85,7 @@ exports = Class(Emitter, function () {
 			y: opts.height - 96,
 			width: opts.width,
 			height: 96,
-			images: opts.tileSettings.tiles,
+			images: opts.tileSettings.tiles || [],
 			visible: false,
 			title: 'Tile'
 		}).on('Select', bind(this, 'onSelectTile')));
