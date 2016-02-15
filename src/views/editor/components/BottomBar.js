@@ -4,7 +4,7 @@ import ui.View as View;
 import ui.TextView as TextView;
 import ui.ImageScaleView as ImageScaleView;
 
-import menus.constants.menuConstants as menuConstants;
+import ..constants.menuConstants as menuConstants;
 
 exports = Class(View, function (supr) {
 	this.init = function (opts) {

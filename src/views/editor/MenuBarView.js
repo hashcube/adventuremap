@@ -7,9 +7,6 @@ import ui.ImageScaleView as ImageScaleView;
 import ui.TextView as TextView;
 import ui.ScrollView as ScrollView;
 
-import menus.constants.menuConstants as menuConstants;
-import menus.views.TextDialogView as TextDialogView;
-
 import .components.TopBar as TopBar;
 import .components.EditButton as EditButton;
 
@@ -180,28 +177,9 @@ exports = Class(TopBar, function (supr) {
 	};
 
 	this.onClear = function () {
-		this._confirmClearDialog = this._confirmClearDialog || new TextDialogView({
-			superview: this._superview,
-			title: 'Clear map',
-			text: 'Are you sure you want to clear this map?',
-			height: 450,
-			modal: true,
-			zIndex: 999999999,
-			buttons: [
-				{
-					title: 'No',
-					width: 200,
-					style: 'GREEN'
-				},
-				{
-					title: 'Yes',
-					width: 200,
-					style: 'RED',
-					cb: bind(this, 'emit', 'Clear')
-				}
-			]
-		});
-		this._confirmClearDialog.show();
+		if (window.confirm('Are you sure you want to clear this map?')) {
+			this.emit('Clear');
+		}
 	};
 
 	this.onExport = function () {

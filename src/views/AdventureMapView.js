@@ -25,7 +25,8 @@ exports = Class(ScrollView, function (supr) {
 	var h_tail = 0;
 
 	this.init = function (opts, model) {
-		var width, height;
+		var width, height,
+			editMode = opts.editMode;
 
 		this._model = model;
 		this._tileWidth = opts.tileSettings.tileWidth;
@@ -146,22 +147,37 @@ exports = Class(ScrollView, function (supr) {
 				gridSettings: opts.gridSettings,
 				nodeSettings: opts.nodeSettings,
 				pathSettings: opts.pathSettings,
-				editMode: opts.editMode,
+				editMode: editMode,
 				blockEvents: opts.editMode ? (i !== 0) : (i < 2),
 				poolSize: v_head * h_head
 			}));
 		}
 
-		this.on('Scrolled', bind(this, function (point) {
-			var x = point.x || 0,
-				y = point.y || 0;
+		this.editMode = editMode;
 
-			var adventureMapLayer = this._adventureMapLayers[0];
-			this.move(x, y);
-		}));
+		if (!editMode) {
+			this.on('Scrolled', bind(this, function (point) {
+				var x = point.x || 0,
+					y = point.y || 0;
+
+				var adventureMapLayer = this._adventureMapLayers[0];
+				this.move(x, y);
+			}));
+		}
 	};
 
 	this.onUpdate = function (data) {
+		var width = this._gridSettings.width,
+			height = this._gridSettings.height;
+
+		if (this.editMode) {
+			for (var y = 0; y < height; y++) {
+				for (var x = 0; x < width; x++) {
+					this.create(x, y);
+				}
+			}
+		}
+
 		data.pos = this.getPosition();
 		for (var i = 0; i < 4; i++) {
 			var adventureMapLayer = this._adventureMapLayers[i];
@@ -545,7 +561,9 @@ exports = Class(ScrollView, function (supr) {
 	this.create = function (x, y, rel) {
 		var data = this._model.getData().grid;
 		this._adventureMapLayers.forEach(function (layer) {
-			layer.release && layer.release(x, rel);
+			if (rel && layer.release) {
+				layer.release(x, rel);
+			}
 			layer.create && layer.create(x, y, data);
 		});
 	};
