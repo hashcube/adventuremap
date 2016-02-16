@@ -429,7 +429,7 @@ exports = Class(ScrollView, function (supr) {
 			for (var y = v_tail; y < v_head; y++) {
 				for (var x = h_head; x <= end; x++) {
 					var rel = h_tail + (end - x);
-					this.create(x, y, rel);
+					this.create(x, y, rel, y);
 				}
 			}
 			h_head += num;
@@ -470,7 +470,7 @@ exports = Class(ScrollView, function (supr) {
 			for (var y = v_tail; y < v_head; y++) {
 				for (var x = h_tail - 1; x >= end; x--) {
 					var rel = h_head - (h_tail - x);
-					this.create(x, y, rel);
+					this.create(x, y, rel, y);
 				}
 			}
 			h_head -= num;
@@ -509,7 +509,7 @@ exports = Class(ScrollView, function (supr) {
 			for (var y = v_head; y <= end; y++) {
 				for (var x = h_tail; x < h_head; x++) {
 					var rel = v_tail + (y - v_head);
-					this.create(x, y, rel);
+					this.create(x, y, x, rel);
 				}
 			}
 			v_head += num;
@@ -550,7 +550,7 @@ exports = Class(ScrollView, function (supr) {
 			for (var y = v_tail - 1; y >= end; y--) {
 				for (var x = h_tail; x < h_head; x++) {
 					var rel = v_head - (v_tail - y);
-					this.create(x, y, rel);
+					this.create(x, y, x, rel);
 				}
 			}
 			v_head -= num;
@@ -558,11 +558,11 @@ exports = Class(ScrollView, function (supr) {
 		}
 	};
 
-	this.create = function (x, y, rel) {
+	this.create = function (x, y, release_x, release_y) {
 		var data = this._model.getData().grid;
 		this._adventureMapLayers.forEach(function (layer) {
-			if (rel && layer.release) {
-				layer.release(x, rel);
+			if (release_x && layer.release) {
+				layer.release(release_x, release_y);
 			}
 			layer.create && layer.create(x, y, data);
 		});
