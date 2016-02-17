@@ -100,6 +100,11 @@ exports = Class(BottomBar, function (supr) {
 		}
 		this.updateTags();
 
+		if (tag === 'milestone') {
+			this._editor.onSelectNode(1);
+			this._editor._menuBarView.onId();
+		}
+
 		this._adventureMap.refreshTile(this._tileX, this._tileY);
 		this._editor.saveMap();
 	};
