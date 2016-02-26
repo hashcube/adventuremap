@@ -75,7 +75,7 @@ exports = Class(ScrollView, function (supr) {
 		this._touchIDs = [];
 
 		//playerview, to track a player
-		this._playerView = null;
+		this._nodeItems = {};
 
 		var scale = opts.scale || 1;
 
