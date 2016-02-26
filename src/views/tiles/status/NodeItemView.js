@@ -10,8 +10,4 @@ exports = Class(ImageScaleView, function (supr) {
 		this._tile = opts.tile;
 		this._tag = opts.tag;
 	};
-
-	this.onInputSelect = function() {
-		this._adventureMapView.emit('ClickTag', 'Player', this._tile);
-	};
 });

@@ -90,7 +90,7 @@ exports = Class(Emitter, function (supr) {
 	};
 
 	this.getPlayerPosition = function(view) {
-		return this._adventureMapView._playerView.getPosition(view);
+		return this._adventureMapView._nodeItems.Player.getPosition(view);
 	};
 
 	this.onClickNode = function (tile) {

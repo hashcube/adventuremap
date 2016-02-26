@@ -107,7 +107,7 @@ exports = Class(ImageView, function (supr) {
 
 			for (var tag in tile.tags) {
 				if (this._itemCtors[tag]) {
-					var itemView = this._adventureMapView._playerView;
+					var itemView = this._adventureMapView._nodeItems[tag];
 					if (!itemView) {
 						itemView = new this._itemCtors[tag]({
 							superview: this.getSuperview(),
@@ -116,9 +116,8 @@ exports = Class(ImageView, function (supr) {
 							tag: tag,
 							tile: tile
 						});
-						this._adventureMapView._playerView = itemView;
-					}
-					else {
+						this._adventureMapView._nodeItems[tag] = itemView;
+					} else {
 						itemView.updateOpts({
 							tile: tile
 						});
