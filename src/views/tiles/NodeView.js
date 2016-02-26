@@ -123,6 +123,7 @@ exports = Class(ImageView, function (supr) {
 						});
 						itemView.removeAllListeners('InputSelect');
 					}
+					itemView.show();
 					itemView.on('InputSelect', bind(this, 'onSelectTag', tag, tile, itemView));
 
 					if (!('centerTag' in this._tileSettings) || this._tileSettings.centerTag) {
@@ -135,6 +136,7 @@ exports = Class(ImageView, function (supr) {
 					itemView.update && itemView.update(tile);
 
 					hideViews[tag] = null;
+					itemViews[tag] = itemView;
 				}
 			}
 
