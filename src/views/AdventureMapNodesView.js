@@ -89,8 +89,12 @@ exports = Class(AdventureMapLayerView, function (supr) {
   };
 
   this.refreshNode = function (x, y) {
-    var views = this._views;
-    this._views[y][x].refreshLoc();
+    var views = this._views,
+      row = this._views[y];
+
+    if (row && row[x]) {
+      this._views[y][x].refreshLoc();
+    }
   };
 
   this.refreshAll = function () {
