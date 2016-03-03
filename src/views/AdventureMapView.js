@@ -403,7 +403,7 @@ exports = Class(ScrollView, function (supr) {
 		var old = v_calls;
 
 		h_calls += count;
-		var nonflip = old * v_calls >= 0;
+		var nonflip = old * h_calls > 0;
 
 		if (nonflip && h_calls < cell_size) {
 			return;
@@ -448,7 +448,7 @@ exports = Class(ScrollView, function (supr) {
 		var old = h_calls;
 
 		h_calls -= count;
-		var nonflip = old * h_calls >= 0;
+		var nonflip = old * h_calls > 0;
 
 		if (nonflip && h_calls * -1 < cell_size) {
 			return;
