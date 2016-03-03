@@ -400,7 +400,7 @@ exports = Class(ScrollView, function (supr) {
 		var width = this._gridSettings.width;
 		var num = 1;
 		var cell_size = this._tileWidth;
-		var old = v_calls;
+		var old = h_calls;
 
 		h_calls += count;
 		var nonflip = old * h_calls > 0;
