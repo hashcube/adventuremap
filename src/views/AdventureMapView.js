@@ -568,7 +568,7 @@ exports = Class(ScrollView, function (supr) {
 	this.create = function (x, y, release_x, release_y) {
 		var data = this._model.getData().grid;
 		this._adventureMapLayers.forEach(function (layer) {
-			if (release_x && layer.release) {
+			if (release_x !== undefined && layer.release) {
 				layer.release(release_x, release_y);
 			}
 			layer.create && layer.create(x, y, data);
