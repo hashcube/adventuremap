@@ -400,12 +400,17 @@ exports = Class(ScrollView, function (supr) {
 		var width = this._gridSettings.width;
 		var num = 1;
 		var cell_size = this._tileWidth;
+		var old = v_calls;
 
 		h_calls += count;
-		if (h_calls < cell_size) {
+		var nonflip = old * v_calls >= 0;
+
+		if (nonflip && h_calls < cell_size) {
 			return;
 		} else {
-			num = Math.floor(h_calls/cell_size);
+			if (nonflip) {
+				num = Math.floor(h_calls/cell_size);
+			}
 			h_calls = Math.floor(h_calls % cell_size);
 		}
 
@@ -486,12 +491,16 @@ exports = Class(ScrollView, function (supr) {
 		var height = this._gridSettings.height;
 		var num = 1;
 		var cell_size = this._tileHeight;
+		var old = v_calls;
 
 		v_calls += count;
-		if (v_calls < cell_size) {
+		var nonflip = old * v_calls > 0;
+		if (nonflip && v_calls < cell_size) {
 			return;
 		} else {
-			num = Math.floor(v_calls/cell_size);
+			if (nonflip) {
+				num = Math.floor(v_calls/cell_size);
+			}
 			v_calls = Math.floor(v_calls % cell_size);
 		}
 
@@ -528,7 +537,7 @@ exports = Class(ScrollView, function (supr) {
 		var old = v_calls;
 
 		v_calls -= count;
-		var nonflip = old * v_calls >= 0;
+		var nonflip = old * v_calls > 0;
 
 		if (nonflip && v_calls * -1 < cell_size) {
 			return;
