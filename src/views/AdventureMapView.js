@@ -403,14 +403,12 @@ exports = Class(ScrollView, function (supr) {
 		var old = h_calls;
 
 		h_calls += count;
-		var nonflip = old * h_calls > 0;
+		var nonflip = old * h_calls >= 0;
 
 		if (nonflip && h_calls < cell_size) {
 			return;
 		} else {
-			if (nonflip) {
-				num = Math.floor(h_calls/cell_size);
-			}
+			num = Math.floor(h_calls/cell_size);
 			h_calls = Math.floor(h_calls % cell_size);
 		}
 
@@ -448,14 +446,12 @@ exports = Class(ScrollView, function (supr) {
 		var old = h_calls;
 
 		h_calls -= count;
-		var nonflip = old * h_calls > 0;
+		var nonflip = old * h_calls >= 0;
 
 		if (nonflip && h_calls * -1 < cell_size) {
 			return;
 		} else {
-			if (nonflip) {
-				num = Math.floor(h_calls * -1 / cell_size);
-			}
+			num = Math.floor(h_calls * -1 / cell_size);
 			h_calls = Math.floor(h_calls % cell_size);
 		}
 
@@ -494,13 +490,11 @@ exports = Class(ScrollView, function (supr) {
 		var old = v_calls;
 
 		v_calls += count;
-		var nonflip = old * v_calls > 0;
+		var nonflip = old * v_calls >= 0;
 		if (nonflip && v_calls < cell_size) {
 			return;
 		} else {
-			if (nonflip) {
-				num = Math.floor(v_calls/cell_size);
-			}
+			num = Math.floor(v_calls/cell_size);
 			v_calls = Math.floor(v_calls % cell_size);
 		}
 
@@ -537,14 +531,12 @@ exports = Class(ScrollView, function (supr) {
 		var old = v_calls;
 
 		v_calls -= count;
-		var nonflip = old * v_calls > 0;
+		var nonflip = old * v_calls >= 0;
 
 		if (nonflip && v_calls * -1 < cell_size) {
 			return;
 		} else {
-			if (nonflip) {
-				num = Math.floor(v_calls * -1 /cell_size);
-			}
+			num = Math.floor(v_calls * -1 /cell_size);
 			v_calls = Math.floor(v_calls % cell_size);
 		}
 
