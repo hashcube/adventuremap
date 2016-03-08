@@ -409,6 +409,9 @@ exports = Class(ScrollView, function (supr) {
 			return;
 		} else {
 			num = Math.floor(h_calls/cell_size);
+			if (!nonflip && num === 0) {
+				num = 1;
+			}
 			h_calls = Math.floor(h_calls % cell_size);
 		}
 
@@ -452,6 +455,9 @@ exports = Class(ScrollView, function (supr) {
 			return;
 		} else {
 			num = Math.floor(h_calls * -1 / cell_size);
+			if (!nonflip && num === 0) {
+				num = 1;
+			}
 			h_calls = Math.floor(h_calls % cell_size);
 		}
 
@@ -495,6 +501,9 @@ exports = Class(ScrollView, function (supr) {
 			return;
 		} else {
 			num = Math.floor(v_calls/cell_size);
+			if (!nonflip && num === 0) {
+				num = 1;
+			}
 			v_calls = Math.floor(v_calls % cell_size);
 		}
 
@@ -537,6 +546,9 @@ exports = Class(ScrollView, function (supr) {
 			return;
 		} else {
 			num = Math.floor(v_calls * -1 /cell_size);
+			if (!nonflip && num === 0) {
+				num = 1;
+			}
 			v_calls = Math.floor(v_calls % cell_size);
 		}
 
