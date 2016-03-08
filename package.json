@@ -1,6 +1,6 @@
 {
   "name": "adventuremap",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "devkit": {
     "clientPaths": {
       "adventuremap": "src"
