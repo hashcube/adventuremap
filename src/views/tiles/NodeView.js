@@ -119,6 +119,7 @@ exports = Class(ImageView, function (supr) {
 						this._adventureMapView._nodeItems[tag] = itemView;
 					} else {
 						itemView.updateOpts({
+							superview: this.getSuperview(),
 							tile: tile
 						});
 						itemView.removeAllListeners('InputSelect');
@@ -142,7 +143,8 @@ exports = Class(ImageView, function (supr) {
 
 			for (var tag in hideViews) {
 				if (hideViews[tag]) {
-					hideViews[tag].style.visible = false;
+					itemViews[tag].removeFromSuperview();
+					delete itemViews[tag];
 				}
 			}
 

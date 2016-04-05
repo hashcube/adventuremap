@@ -201,9 +201,6 @@ exports = Class(Emitter, function (supr) {
 			if (tile.tags) {
 				delete tile.tags[tag];
 			}
-                        if (tile.itemViews) {
-                                delete tile.itemViews[tag];
-                        }
 			this.emit('UpdateTile', tile.tileX, tile.tileY);
 		}
 	};
