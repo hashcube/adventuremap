@@ -142,6 +142,7 @@ exports = Class(ImageView, function (supr) {
 
 			for (var tag in hideViews) {
 				if (hideViews[tag]) {
+                                        delete itemViews[tag];
 					hideViews[tag].style.visible = false;
 				}
 			}
