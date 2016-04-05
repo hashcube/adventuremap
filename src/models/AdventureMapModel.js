@@ -198,7 +198,7 @@ exports = Class(Emitter, function (supr) {
 	this.removeTagById = function (id, tag) {
 		var tile = this._nodesById[id];
 		if (tile) {
-                        if (tile.tags) {
+                       if (tile.tags) {
 		                delete tile.tags[tag];
 		        }
 		        this.emit('UpdateTile', tile.tileX, tile.tileY);
