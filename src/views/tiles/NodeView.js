@@ -223,21 +223,14 @@ exports = Class(ImageView, function (supr) {
 				len = views.length,
 				view, i;
 
-			if (!friendsView) {
-				friendsView = this._friendsView = new View({
-					superview: this.getSuperview()
-				});
-				friendsView.on('InputSelect', bind(this, 'onSelectFriends', views, deltaX, deltaY));
-			}
-
-			i = len;
-			while (i > 0) {
-				friendsView.addSubview(views[--i]);
-			}
+			friendsView = this._friendsView = new View({
+				superview: this.getSuperview()
+			});
 
 			i = len;
 			while (i > 0) {
 				view = views[--i];
+				friendsView.addSubview(view);
 				view.updateOpts({
 					x: x,
 					y: y,
@@ -246,6 +239,7 @@ exports = Class(ImageView, function (supr) {
 				x += (padding * deltaX);
 				y += (padding * deltaY);
 			}
+			friendsView.on('InputSelect', bind(this, 'onSelectFriends', views, deltaX, deltaY));
 
 			friendsView.updateOpts({
 				x: this.style.x + friends.x * tileSettings.tileWidth - friendsLeft + friendsRight,
@@ -259,6 +253,7 @@ exports = Class(ImageView, function (supr) {
 			});
 		} else if (friendsView) {
 			friendsView.hide();
+			friendsView.removeAllListeners('InputSelect');
 		}
 
 		this.style.visible = tile.node;
