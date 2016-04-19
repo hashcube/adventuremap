@@ -56,6 +56,7 @@ exports = Class(ImageView, function (supr) {
 		this._nodes = opts.nodeSettings.nodes;
 
 		this.canHandleEvents(false);
+		this._tagViews = {};
 	};
 
 	this.update = function (grid, tileX, tileY) {
@@ -106,38 +107,47 @@ exports = Class(ImageView, function (supr) {
 			}
 
 			for (var tag in tile.tags) {
-				if (this._itemCtors[tag]) {
-					var itemView = this._adventureMapView._nodeItems[tag];
-					if (!itemView) {
-						itemView = new this._itemCtors[tag]({
-							superview: this.getSuperview(),
-							adventureMapView: this._adventureMapView,
-							zIndex: 999999999,
-							tag: tag,
-							tile: tile
-						});
-						this._adventureMapView._nodeItems[tag] = itemView;
-					} else {
-						itemView.updateOpts({
-							superview: this.getSuperview(),
-							tile: tile
-						});
-						itemView.removeAllListeners('InputSelect');
+				if (tag === "Friends") {
+					if (!this._tagViews[tag]) {
+					this._tagViews[tag] = this._itemCtors[tag].obtainView({
+						superview: this,
+						ms: tile.id
+					});
 					}
-					itemView.show();
-					itemView.on('InputSelect', bind(this, 'onSelectTag', tag, tile, itemView));
+				} else {
+					if (this._itemCtors[tag]) {
+						var itemView = this._adventureMapView._nodeItems[tag];
+						if (!itemView) {
+							itemView = new this._itemCtors[tag]({
+								superview: this.getSuperview(),
+								adventureMapView: this._adventureMapView,
+								zIndex: 999999999,
+								tag: tag,
+								tile: tile
+							});
+							this._adventureMapView._nodeItems[tag] = itemView;
+						} else {
+							itemView.updateOpts({
+								superview: this.getSuperview(),
+								tile: tile
+							});
+							itemView.removeAllListeners('InputSelect');
+						}
+						itemView.show();
+						itemView.on('InputSelect', bind(this, 'onSelectTag', tag, tile, itemView));
 
-					if (!('centerTag' in this._tileSettings) || this._tileSettings.centerTag) {
-						itemView.style.x = this.style.x + (this.style.width * 0.15);
-						itemView.style.y = this.style.y - (itemView.style.height * 0.3 + this.style.height);
-					} else {
-						itemView.style.x = this.style.x + (this.style.width * 0.15);
-						itemView.style.y = this.style.y - (itemView.style.height * 0.3 + this.style.height);
+						if (!('centerTag' in this._tileSettings) || this._tileSettings.centerTag) {
+							itemView.style.x = this.style.x + (this.style.width * 0.15);
+							itemView.style.y = this.style.y - (itemView.style.height * 0.3 + this.style.height);
+						} else {
+							itemView.style.x = this.style.x + (this.style.width * 0.15);
+							itemView.style.y = this.style.y - (itemView.style.height * 0.3 + this.style.height);
+						}
+						itemView.update && itemView.update(tile);
+
+						hideViews[tag] = null;
+						itemViews[tag] = itemView;
 					}
-					itemView.update && itemView.update(tile);
-
-					hideViews[tag] = null;
-					itemViews[tag] = itemView;
 				}
 			}
 
@@ -190,72 +200,6 @@ exports = Class(ImageView, function (supr) {
 		} else {
 			this._doodadView.style.visible = false;
 		}*/
-
-		var friendsView = this._friendsView;
-		if (tile && tile.friends && tile.friends.views) {
-			var friends = tile.friends,
-				views = friends.views,
-				tileSettings = this._tileSettings,
-				position = friends.position || invert(tile.position) || 'right',
-				left = (position === 'left'),
-				right = (position === 'right'),
-				top = (position === 'top'),
-				bottom = (position === 'bottom'),
-				deltaX = (left ? -1 : (right ? 1 : 0)),
-				deltaY = (top ? -1 : (bottom ? 1 : 0)),
-				// with and height of the container
-				friendsWidth =  (left || right ? friends.width : friends.height),
-				friendsHeight = (left || right ? friends.height : friends.width),
-				// position of the container if it is after the milestone icon
-				// if position is right, then x position should come after the node, on left it should be 0, before the node
-				// otherwise (top and bottom) it should take x value from tile settings.
-				friendsRight = (right && isNaN(parseFloat(friends.x)) && node ? node.width : (left ? 0 : tileSettings.friendsX)),
-				// if position is bottom, then y position should come after the node, on top it should be 0, before the node
-				// otherwise (left and right) it should take y value from tile settings.
-				friendsBottom = (bottom && isNaN(parseFloat(friends.y)) && node ? node.height : (top ? 0 : tileSettings.friendsY)),
-				// position of the container if it is before the milestone icon
-				friendsLeft = (left ? friendsWidth : 0),
-				friendsTop = (top ? friendsHeight : 0),
-				// x and y value for inner views
-				x = (deltaX === -1 ? friendsWidth - tileSettings.friendWidth : 0),
-				y = (deltaY === -1 ? friendsHeight - tileSettings.friendHeight : 0),
-				padding = 25,
-				len = views.length,
-				view, i;
-
-			friendsView = this._friendsView = new View({
-				superview: this.getSuperview()
-			});
-
-			i = len;
-			while (i > 0) {
-				view = views[--i];
-				friendsView.addSubview(view);
-				view.updateOpts({
-					x: x,
-					y: y,
-					zIndex: i
-				});
-				x += (padding * deltaX);
-				y += (padding * deltaY);
-			}
-			friendsView.on('InputSelect', bind(this, 'onSelectFriends', views, deltaX, deltaY));
-
-			friendsView.updateOpts({
-				x: this.style.x + friends.x * tileSettings.tileWidth - friendsLeft + friendsRight,
-				y: this.style.y + friends.y * tileSettings.tileHeight - friendsTop + friendsBottom,
-				r: friends.r,
-				anchorX: (top || bottom ? friendsWidth / 2 : (left ? friendsWidth : 0)),
-				anchorY: (left || right ? friendsHeight / 2 : (top ? friendsHeight : 0)),
-				width: friendsWidth,
-				height: friendsHeight,
-				visible: true
-			});
-		} else if (friendsView) {
-			friendsView.hide();
-			friendsView.removeAllListeners('InputSelect');
-		}
-
 		this.style.visible = tile.node;
 	};
 
@@ -267,45 +211,20 @@ exports = Class(ImageView, function (supr) {
 		this._adventureMapView.emit('ClickNode', tile);
 	};
 
-	this.onSelectFriends = function (views, deltaX, deltaY) {
-		if(this._ongoing) {
-			return;
-		}
-
-		var sub = this._friendsView.getSubviews(),
-			len = sub.length,
-			i = len,
-			tileSettings = this._tileSettings,
-			valueX, valueY, view, x, y;
-
-		this._ongoing = true;
-
-		while (i > 0) {
-			valueX = tileSettings.friendWidth * deltaX * (len - i);
-			valueY = tileSettings.friendHeight * deltaY * (len - i);
-			view = views[--i];
-			x = view.style.x;
-			y = view.style.y;
-
-			animate(view, 'friends')
-				.then({x: x + valueX, y: y + valueY})
-				.then({}, 1000)
-				.then({x: x, y: y})
-				.then(bind(this, function() {
-					this._ongoing = false;
-				}));
-		}
-	};
-
 	this.refreshLoc = function() {
 		this.style.x = this.initial[0];
 		this.style.y = this.initial[1];
 		this._locSet = false;
 	};
 
-	this.onRelease = function () {
+	this.onRelease = function (grid, x ,y) {
+		var tile = grid[y][x];
 		this._idText.hide();
 		this.refreshLoc();
 		this._itemView.removeAllListeners('InputSelect');
+		if ('Friends' in  tile.tags) {
+			this._itemCtors['Friends'].releaseView(this._tagViews['Friends']);
+			this._tagViews = {};
+		}
 	}
 });
