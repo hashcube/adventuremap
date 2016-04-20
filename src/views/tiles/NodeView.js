@@ -112,11 +112,37 @@ exports = Class(ImageView, function (supr) {
 					if (tag === "Friends") {
 						itemView = this._tagViews[tag];
 						if (!itemView) {
+							var position = tile.friends.position || invert(tile.position) || 'right',
+								friends = tile.friends,
+								tileSettings = this._tileSettings,
+								left = (position === 'left'),
+								right = (position === 'right'),
+								top = (position === 'top'),
+								bottom = (position === 'bottom'),
+								deltaX = (left ? -1 : (right ? 1 : 0)),
+								deltaY = (top ? -1 : (bottom ? 1 : 0)),
+								// with and height of the container
+								friendsWidth =  (left || right ? friends.width : friends.height),
+								friendsHeight = (left || right ? friends.height : friends.width),
+								// position of the container if it is after the milestone icon
+								// if position is right, then x position should come after the node, on left it should be 0, before the node
+								// otherwise (top and bottom) it should take x value from tile settings.
+								friendsRight = (right && isNaN(parseFloat(friends.x)) && node ? node.width : (left ? 0 : tileSettings.friendsX)),
+								// if position is bottom, then y position should come after the node, on top it should be 0, before the node
+								// otherwise (left and right) it should take y value from tile settings.
+								friendsBottom = (bottom && isNaN(parseFloat(friends.y)) && node ? node.height : (top ? 0 : tileSettings.friendsY)),
+								// position of the container if it is before the milestone icon
+								friendsLeft = (left ? friendsWidth : 0),
+								friendsTop = (top ? friendsHeight : 0),
+								// x and y value for inner views
+								x = (deltaX === -1 ? friendsWidth - tileSettings.friendWidth : 0),
+								y = (deltaY === -1 ? friendsHeight - tileSettings.friendHeight : 0);
+
 							itemView = this._tagViews[tag] = this._itemCtors[tag].obtainView({
 								superview: this.getSuperview(),
 								ms: tile.id,
-								x: this.style.x,
-								y: this.style.y + this.style.height
+								x: this.style.x + friends.x * tileSettings.tileWidth - friendsLeft + friendsRight,
+								y: this.style.y + friends.y * tileSettings.tileHeight - friendsTop + friendsBottom
 							});
 						}
 					} else {
@@ -225,8 +251,8 @@ exports = Class(ImageView, function (supr) {
 		this._idText.hide();
 		this.refreshLoc();
 		this._itemView.removeAllListeners('InputSelect');
-		if ('Friends' in  tile.tags) {
-			this._itemCtors['Friends'].releaseView(this._tagViews['Friends']);
+		for (tag in tile.tags) {
+			this._tagViews[tag] && this._itemCtors[tag].releaseView(this._tagViews[tag]);
 			this._tagViews = {};
 		}
 	}
