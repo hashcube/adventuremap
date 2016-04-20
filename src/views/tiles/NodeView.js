@@ -106,17 +106,21 @@ exports = Class(ImageView, function (supr) {
 				}
 			}
 
+			var itemView;
 			for (var tag in tile.tags) {
-				if (tag === "Friends") {
-					if (!this._tagViews[tag]) {
-					this._tagViews[tag] = this._itemCtors[tag].obtainView({
-						superview: this,
-						ms: tile.id
-					});
-					}
-				} else {
-					if (this._itemCtors[tag]) {
-						var itemView = this._adventureMapView._nodeItems[tag];
+				if (this._itemCtors[tag]) {
+					if (tag === "Friends") {
+						itemView = this._tagViews[tag];
+						if (!itemView) {
+							itemView = this._tagViews[tag] = this._itemCtors[tag].obtainView({
+								superview: this.getSuperview(),
+								ms: tile.id,
+								x: this.style.x,
+								y: this.style.y + this.style.height
+							});
+						}
+					} else {
+						itemView = this._adventureMapView._nodeItems[tag];
 						if (!itemView) {
 							itemView = new this._itemCtors[tag]({
 								superview: this.getSuperview(),
@@ -136,17 +140,16 @@ exports = Class(ImageView, function (supr) {
 						itemView.show();
 						itemView.on('InputSelect', bind(this, 'onSelectTag', tag, tile, itemView));
 
-						if (!('centerTag' in this._tileSettings) || this._tileSettings.centerTag) {
-							itemView.style.x = this.style.x + (this.style.width * 0.15);
-							itemView.style.y = this.style.y - (itemView.style.height * 0.3 + this.style.height);
-						} else {
-							itemView.style.x = this.style.x + (this.style.width * 0.15);
-							itemView.style.y = this.style.y - (itemView.style.height * 0.3 + this.style.height);
-						}
-						itemView.update && itemView.update(tile);
-
 						hideViews[tag] = null;
 						itemViews[tag] = itemView;
+					if (!('centerTag' in this._tileSettings) || this._tileSettings.centerTag) {
+						itemView.style.x = this.style.x + (this.style.width * 0.15);
+						itemView.style.y = this.style.y - (itemView.style.height * 0.3 + this.style.height);
+					} else {
+						itemView.style.x = this.style.x + (this.style.width * 0.15);
+						itemView.style.y = this.style.y - (itemView.style.height * 0.3 + this.style.height);
+					}
+						itemView.update && itemView.update(tile);
 					}
 				}
 			}
@@ -217,7 +220,7 @@ exports = Class(ImageView, function (supr) {
 		this._locSet = false;
 	};
 
-	this.onRelease = function (grid, x ,y) {
+	this.onRelease = function (grid, x, y) {
 		var tile = grid[y][x];
 		this._idText.hide();
 		this.refreshLoc();
