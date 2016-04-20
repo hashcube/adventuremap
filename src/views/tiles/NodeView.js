@@ -251,9 +251,10 @@ exports = Class(ImageView, function (supr) {
 		this._idText.hide();
 		this.refreshLoc();
 		this._itemView.removeAllListeners('InputSelect');
+
 		for (tag in tile.tags) {
 			this._tagViews[tag] && this._itemCtors[tag].releaseView(this._tagViews[tag]);
-			this._tagViews = {};
 		}
+		this._tagViews = {};
 	}
 });
