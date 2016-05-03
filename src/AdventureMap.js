@@ -3,6 +3,7 @@ import event.Emitter as Emitter;
 import .models.AdventureMapModel as AdventureMapModel;
 
 import .views.AdventureMapView as AdventureMapView;
+import .views.editor.Editor as Editor;
 
 exports = Class(Emitter, function (supr) {
 	this.init = function (opts) {
@@ -27,6 +28,22 @@ exports = Class(Emitter, function (supr) {
 		opts.map = this._model.getMap();
 
 		this._adventureMapView = new AdventureMapView(opts, this._model);
+
+		if (opts.editMode) {
+			new Editor({
+				superview: opts.superview,
+				x: 0,
+				y: 0,
+				tileSettings: opts.tileSettings,
+				gridSettings: opts.gridSettings,
+				nodeSettings: opts.nodeSettings,
+				pathSettings: opts.pathSettings,
+				width: opts.width,
+				height: opts.height,
+				adventureMap: this
+			});
+		}
+
 		this._pinchSet = 0;
 		this._pinchUp = 0;
 		this._pinchReset = 0;
