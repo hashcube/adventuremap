@@ -28,6 +28,7 @@ exports = Class(ImageView, function (supr) {
 
 		this._tileX = 0;
 		this._tileY = 0;
+		this.initial = [0, 0];
 
 		this._editMode = opts.editMode;
 
