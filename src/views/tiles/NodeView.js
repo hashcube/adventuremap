@@ -57,7 +57,6 @@ exports = Class(ImageView, function (supr) {
 		this._nodes = opts.nodeSettings.nodes;
 
 		this.canHandleEvents(false);
-		this._tagViews = {};
 	};
 
 	this.update = function (grid, tileX, tileY) {
@@ -92,26 +91,26 @@ exports = Class(ImageView, function (supr) {
 			style.visible = true;
 			this._itemView.setImage(node.image);
 
-			this._hideViews = {};
 			var itemViews = tile.itemViews;
 			if (!itemViews) {
 				itemViews = {};
 				tile.itemViews = itemViews;
 			}
 
-			var hideViews = this._hideViews;
+			var hideViews = {};
 			for (var tag in itemViews) {
 				var itemView = itemViews[tag];
 				if (itemView.style.visible) {
 					hideViews[tag] = itemView;
 				}
-			}
+			};
 
 			var itemView;
 			for (var tag in tile.tags) {
+				hideViews[tag] = null;
 				if (this._itemCtors[tag]) {
 					if (tag === "Friends") {
-						itemView = this._tagViews[tag];
+						itemView = tile.itemViews[tag];
 						if (!itemView) {
 							var position = tile.friends.position || invert(tile.position) || 'right',
 								friends = tile.friends,
@@ -139,7 +138,7 @@ exports = Class(ImageView, function (supr) {
 								x = (deltaX === -1 ? friendsWidth - tileSettings.friendWidth : 0),
 								y = (deltaY === -1 ? friendsHeight - tileSettings.friendHeight : 0);
 
-							itemView = this._tagViews[tag] = this._itemCtors[tag].obtainView({
+							itemView = itemViews[tag] = this._itemCtors[tag].obtainView({
 								superview: this.getSuperview(),
 								ms: tile.id,
 								x: this.style.x + friends.x * tileSettings.tileWidth - friendsLeft + friendsRight,
@@ -167,15 +166,14 @@ exports = Class(ImageView, function (supr) {
 						itemView.show();
 						itemView.on('InputSelect', bind(this, 'onSelectTag', tag, tile, itemView));
 
-						hideViews[tag] = null;
 						itemViews[tag] = itemView;
-					if (!('centerTag' in this._tileSettings) || this._tileSettings.centerTag) {
-						itemView.style.x = this.style.x + (this.style.width * 0.15);
-						itemView.style.y = this.style.y - (itemView.style.height * 0.3 + this.style.height);
-					} else {
-						itemView.style.x = this.style.x + (this.style.width * 0.15);
-						itemView.style.y = this.style.y - (itemView.style.height * 0.3 + this.style.height);
-					}
+						if (!('centerTag' in this._tileSettings) || this._tileSettings.centerTag) {
+							itemView.style.x = this.style.x + (this.style.width * 0.15);
+							itemView.style.y = this.style.y - (itemView.style.height * 0.3 + this.style.height);
+						} else {
+							itemView.style.x = this.style.x + (this.style.width * 0.15);
+							itemView.style.y = this.style.y - (itemView.style.height * 0.3 + this.style.height);
+						}
 						itemView.update && itemView.update(tile);
 					}
 				}
@@ -183,7 +181,11 @@ exports = Class(ImageView, function (supr) {
 
 			for (var tag in hideViews) {
 				if (hideViews[tag]) {
-					itemViews[tag].removeFromSuperview();
+					if (hideViews[tag]._obtainedFromPool) {
+						this._itemCtors[tag].releaseView(itemViews[tag]);
+					} else {
+						itemViews[tag].removeFromSuperview();
+					}
 					delete itemViews[tag];
 				}
 			}
@@ -254,8 +256,10 @@ exports = Class(ImageView, function (supr) {
 		this._itemView.removeAllListeners('InputSelect');
 
 		for (tag in tile.tags) {
-			this._tagViews[tag] && this._itemCtors[tag].releaseView(this._tagViews[tag]);
+			if (tile.itemViews[tag] && tile.itemViews[tag]._obtainedFromPool) {
+				this._itemCtors[tag].releaseView(tile.itemViews[tag])
+			}
+			delete tile.itemViews[tag];
 		}
-		this._tagViews = {};
 	}
 });
