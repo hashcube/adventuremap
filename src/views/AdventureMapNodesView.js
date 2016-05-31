@@ -60,7 +60,7 @@ exports = Class(AdventureMapLayerView, function (supr) {
 
   this.release = function (x, y) {
     if (this._views[y] && this._views[y][x]) {
-      this._views[y][x].onRelease(this._grid, x, y);
+      this._views[y][x].onReleaseNode(this._grid, x, y);
       this._pool.releaseView(this._views[y][x]);
       this._views[y][x] = null;
     }
