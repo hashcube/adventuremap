@@ -249,7 +249,7 @@ exports = Class(ImageView, function (supr) {
 		this._locSet = false;
 	};
 
-	this.onRelease = function (grid, x, y) {
+	this.onReleaseNode = function (grid, x, y) {
 		var tile = grid[y][x];
 		this._idText.hide();
 		this.refreshLoc();
