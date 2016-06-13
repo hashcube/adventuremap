@@ -42,8 +42,12 @@ _.each(map_config.maps, function (data, map_name) {
 
       ms_tile = current_tile + ms_data.map;
       ms_obj.map = ms_tile;
-      ms_obj.x = ms_data.x;
-      ms_obj.y = ms_data.y;
+      if (ms_data.x) {
+        ms_obj.x = ms_data.x;
+      }
+      if (ms_data.y) {
+        ms_obj.y = ms_data.y;
+      }
 
       map_data.grid[Math.floor(ms_tile / 10)][ms_tile % 10] = ms_obj;
       current_ms++;
