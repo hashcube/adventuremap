@@ -1,6 +1,8 @@
 {
   "width": 10,
-  "height": 577,
+  "height": 243,
+  "tileWidth": 64,
+  "tileHeight": 100,
   "comingsoon": {
     "length": 5
   },
@@ -15,18 +17,6 @@
     "map2": {
       "length": 20,
       "repeat": 6
-    },
-    "map3": {
-      "length": 20,
-      "repeat": 6
-    },
-    "map4": {
-      "length": 20,
-      "repeat": 6
-    },
-    "map5": {
-      "length": 20,
-      "repeat": 4
     }
   }
 }

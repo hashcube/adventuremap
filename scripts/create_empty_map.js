@@ -9,7 +9,7 @@ var map_config = require('./map_config.json'),
   tileWidth = map_config.tileWidth,
   tileHeight = map_config.tileHeight,
   grid = [],
-  writable = fs.createWriteStream('./maps/map_empty.json'),
+  writable = fs.createWriteStream('./maps/map_empty.js'),
   i = 0,
   j = 0,
   row_data = [];
@@ -33,5 +33,5 @@ map_data = {
   tileHeight: tileHeight,
   grid: grid
 };
-writable.write(JSON.stringify(map_data, null, 2));
+writable.write('exports = ' + JSON.stringify(map_data, null, 2) + ';');
 writable.end();
