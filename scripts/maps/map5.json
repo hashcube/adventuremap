@@ -1,0 +1,116 @@
+{
+  "10": {
+    "friends": {
+        "position": "bottom"
+    },
+    "node":1,
+    "tags":{
+      "milestone":true
+    },
+    "x":0.6,
+    "y":0.9,
+    "map":4
+  },
+  "9": {
+    "friends": {
+        "position": "bottom"
+    },
+    "node":1,
+    "tags":{
+      "milestone":true
+    },
+    "x":0.7,
+    "y":0.6,
+    "map":25
+  },
+  "8": {
+    "friends": {
+        "position": "bottom"
+    },
+    "node":1,
+    "tags":{
+      "milestone":true
+    },
+    "x":0.6,
+    "y":0.9,
+    "map":44
+  },
+  "7": {
+    "friends": {
+        "position": "bottom"
+    },
+    "node":1,
+    "tags":{
+      "milestone":true
+    },
+    "map":66
+  },
+  "6": {
+    "friends": {
+        "position": "bottom"
+    },
+    "node":1,
+    "tags":{
+      "milestone":true
+    },
+    "y":0.1,
+    "map":85
+  },
+  "5": {
+    "friends": {
+        "position": "bottom"
+    },
+    "node":1,
+    "tags":{
+      "milestone":true
+    },
+    "x":0.1,
+    "y":0.3,
+    "map":104
+  },
+  "4": {
+    "friends": {
+        "position": "bottom"
+    },
+    "node":1,
+    "tags":{
+      "milestone":true
+    },
+    "x":0.6,
+    "map":123
+  },
+  "3": {
+    "friends": {
+        "position": "bottom"
+    },
+    "node":1,
+    "tags":{
+      "milestone":true
+    },
+    "map":145
+  },
+  "2": {
+    "friends": {
+        "position": "bottom"
+    },
+    "node":1,
+    "tags":{
+      "milestone":true
+    },
+    "x":0.9,
+    "y":0.8,
+    "map":164
+  },
+  "1": {
+    "friends": {
+        "position": "bottom"
+    },
+    "node":1,
+    "tags":{
+      "milestone":true
+    },
+    "x":0.4,
+    "y":0.4,
+    "map":195
+  }
+}

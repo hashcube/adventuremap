@@ -1,0 +1,119 @@
+{
+  "10": {
+    "friends": {
+        "position": "bottom"
+    },
+    "x":0.3,
+    "y":1,
+    "node":1,
+    "tags":{
+      "milestone":true
+    },
+    "map":6
+  },
+  "9": {
+    "friends": {
+        "position": "bottom"
+    },
+    "x":0.3,
+    "y":0.7,
+    "node":1,
+    "tags":{
+      "milestone":true
+    },
+    "map":24
+  },
+  "8": {
+    "friends": {
+        "position": "bottom"
+    },
+    "x":0.7,
+    "y":0.7,
+    "node":1,
+    "tags":{
+      "milestone":true
+    },
+    "map":46
+  },
+  "7": {
+    "friends": {
+        "position": "bottom"
+    },
+    "x":0.3,
+    "node":1,
+    "tags":{
+      "milestone":true
+    },
+    "map":64
+  },
+  "6" :{
+    "friends": {
+        "position": "bottom"
+    },
+    "node":1,
+    "tags":{
+      "milestone":true
+    },
+    "map":85
+  },
+  "5": {
+    "friends": {
+        "position": "bottom"
+    },
+    "x":0.6,
+    "y":0.1,
+    "node":1,
+    "tags":{
+      "milestone":true
+    },
+    "map":103
+  },
+  "4": {
+    "friends": {
+        "position": "bottom"
+    },
+    "x":0.4,
+    "y":0.4,
+    "node":1,
+    "tags":{
+      "milestone":true
+    },
+    "map":116
+  },
+  "3": {
+    "friends": {
+        "position": "bottom"
+    },
+    "x":0.3,
+    "y":0.9,
+    "node":1,
+    "tags":{
+      "milestone":true
+    },
+    "map":134
+  },
+  "2": {
+    "friends": {
+        "position": "bottom"
+    },
+    "x":0.2,
+    "y":0.2,
+    "node":1,
+    "tags":{
+      "milestone":true
+    },
+    "map":167
+  },
+  "1": {
+    "friends": {
+        "position": "bottom"
+    },
+    "x":0.8,
+    "y":0.6,
+    "node":1,
+    "tags":{
+      "milestone":true
+    },
+    "map":184
+  }
+}
