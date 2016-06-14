@@ -1,11 +1,11 @@
 /* jshint node:true */
 "use strict";
 
-var map_config = require('./map_config.json'),
+var ms_tile, lower_range, width, height,
+  bridge_length, current_tile, map_config,
+  exec = require('child_process').exec,
   fs = require('fs'),
   _ = require('underscore'),
-  width = map_config.width,
-  height = map_config.height,
   grid = [],
   tile_config = [],
   jsio = require('jsio'),
@@ -15,17 +15,55 @@ var map_config = require('./map_config.json'),
   row_data = [],
   current_ms = 1,
   bridge_count = 0,
-  bridge_length = map_config.bridge.length,
-  initial_tile,
-  ms_tile,
-  lower_range,
-  current_tile = height * width;
+  create_map_group = function (i, loop_data, length) {
+    current_tile = current_tile - (length * width);
+
+    _.each(loop_data, function (row) {
+      return _.each(row, function (tile) {
+        return check_object(tile);
+      });
+    });
+  },
+  check_object = function (tile) {
+    var ms_obj = {
+      node: '1',
+      'friends': {
+        'position': 'bottom'
+      },
+      'tags':{
+        'milestone': true
+      }
+    };
+
+    if (_.isObject(tile)) {
+      ms_tile = current_tile + tile.map;
+      ms_obj.map = ms_tile;
+      ms_obj.id = current_ms;
+      map_data.grid[Math.floor(ms_tile / width)][ms_tile % width] = ms_obj;
+      current_ms++;
+      if (tile.x) {
+        ms_obj.x = tile.x;
+      }
+      if (tile.y) {
+        ms_obj.y = tile.y;
+      }
+
+      return ms_obj;
+    } else {
+      return tile + current_tile;
+    }
+  };
+
+// Setup empty map
+exec('node create_empty_map.js');
+
+map_config = require('./map_config.json');
+width = map_config.width,
+height = map_config.height,
+bridge_length = map_config.bridge.length;
+current_tile = height * width;
 
 jsio('import .maps.map_empty as map_data');
-
-if (!map_data) {
-  process.exit(1)
-}
 
 tile_config.push({
   range: [0, 4],
@@ -37,65 +75,18 @@ _.each(map_config.maps, function (data, num) {
     map_loc = './maps/' + map_name,
     file_data = require(map_loc),
     loop_data = file_data.grid,
-    i = 0,
-    ms_count = 0,
     milestones = {},
     map_writable = fs.createWriteStream(map_loc + '.json');
 
   map_writable.write(JSON.stringify(file_data, null, 2));
   map_writable.end();
 
-  do {
-    current_tile = initial_tile = current_tile - (data.length * width);
-
-    _.each(loop_data, function (row_data) {
-      _.each(row_data, function (cell_data) {
-        if (!_.isNumber(cell_data)) {
-          ms_count++;
-        }
-      });
-    });
-
-    _.each(loop_data, function (row_data) {
-      _.each(row_data, function (cell_data) {
-        if (!_.isNumber(cell_data)) {
-          milestones[ms_count] = cell_data;
-          ms_count--;
-        }
-      });
-    });
-
-    _.each(milestones, function (ms_data, ms) {
-      var ms_obj = {
-          node: '1',
-          'friends': {
-            'position': 'bottom'
-          },
-          'tags':{
-            'milestone': true
-          }
-        };
-
-      ms_tile = current_tile + ms_data.map;
-      ms_obj.map = ms_tile;
-      ms_obj.id = current_ms;
-      if (ms_data.x) {
-        ms_obj.x = ms_data.x;
-      }
-      if (ms_data.y) {
-        ms_obj.y = ms_data.y;
-      }
-
-      map_data.grid[Math.floor(ms_tile / width)][ms_tile % width] = ms_obj;
-      current_ms++;
-    });
-    i++;
-
-    current_tile = initial_tile;
-  } while (i < data.repeat)
+  _.times(data.repeat, function (i) {
+    create_map_group(i, loop_data, data.length);
+  });
 
   // For map tile config
-  lower_range = Math.floor(initial_tile / width);
+  lower_range = Math.floor(current_tile / width);
   tile_config.splice(1, 0, {
     range: [lower_range, lower_range + data.length * data.repeat - 1],
     folder: map_name,
@@ -115,6 +106,5 @@ _.each(map_config.maps, function (data, num) {
 
 // Remove last bridge
 tile_config.splice(1, 1);
-console.log(tile_config);
 writable.write('exports = ' + JSON.stringify(map_data, null, 2));
 writable.end();
