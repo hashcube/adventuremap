@@ -14,7 +14,7 @@ var map_config = require('./map_config.json'),
   row_data = [],
   current_ms = 1,
   initial_tile,
-  current_tile = height * 10;
+  current_tile = height * width;
 
 jsio('import .maps.map_empty as map_data');
 
@@ -29,7 +29,7 @@ _.each(map_config.maps, function (data, map_name) {
     milestones = {};
 
   do {
-    current_tile = initial_tile = current_tile - (data.length * 10);
+    current_tile = initial_tile = current_tile - (data.length * width);
 
     _.each(loop_data, function (row_data) {
       _.each(row_data, function (cell_data) {
@@ -71,7 +71,7 @@ _.each(map_config.maps, function (data, map_name) {
         ms_obj.y = ms_data.y;
       }
 
-      map_data.grid[Math.floor(ms_tile / 10)][ms_tile % 10] = ms_obj;
+      map_data.grid[Math.floor(ms_tile / width)][ms_tile % width] = ms_obj;
       current_ms++;
     });
     i++;
@@ -79,7 +79,7 @@ _.each(map_config.maps, function (data, map_name) {
     current_tile = initial_tile;
   } while (i < data.repeat)
 
-  current_tile = current_tile - (map_config.bridge.length * 10);
+  current_tile = current_tile - (map_config.bridge.length * width);
 });
 
 writable.write('exports = ' + JSON.stringify(map_data, null, 2));
