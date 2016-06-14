@@ -1,6 +1,6 @@
 {
   "width": 10,
-  "height": 243,
+  "height": 577,
   "tileWidth": 64,
   "tileHeight": 100,
   "comingsoon": {
@@ -9,14 +9,26 @@
   "bridge": {
     "length": 3
   },
-  "maps": {
-    "map1": {
+  "maps": [
+    {
       "length": 20,
       "repeat": 6
     },
-    "map2": {
+    {
       "length": 20,
       "repeat": 6
+    },
+    {
+      "length": 20,
+      "repeat": 6
+    },
+    {
+      "length": 20,
+      "repeat": 6
+    },
+    {
+      "length": 20,
+      "repeat": 4
     }
-  }
+  ]
 }

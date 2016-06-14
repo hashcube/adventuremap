@@ -7,13 +7,18 @@ var map_config = require('./map_config.json'),
   width = map_config.width,
   height = map_config.height,
   grid = [],
+  tile_config = [],
   jsio = require('jsio'),
   writable = fs.createWriteStream('./maps/final_map.json'),
   i = 0,
   j = 0,
   row_data = [],
   current_ms = 1,
+  bridge_count = 0,
+  bridge_length = map_config.bridge.length,
   initial_tile,
+  ms_tile,
+  lower_range,
   current_tile = height * width;
 
 jsio('import .maps.map_empty as map_data');
@@ -22,11 +27,23 @@ if (!map_data) {
   process.exit(1)
 }
 
-_.each(map_config.maps, function (data, map_name) {
-  var loop_data = require('./maps/' + map_name).grid,
+tile_config.push({
+  range: [0, 4],
+  folder: 'comingsoon'
+})
+
+_.each(map_config.maps, function (data, num) {
+  var map_name = 'map' + (num + 1),
+    map_loc = './maps/' + map_name,
+    file_data = require(map_loc),
+    loop_data = file_data.grid,
     i = 0,
     ms_count = 0,
-    milestones = {};
+    milestones = {},
+    map_writable = fs.createWriteStream(map_loc + '.json');
+
+  map_writable.write(JSON.stringify(file_data, null, 2));
+  map_writable.end();
 
   do {
     current_tile = initial_tile = current_tile - (data.length * width);
@@ -57,9 +74,7 @@ _.each(map_config.maps, function (data, map_name) {
           'tags':{
             'milestone': true
           }
-        },
-        ms_tile;
-
+        };
 
       ms_tile = current_tile + ms_data.map;
       ms_obj.map = ms_tile;
@@ -79,8 +94,27 @@ _.each(map_config.maps, function (data, map_name) {
     current_tile = initial_tile;
   } while (i < data.repeat)
 
-  current_tile = current_tile - (map_config.bridge.length * width);
+  // For map tile config
+  lower_range = Math.floor(initial_tile / width);
+  tile_config.splice(1, 0, {
+    range: [lower_range, lower_range + data.length * data.repeat - 1],
+    folder: map_name,
+    length: data.length
+  });
+
+  // For bridge tile config
+  lower_range--;
+  current_tile = current_tile - (bridge_length * width);
+  bridge_count++;
+  tile_config.splice(1, 0, {
+    range: [lower_range - bridge_length + 1, lower_range],
+    folder: 'bridge' + bridge_count,
+    length: bridge_length
+  });
 });
 
+// Remove last bridge
+tile_config.splice(1, 1);
+console.log(tile_config);
 writable.write('exports = ' + JSON.stringify(map_data, null, 2));
 writable.end();
