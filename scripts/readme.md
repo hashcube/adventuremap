@@ -5,9 +5,7 @@ To modify node positions:
 
   3. Position the milestones and copy the export to a json file in scripts/maps for the selected map.
 
-  4. Run create empty map with out any param
-
-  5. Run duplicate map.
+  4. Run duplicate map.
 
 
 To add a map:

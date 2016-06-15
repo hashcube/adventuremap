@@ -34,7 +34,7 @@ if(!map_id) {
 _.times(height, function (i) {
   row_data = [];
   _.times(width, function (j) {
-        row_data.push(i * 10 + j);
+        row_data.push(i * width + j);
   });
   grid.push(row_data);
 });
