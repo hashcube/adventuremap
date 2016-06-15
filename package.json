@@ -8,6 +8,10 @@
     "extensions": {
       "build": "build"
     }
+  },
+  "devDependencies": {
+    "fs": "0.0.2",
+    "jsio": "^2.2.4",
+    "underscore": "^1.8.3"
   }
 }
-
