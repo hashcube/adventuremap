@@ -18,11 +18,11 @@ var ms_tile, lower_range, width, height,
   create_map_group = function (i, loop_data, length) {
     current_tile = current_tile - (length * width);
 
-    _.each(loop_data, function (row) {
-      return _.each(row, function (tile) {
+    for (var j = loop_data.length; j-- > 0;) {
+      _.each(loop_data[j], function (tile) {
         return check_object(tile);
       });
-    });
+    }
   },
   check_object = function (tile) {
     var ms_obj = {
