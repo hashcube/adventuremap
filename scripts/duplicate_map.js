@@ -13,7 +13,7 @@ var ms_tile, lower_range, width, height,
   final_map = process.argv[3] ? process.argv[3] :
     path.join(__dirname, 'maps/final_map.js'),
   empty_map_path = path.join(__dirname, 'create_empty_map.js'),
-  map_config_path = process.argv[4] ? process.argv[4] :
+  map_config_path = process.argv[4] ? path.join(process.cwd(), process.argv[4]) :
     path.join(__dirname, 'map_config.json'),
   writable = fs.createWriteStream(final_map),
   i = 0,
