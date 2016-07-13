@@ -1,7 +1,10 @@
 /* jshint node:true */
 "use strict";
 
-var map_config = require('./map_config.json'),
+var path = require('path'),
+  map_config_path = process.argv[4] ? process.argv[4] :
+    path.join(__dirname, 'map_config.json'),
+  map_config = require(map_config_path),
   fs = require('fs'),
   _ = require('underscore'),
   map_data = {},
@@ -10,7 +13,9 @@ var map_config = require('./map_config.json'),
   tileWidth = map_config.tileWidth,
   tileHeight = map_config.tileHeight,
   grid = [],
-  writable = fs.createWriteStream('./maps/map_empty.js'),
+  map_empty_path = process.argv[3] ? process.argv[3] :
+    path.join(__dirname, 'maps/map_empty.js'),
+  writable = fs.createWriteStream(map_empty_path),
   row_data = [],
   height = 0,
   writ_config;
@@ -24,7 +29,7 @@ if(!map_id) {
   height += map_config.bridge.length * (map_config.maps.length - 1);
 
   map_config.height = height;
-  writ_config = fs.createWriteStream('./map_config.json'),
+  writ_config = fs.createWriteStream(map_config_path),
   writ_config.write(JSON.stringify(map_config, null, 2))
   writ_config.end();
 } else {

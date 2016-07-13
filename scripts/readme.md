@@ -16,3 +16,17 @@ To add a map:
   3. Run create empty map with the correct height and width for the overall map
 
   4. Run duplicate map after setting the correct values again in map_config.
+
+
+Parameters:
+
+create_empty_map <1> <2> <3>
+  <1> optional map id (for specific map data reading)
+  <2> location to dump map_empty file. default: adventuremap/scripts/maps/map_empty.js
+  <3> location to map export config. default: adventuremap/scripts/map_config.json
+
+duplicate_map <1> <2> <3>
+  <1> folder location to read map files. default: adventuremap/scripts/maps/
+  <2> name of the file to dump the computed map, if empty will dump
+    at adventuremap/scripts/maps/final_map.js
+  <3> location to map export config. default: adventuremap/scripts/map_config.json
