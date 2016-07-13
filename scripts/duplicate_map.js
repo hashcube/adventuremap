@@ -4,12 +4,18 @@
 var ms_tile, lower_range, width, height,
   bridge_length, current_tile, map_config,
   exec = require('child_process').exec,
+  path = require('path'),
   fs = require('fs'),
   _ = require('underscore'),
   grid = [],
   tile_config = [],
   jsio = require('jsio'),
-  writable = fs.createWriteStream('./maps/final_map.json'),
+  final_map = process.argv[3] ? process.argv[3] :
+    path.join(__dirname, 'maps/final_map.js'),
+  empty_map_path = path.join(__dirname, 'create_empty_map.js'),
+  map_config_path = process.argv[4] ? process.argv[4] :
+    path.join(__dirname, 'map_config.json'),
+  writable = fs.createWriteStream(final_map),
   i = 0,
   j = 0,
   row_data = [],
@@ -52,18 +58,20 @@ var ms_tile, lower_range, width, height,
     } else {
       return tile + current_tile;
     }
-  };
+  },
+  map_data_path = path.join(__dirname, 'maps/map_empty');
 
 // Setup empty map
-exec('node create_empty_map.js');
+exec('node ' + empty_map_path).stdout.pipe(process.stdout);
 
-map_config = require('./map_config.json');
+map_config = require(map_config_path);
 width = map_config.width,
 height = map_config.height,
 bridge_length = map_config.bridge.length;
 current_tile = height * width;
 
-jsio('import .maps.map_empty as map_data');
+jsio.path.add('../');
+jsio('import adventuremap.scripts.maps.map_empty as map_data');
 
 tile_config.push({
   range: [0, 4],
@@ -72,7 +80,7 @@ tile_config.push({
 
 _.each(map_config.maps, function (data, num) {
   var map_name = 'map' + (num + 1),
-    map_loc = './maps/' + map_name,
+    map_loc = path.join(process.cwd(), process.argv[2]) + '/' + map_name,
     file_data = require(map_loc),
     loop_data = file_data.grid,
     milestones = {},
@@ -106,5 +114,5 @@ _.each(map_config.maps, function (data, num) {
 
 // Remove last bridge
 tile_config.splice(1, 1);
-writable.write('exports = ' + JSON.stringify(map_data, null, 2));
+writable.write('exports = ' + JSON.stringify(map_data, null, 2) + ';');
 writable.end();
