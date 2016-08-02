@@ -15,13 +15,14 @@ var ms_tile, lower_range, width, height,
   empty_map_path = path.join(__dirname, 'create_empty_map.js'),
   map_config_path = process.argv[4] ? path.join(process.cwd(), process.argv[4]) :
     path.join(__dirname, 'map_config.json'),
+  tile_writable = fs.createWriteStream('maps/tile_config.json'),
   writable = fs.createWriteStream(final_map),
   i = 0,
   j = 0,
   row_data = [],
   current_ms = 1,
   bridge_count = 0,
-  create_map_group = function (i, loop_data, length) {
+  create_map_group = function (loop_data, length) {
     current_tile = current_tile - (length * width);
 
     for (var j = loop_data.length; j-- > 0;) {
@@ -47,19 +48,18 @@ var ms_tile, lower_range, width, height,
       ms_obj.id = current_ms;
       map_data.grid[Math.floor(ms_tile / width)][ms_tile % width] = ms_obj;
       current_ms++;
-      if (tile.x) {
+      if (tile.x || tile.x === 0) {
         ms_obj.x = tile.x;
       }
-      if (tile.y) {
+      if (tile.y || tile.y === 0) {
         ms_obj.y = tile.y;
       }
-
       return ms_obj;
     } else {
       return tile + current_tile;
     }
   },
-  map_data_path = path.join(__dirname, 'maps/map_empty');
+  map_data_path = 'maps/map_empty';
 
 // Setup empty map
 exec('node ' + empty_map_path).stdout.pipe(process.stdout);
@@ -71,7 +71,7 @@ bridge_length = map_config.bridge.length;
 current_tile = height * width;
 
 jsio.path.add('../');
-jsio('import adventuremap.scripts.maps.map_empty as map_data');
+jsio('import scripts.maps.map_empty as map_data');
 
 tile_config.push({
   range: [0, 4],
@@ -83,14 +83,10 @@ _.each(map_config.maps, function (data, num) {
     map_loc = path.join(process.cwd(), process.argv[2]) + '/' + map_name,
     file_data = require(map_loc),
     loop_data = file_data.grid,
-    milestones = {},
-    map_writable = fs.createWriteStream(map_loc + '.json');
+    milestones = {};
 
-  map_writable.write(JSON.stringify(file_data, null, 2));
-  map_writable.end();
-
-  _.times(data.repeat, function (i) {
-    create_map_group(i, loop_data, data.length);
+  _.times(data.repeat, function () {
+    create_map_group(loop_data, data.length);
   });
 
   // For map tile config
@@ -114,5 +110,8 @@ _.each(map_config.maps, function (data, num) {
 
 // Remove last bridge
 tile_config.splice(1, 1);
+console.log(tile_config);
+tile_writable.write(JSON.stringify(tile_config, null, 2));
+tile_writable.end();
 writable.write('exports = ' + JSON.stringify(map_data, null, 2) + ';');
 writable.end();
