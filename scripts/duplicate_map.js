@@ -15,7 +15,7 @@ var ms_tile, lower_range, width, height,
   empty_map_path = path.join(__dirname, 'create_empty_map.js'),
   map_config_path = process.argv[4] ? path.join(process.cwd(), process.argv[4]) :
     path.join(__dirname, 'map_config.json'),
-  tile_writable = fs.createWriteStream('maps/tile_config.json'),
+  tile_writable = fs.createWriteStream(path.join(process.cwd(), process.argv[2]) + '/tile_config.json'),
   writable = fs.createWriteStream(final_map),
   i = 0,
   j = 0,
