@@ -23,15 +23,32 @@ var ms_tile, lower_range, width, height,
   current_ms = 1,
   bridge_count = 0,
   create_map_group = function (loop_data, length) {
+    var tiles = [],
+      ms_tile;
+
     current_tile = current_tile - (length * width);
 
     for (var j = loop_data.length; j-- > 0;) {
+      tiles = [];
+
       _.each(loop_data[j], function (tile) {
-        return check_object(tile);
+        if (_.isObject(tile)) {
+          tiles.push(tile);
+        } else {
+          ms_tile = tile + current_tile;
+          map_data.grid[Math.floor(ms_tile / width)][ms_tile % width] = ms_tile;
+        }
+      });
+
+      _.sortBy(tiles, 'y');
+      tiles.reverse();
+
+      _.each(tiles, function (tile) {
+        create_object(tile);
       });
     }
   },
-  check_object = function (tile) {
+  create_object = function (tile) {
     var ms_obj = {
       node: '1',
       'friends': {
@@ -55,8 +72,6 @@ var ms_tile, lower_range, width, height,
         ms_obj.y = tile.y;
       }
       return ms_obj;
-    } else {
-      return tile + current_tile;
     }
   },
   map_data_path = 'maps/map_empty';
