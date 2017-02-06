@@ -190,7 +190,7 @@ exports = Class(ImageView, function (supr) {
 				}
 			}
 
-			if (tile.id && node.characterSettings && tile.tags && !tile.tags.locked) {
+			if (tile.id && node.characterSettings && tile.tags) {
 				this._idText.updateOpts({
 					x: node.characterSettings.x || 0,
 					y: node.characterSettings.y || 0,
