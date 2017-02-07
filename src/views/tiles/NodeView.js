@@ -60,6 +60,8 @@ exports = Class(ImageView, function (supr) {
 	};
 
 	this.update = function (grid, tileX, tileY) {
+		var itemView, tag;
+
 		this._tileX = tileX;
 		this._tileY = tileY;
 
@@ -98,15 +100,14 @@ exports = Class(ImageView, function (supr) {
 			}
 
 			var hideViews = {};
-			for (var tag in itemViews) {
-				var itemView = itemViews[tag];
+			for (tag in itemViews) {
+				itemView = itemViews[tag];
 				if (itemView.style.visible) {
 					hideViews[tag] = itemView;
 				}
-			};
+			}
 
-			var itemView;
-			for (var tag in tile.tags) {
+			for (tag in tile.tags) {
 				hideViews[tag] = null;
 				if (this._itemCtors[tag]) {
 					if (tag === "Friends") {
