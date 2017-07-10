@@ -62,7 +62,6 @@ var ms_tile, lower_range, width, height,
 
             row = Math.floor(ms_tile / width);
             col = ms_tile % width;
-            console.log(tile_value, j, k, l , row, col, orig_map_data.grid[row])
             map_data.grid[row][col] = orig_map_data.grid[row - row_difference][col];
             tile_value++;
         };
