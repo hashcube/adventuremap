@@ -1,6 +1,3 @@
-import ui.View as View;
-import ui.resource.Image as Image;
-
 import .tiles.PathView as PathView;
 import .AdventureMapLayerView;
 
