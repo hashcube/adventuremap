@@ -1,6 +1,4 @@
-import ui.View as View;
 import ui.ViewPool as ViewPool;
-import ui.resource.Image as Image;
 
 import .tiles.NodeView as NodeView;
 import .AdventureMapLayerView;

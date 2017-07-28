@@ -19,7 +19,7 @@ exports = Class(ScrollView, function (supr) {
 	var v_slider_head = 20;
 	var v_slider_tail = 0;
 
-	var v_head = 20 + v_padding*2;
+	var v_head = 20 + v_padding * 2;
 	var v_tail = 0;
 	var h_head = 20 + h_padding*2;
 	var h_tail = 0;
@@ -49,7 +49,6 @@ exports = Class(ScrollView, function (supr) {
 			v_head = height;
 			v_padding = 0;
 		}
-
 		/*	By setting v_slider values to height we are moving the scroller to
 			bottom corner, Horizontal sliders are already at left, so the map
 			start rendering from bottom-left corner
@@ -119,6 +118,7 @@ exports = Class(ScrollView, function (supr) {
 		});
 
 		// Scrolled to the bottom initally
+		// TODO: Needed ?
 		this._contentView.updateOpts({
 			y: -this.getStyleBounds().maxY,
 		});
@@ -370,8 +370,8 @@ exports = Class(ScrollView, function (supr) {
 			tileWidth = this._tileSettings.tileWidth,
 			tileHeight = this._tileSettings.tileHeight;
 		return {
-			x: pos.x + tileWidth*scale*(node.x-1),
-			y: pos.y + tileHeight*scale*(node.y-1)
+			x: pos.x + tileWidth * scale * (node.x - 1),
+			y: pos.y + tileHeight * scale * (node.y - 1)
 		};
 	};
 
@@ -382,6 +382,7 @@ exports = Class(ScrollView, function (supr) {
 	this.move = function (x, y) {
 		var posX = Math.ceil(Math.abs(x));
 		var posY = Math.ceil(Math.abs(y));
+		var toScrollMin = 2 * v_padding * this._tileHeight; //no logic here, just picking a large value
 
 		if (x < 0) {
 			this.populateRight(posX);
@@ -392,8 +393,36 @@ exports = Class(ScrollView, function (supr) {
 		if (y < 0) {
 			this.populateBottom(posY);
 		} else if (y > 0) {
-			this.populateTop(posY);
+			if(posY > toScrollMin) {
+				this.populateLargeTop(posY);
+			} else {
+				this.populateTop(posY);
+			}
 		}
+	};
+
+	this.populateLargeTop = function (count) {
+		var num = Math.floor(count / this._tileHeight),
+			end;
+
+		// Handle reaching end of map
+		if (v_tail -num < 0) {
+			num = v_tail;
+		}
+		end = v_tail - num;
+		v_slider_tail -= num;
+		v_slider_head -= num;
+		v_tail = v_slider_head + v_padding;
+
+		for (var y = v_tail - 1, i = 0; y >= end; y--, i++) {
+			var rel = v_head - i;
+			for (var x = h_tail; x < h_head; x++) {
+				this.create(x, y, x, rel);
+			}
+		}
+
+		v_head -= num;
+		v_tail = v_slider_tail - 2 * v_padding;
 	};
 
 	this.populateRight = function (count) {
@@ -497,6 +526,7 @@ exports = Class(ScrollView, function (supr) {
 
 		v_calls += count;
 		var nonflip = old * v_calls >= 0;
+
 		if (nonflip && v_calls < cell_size) {
 			return;
 		} else {
@@ -523,8 +553,8 @@ exports = Class(ScrollView, function (supr) {
 			var end = v_head + num - 1;
 
 			for (var y = v_head; y <= end; y++) {
+				var rel = v_tail + (y - v_head);
 				for (var x = h_tail; x < h_head; x++) {
-					var rel = v_tail + (y - v_head);
 					this.create(x, y, x, rel);
 				}
 			}
@@ -552,6 +582,7 @@ exports = Class(ScrollView, function (supr) {
 			v_calls = Math.floor(v_calls % cell_size);
 		}
 
+		//set proper slider values if end of map is reached
 		if (v_slider_tail - num < 0) {
 			v_slider_head = (v_slider_head - v_slider_tail);
 			v_slider_tail = 0;
@@ -566,10 +597,9 @@ exports = Class(ScrollView, function (supr) {
 
 		if (v_slider_head + v_padding < v_head) {
 			var end = v_tail - num;
-
 			for (var y = v_tail - 1; y >= end; y--) {
+				var rel = v_head - (v_tail - y);
 				for (var x = h_tail; x < h_head; x++) {
-					var rel = v_head - (v_tail - y);
 					this.create(x, y, x, rel);
 				}
 			}
