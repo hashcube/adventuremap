@@ -403,7 +403,7 @@ exports = Class(ScrollView, function (supr) {
 
 	this.populateLargeTop = function (count) {
 		var num = Math.floor(count / this._tileHeight),
-			end, x, y, i, rel;
+			end, x, y, i;
 
 		// Handle reaching end of map
 		if (v_tail -num < 0) {
