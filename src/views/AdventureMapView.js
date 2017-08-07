@@ -403,7 +403,7 @@ exports = Class(ScrollView, function (supr) {
 
 	this.populateLargeTop = function (count) {
 		var num = Math.floor(count / this._tileHeight),
-			end;
+			end, x, y, i;
 
 		// Handle reaching end of map
 		if (v_tail -num < 0) {
@@ -414,10 +414,15 @@ exports = Class(ScrollView, function (supr) {
 		v_slider_head -= num;
 		v_tail = v_slider_head + v_padding;
 
-		for (var y = v_tail - 1, i = 0; y >= end; y--, i++) {
-			var rel = v_head - i;
-			for (var x = h_tail; x < h_head; x++) {
-				this.create(x, y, x, rel);
+		for (y = v_head; y >= v_head - (v_tail - end); y--) {
+			for (x = h_tail; x < h_head; x++) {
+				this.create(undefined, undefined, x, y);
+			}
+		}
+
+		for(y = v_tail - 1; y >= end; y--) {
+			for (x = h_tail; x < h_head; x++) {
+				this.create(x, y);
 			}
 		}
 
@@ -611,10 +616,12 @@ exports = Class(ScrollView, function (supr) {
 	this.create = function (x, y, release_x, release_y) {
 		var data = this._model.getData().grid;
 		this._adventureMapLayers.forEach(function (layer) {
-			if (release_x !== undefined && layer.release) {
+			if (release_x !== undefined && release_y !== undefined && layer.release) {
 				layer.release(release_x, release_y);
 			}
-			layer.create && layer.create(x, y, data);
+			if (x !== undefined && y !== undefined && layer.create) {
+				layer.create(x, y, data);
+			}
 		});
 	};
 
