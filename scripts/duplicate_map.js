@@ -48,6 +48,26 @@ var ms_tile, lower_range, width, height,
       });
     }
   },
+  create_orig_map = function (repeat, length) {
+    var tile_value = 0,
+      row_difference = map_data.height - orig_map_data.height,
+      ms_tile, row, col;
+
+    for (var j = repeat; j-- > 0;) {
+      tile_value = 0;
+      current_tile = current_tile - (length * width);
+      for (var k = length; k-- > 0;) {
+        for (var l = -1; l++ < width - 1;) {
+            ms_tile = tile_value + current_tile;
+
+            row = Math.floor(ms_tile / width);
+            col = ms_tile % width;
+            map_data.grid[row][col] = orig_map_data.grid[row - row_difference][col];
+            tile_value++;
+        };
+      }
+    }
+  },
   create_object = function (tile) {
     var ms_obj = {
       node: '1',
@@ -87,6 +107,7 @@ current_tile = height * width;
 
 jsio.path.add('../');
 jsio('import scripts.maps.map_empty as map_data');
+jsio('import scripts.maps.original_map as orig_map_data');
 
 tile_config.push({
   range: [0, 4],
@@ -96,13 +117,21 @@ tile_config.push({
 _.each(map_config.maps, function (data, num) {
   var map_name = 'map' + (num + 1),
     map_loc = path.join(process.cwd(), process.argv[2]) + '/' + map_name,
-    file_data = require(map_loc),
-    loop_data = file_data.grid,
-    milestones = {};
+    milestones = {},
+    file_data, loop_data;
 
-  _.times(data.repeat, function () {
-    create_map_group(loop_data, data.length);
-  });
+  try {
+    file_data = require(map_loc);
+    loop_data = file_data.grid;
+
+    _.times(data.repeat, function () {
+      create_map_group(loop_data, data.length);
+    });
+  }
+  catch (e) {
+    console.log(map_name + ' was not found, using original elements')
+    create_orig_map(data.repeat, data.length);
+  }
 
   // For map tile config
   lower_range = Math.floor(current_tile / width);
