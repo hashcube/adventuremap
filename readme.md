@@ -7,7 +7,7 @@ The map contains a model, your can [read about the model here](model.md).
 
 ### Node Tags
 
-A node can be tagged.  It's possible to define a view for a tag.  When a node has a certain tag and the node is visible, then the view will be instanciated and will be shown on the node.  This feature allows you to show custom items on the map at tagged nodes.
+A node can be tagged.  It's possible to define a view for a tag.  When a node has a certain tag and the node is visible, then the view will be instantiated and will be shown on the node.  This feature allows you to show custom items on the map at tagged nodes.
 
 ## Settings objects
 
