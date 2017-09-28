@@ -9,6 +9,9 @@ exports = Class(Emitter, function (supr) {
 	this.init = function (opts) {
 		supr(this, 'init', [opts]);
 
+		// To support if chapterSettings not passed. Else code breaks
+		opts.chapterSettings = opts.chapterSettings || {};
+
 		this._model = new AdventureMapModel({
 			tileWidth: opts.tileSettings.tileWidth,
 			tileHeight: opts.tileSettings.tileHeight,
