@@ -24,6 +24,7 @@ exports = Class(Emitter, function (supr) {
 		this._tileSettings = tileSettings;
 		this._pathSettings = opts.pathSettings;
 		this._nodeSettings = opts.nodeSettings;
+		this._chapterSettings = opts.chapterSettings;
 
 		opts.map = this._model.getMap();
 
@@ -38,6 +39,7 @@ exports = Class(Emitter, function (supr) {
 				gridSettings: opts.gridSettings,
 				nodeSettings: opts.nodeSettings,
 				pathSettings: opts.pathSettings,
+				chapterSettings: opts.chapterSettings,
 				width: opts.width,
 				height: opts.height,
 				adventureMap: this

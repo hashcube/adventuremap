@@ -11,6 +11,7 @@ exports = Class(View, function (supr) {
 		this._nodeSettings = opts.nodeSettings;
 		this._tileSettings = opts.tileSettings;
 		this._pathSettings = opts.pathSettings;
+		this._chapterSettings = opts.chapterSettings;
 		this._map = opts.map;
 		this._views = [];
 		this._needsPopulate = true;
