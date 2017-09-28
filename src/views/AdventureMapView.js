@@ -5,6 +5,7 @@ import .AdventureMapBackgroundView;
 import .AdventureMapPathsView;
 import .AdventureMapNodesView;
 import .AdventureMapDoodadsView;
+import .AdventureMapChaptersView;
 import math.geom.Point as Point;
 
 exports = Class(ScrollView, function (supr) {
@@ -130,6 +131,7 @@ exports = Class(ScrollView, function (supr) {
 
 		var ctors = [
 				AdventureMapBackgroundView,
+				AdventureMapChaptersView,
 				AdventureMapPathsView,
 				AdventureMapNodesView
 			];
@@ -147,6 +149,7 @@ exports = Class(ScrollView, function (supr) {
 				gridSettings: opts.gridSettings,
 				nodeSettings: opts.nodeSettings,
 				pathSettings: opts.pathSettings,
+				chapterSettings: opts.chapterSettings,
 				editMode: editMode,
 				blockEvents: opts.editMode ? (i !== 0) : (i < 2),
 				poolSize: v_head * h_head
@@ -179,7 +182,7 @@ exports = Class(ScrollView, function (supr) {
 		}
 
 		data.pos = this.getPosition();
-		for (var i = 0; i < 4; i++) {
+		for (var i = 0; i < 5; i++) {
 			var adventureMapLayer = this._adventureMapLayers[i];
 			if (adventureMapLayer && adventureMapLayer.onUpdate) {
 				adventureMapLayer.onUpdate(data);
@@ -188,7 +191,7 @@ exports = Class(ScrollView, function (supr) {
 
 		this._showTimeout = this._showTimeout || setTimeout(
 			bind(this, function () {
-				for (var i = 0; i < 3; i++) {
+				for (var i = 0; i < 4; i++) {
 					this._adventureMapLayers[i].style.visible = true;
 				}
 			}),
@@ -340,7 +343,7 @@ exports = Class(ScrollView, function (supr) {
 	this.refreshNode = function (tileX, tileY) {
 		var adventureMapLayers = this._adventureMapLayers;
 		// 2 is node view
-		this._adventureMapLayers[2].refreshNode(tileX, tileY);
+		this._adventureMapLayers[3].refreshNode(tileX, tileY);
 	};
 
 	this.focusNodeById = function (node, cb) {
@@ -365,7 +368,7 @@ exports = Class(ScrollView, function (supr) {
 	};
 
 	this.getNodePosition = function (node) {
-		var pos = this._adventureMapLayers[2]._views[node.tileY][node.tileX].getPosition(),
+		var pos = this._adventureMapLayers[3]._views[node.tileY][node.tileX].getPosition(),
 			scale = this._content.style.scale,
 			tileWidth = this._tileSettings.tileWidth,
 			tileHeight = this._tileSettings.tileHeight;
@@ -376,7 +379,7 @@ exports = Class(ScrollView, function (supr) {
 	};
 
 	this.removeItemViews = function () {
-		this._adventureMapLayers[3].removeItemViews();
+		this._adventureMapLayers[4].removeItemViews();
 	};
 
 	this.move = function (x, y) {

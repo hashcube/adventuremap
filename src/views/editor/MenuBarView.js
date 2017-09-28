@@ -25,6 +25,7 @@ exports = Class(TopBar, function (supr) {
 				{title: 'Node', method: 'onNode', style: 'GREEN'},
 				{title: 'Tags', method: 'onTags', style: 'GREEN'},
 				{title: 'Id', method: 'onId', style: 'GREEN'},
+				{title: 'Chapter', method: 'onChapter', style: 'GREEN'},
 				{title: 'Rotate', method: 'onRotate', style: 'GREEN'},
 				{title: 'Friends', method: 'onFriends', style: 'GREEN'},
 				{title: 'Bottom', method: 'onBottom', style: 'GREEN'},
@@ -126,6 +127,10 @@ exports = Class(TopBar, function (supr) {
 
 	this.onNode = function () {
 		this.emit('Node');
+	};
+
+	this.onChapter = function () {
+		this.emit('Chapter');
 	};
 
 	this.onTile = function () {

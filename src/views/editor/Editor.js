@@ -20,6 +20,7 @@ var OPTION_TAGS = 7;
 var OPTION_TEXT_EDIT = 8;
 var OPTION_ZOOM = 9;
 var OPTION_ROTATE = 10;
+var OPTION_CHAPTER = 11;
 
 exports = Class(Emitter, function () {
 	this.init = function (opts) {
@@ -72,6 +73,7 @@ exports = Class(Emitter, function () {
 		this._menuBarView.on('Position', bind(this, 'onPositionChange'));
 		this._menuBarView.on('Friends', bind(this, 'onFriendsChange'));
 		this._menuBarView.on('Rotate', bind(this, 'onRotateEdit'));
+		this._menuBarView.on('Chapter', bind(this, 'onChapterEdit'));
 
 		this._lists = [];
 		this._tool = -1;
@@ -219,6 +221,7 @@ exports = Class(Emitter, function () {
 			title: 'Zoom',
 			adventureMapModel: this._adventureMapModel
 		});
+
 		this._lists.push(this._zoomView);
 		this._zoomView.on('ZoomIn', bind(this, 'onZoomIn'));
 		this._zoomView.on('ZoomOut', bind(this, 'onZoomOut'));
@@ -239,6 +242,21 @@ exports = Class(Emitter, function () {
 			adventureMap: this._adventureMap,
 			adventureMapModel: this._adventureMapModel
 		}));
+
+		this._lists.push(new ImageListView({
+			superview: opts.superview,
+			x: 0,
+			y: opts.height - 96,
+			width: opts.width,
+			height: 96,
+			images: opts.chapterSettings.image ? [{
+				image: opts.chapterSettings.image
+			}] : [],
+			visible: false,
+			canCancel: true,
+			padding: 10,
+			title: 'Chapter'
+		}).on('Select', bind(this, 'onSelectChapter')));
 
 		this._selectTime = 0;
 		this._adventureMap.getAdventureMapLayers()[0].on(
@@ -350,6 +368,10 @@ exports = Class(Emitter, function () {
 		this.showList(OPTION_NODES);
 	};
 
+	this.onChapterEdit = function () {
+		this.showList(OPTION_CHAPTER);
+	};
+
 	this.onRightEdit = function () {
 		this.showList(OPTION_RIGHT_PATH);
 	};
@@ -412,6 +434,20 @@ exports = Class(Emitter, function () {
 			var data = adventureMapModel.getData();
 
 			data.grid[this._tileY][this._tileX].node = index;
+			data.grid[this._tileY][this._tileX].chapter = false;
+			this.update();
+			this.saveMap();
+		}
+	};
+
+	this.onSelectChapter = function (index) {
+		if (this._tileX !== null) {
+			var adventureMapModel = this._adventureMapModel;
+			var data = adventureMapModel.getData();
+
+			data.grid[this._tileY][this._tileX].chapter = index === 1;
+			data.grid[this._tileY][this._tileX].node = 0;
+			data.grid[this._tileY][this._tileX].x = 0.5;
 			this.update();
 			this.saveMap();
 		}
