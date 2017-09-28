@@ -434,7 +434,7 @@ exports = Class(Emitter, function () {
 			var data = adventureMapModel.getData();
 
 			data.grid[this._tileY][this._tileX].node = index;
-			delete data.grid[this._tileY][this._tileX].chapter;
+			data.grid[this._tileY][this._tileX].chapter = false;
 			this.update();
 			this.saveMap();
 		}
@@ -446,8 +446,8 @@ exports = Class(Emitter, function () {
 			var data = adventureMapModel.getData();
 
 			data.grid[this._tileY][this._tileX].chapter = index === 1;
-			delete data.grid[this._tileY][this._tileX].node;
-			delete data.grid[this._tileY][this._tileX].x;
+			data.grid[this._tileY][this._tileX].node = 0;
+			data.grid[this._tileY][this._tileX].x = 0.5;
 			this.update();
 			this.saveMap();
 		}
