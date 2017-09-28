@@ -39,7 +39,7 @@ exports = Class(AdventureMapLayerView, function (supr) {
 			for (var x = pos.h[0]; x < pos.h[1]; x++) {
 				var view = null;
 				var tile = grid[y][x];
-				if (tile.chapter) {
+				if (this._editMode || tile.chapter) {
 					view = this._pool.obtainView({
 						superview: this,
 						y: y * tileHeight
@@ -90,7 +90,7 @@ exports = Class(AdventureMapLayerView, function (supr) {
 				view = views[y] && views[y][x];
 				tile = grid[y][x];
 
-				if (!view && tile.node) {
+				if (!view && tile.chapter) {
 					this.create(x, y, grid);
 				} else if (view && view.update) {
 					view.update(grid, x, y);

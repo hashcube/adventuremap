@@ -5,6 +5,7 @@ var DEFAULT_TILE_VALUES = {
 		x: 0.5,
 		y: 0.5,
 		node: 0,
+		chapter: false,
 		right: 0,
 		bottom: 0,
 		rightTop: 0,
@@ -321,6 +322,7 @@ exports = Class(Emitter, function (supr) {
 			for (var x = 0; x < data.width; x++) {
 				var tile = gridLine[x];
 				tile.node = 0;
+				tile.chapter = false;
 				tile.right = 0;
 				tile.bottom = 0;
 				tile.rightTop = 0;
