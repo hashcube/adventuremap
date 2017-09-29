@@ -4,6 +4,7 @@ import ui.View as View;
 import ui.ImageView as ImageView;
 import ui.TextView as TextView;
 import ui.ScoreView as ScoreView;
+import ui.ViewPool as Viewpool;
 import animate;
 
 exports = Class(ImageView, function (supr) {
@@ -114,7 +115,7 @@ exports = Class(ImageView, function (supr) {
 						itemView = tile.itemViews[tag];
 						if (!itemView) {
 							var position = tile.friends.position || invert(tile.position) || 'right',
-								friends = tile.friends,
+								friends = tile.friends || {},
 								tileSettings = this._tileSettings,
 								left = (position === 'left'),
 								right = (position === 'right'),
@@ -146,6 +147,15 @@ exports = Class(ImageView, function (supr) {
 								y: this.style.y + friends.y * tileSettings.tileHeight - friendsTop + friendsBottom
 							});
 						}
+					} else if (this._itemCtors[tag] instanceof Viewpool) {
+							itemView = itemViews[tag] = this._itemCtors[tag].obtainView({
+								superview: this.getSuperview(),
+								tag: tag,
+								zIndex: 999999999,
+								tile: tile,
+								x: this.style.x,
+								y: this.style.y
+							});
 					} else {
 						itemView = this._adventureMapView._nodeItems[tag];
 						if (!itemView) {
@@ -233,6 +243,7 @@ exports = Class(ImageView, function (supr) {
 		} else {
 			this._doodadView.style.visible = false;
 		}*/
+
 		this.style.visible = tile.node;
 	};
 
