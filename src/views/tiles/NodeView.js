@@ -115,7 +115,7 @@ exports = Class(ImageView, function (supr) {
 						itemView = tile.itemViews[tag];
 						if (!itemView) {
 							var position = tile.friends.position || invert(tile.position) || 'right',
-								friends = tile.friends || {},
+								friends = tile.friends,
 								tileSettings = this._tileSettings,
 								left = (position === 'left'),
 								right = (position === 'right'),
@@ -156,6 +156,7 @@ exports = Class(ImageView, function (supr) {
 								x: this.style.x,
 								y: this.style.y
 							});
+							itemView.update && itemView.update(tile);
 					} else {
 						itemView = this._adventureMapView._nodeItems[tag];
 						if (!itemView) {
