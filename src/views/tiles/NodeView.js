@@ -157,6 +157,7 @@ exports = Class(ImageView, function (supr) {
 								y: this.style.y
 							});
 							itemView.update && itemView.update(tile);
+							itemView.on('InputSelect', bind(this, 'onSelectTag', tag, tile, itemView));
 					} else {
 						itemView = this._adventureMapView._nodeItems[tag];
 						if (!itemView) {
