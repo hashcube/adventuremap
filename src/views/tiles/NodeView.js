@@ -148,16 +148,21 @@ exports = Class(ImageView, function (supr) {
 							});
 						}
 					} else if (this._itemCtors[tag] instanceof Viewpool) {
-							itemView = itemViews[tag] = this._itemCtors[tag].obtainView({
-								superview: this.getSuperview(),
-								tag: tag,
-								zIndex: 999999999,
-								tile: tile,
-								x: this.style.x,
-								y: this.style.y
-							});
+							itemView = itemViews[tag];
+
+							if (!itemView) {
+								itemView = itemViews[tag] = this._itemCtors[tag].obtainView({
+									superview: this.getSuperview(),
+									tag: tag,
+									zIndex: 999999999,
+									tile: tile,
+									x: this.style.x,
+									y: this.style.y
+								});
+
+								itemView.on('InputSelect', bind(this, 'onSelectTag', tag, tile, itemView));
+							}
 							itemView.update && itemView.update(tile);
-							itemView.on('InputSelect', bind(this, 'onSelectTag', tag, tile, itemView));
 					} else {
 						itemView = this._adventureMapView._nodeItems[tag];
 						if (!itemView) {
