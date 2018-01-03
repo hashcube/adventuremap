@@ -4,7 +4,6 @@ import .tiles.TileView as TileView;
 import .AdventureMapLayerView;
 
 exports = Class(AdventureMapLayerView, function (supr) {
-  var pool;
 
   this.init = function (opts) {
     supr(this, 'init', [opts]);
@@ -13,7 +12,7 @@ exports = Class(AdventureMapLayerView, function (supr) {
     var tileWidth = opts.tileSettings.tileWidth;
     var tileHeight = opts.tileSettings.tileHeight;
     this._map = opts.map;
-    pool = new ViewPool({
+    this.pool = new ViewPool({
       ctor: TileView,
       initCount: opts.poolSize,
       initOpts: {
@@ -28,7 +27,7 @@ exports = Class(AdventureMapLayerView, function (supr) {
     var tileWidth = this._tileSettings.tileWidth;
     var tileHeight = this._tileSettings.tileHeight;
 
-    var view = pool.obtainView({
+    var view = this.pool.obtainView({
       superview: this,
       x: x * tileWidth,
       y: y * tileHeight
@@ -39,7 +38,7 @@ exports = Class(AdventureMapLayerView, function (supr) {
 
   this.release = function (x, y) {
     if(this._views[y] && this._views[y][x]) {
-      pool.releaseView(this._views[y][x]);
+      this.pool.releaseView(this._views[y][x]);
       this._views[y][x] = null;
     }
   };

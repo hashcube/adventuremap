@@ -9,164 +9,165 @@ import .AdventureMapChaptersView;
 import math.geom.Point as Point;
 
 exports = Class(ScrollView, function (supr) {
-	var h_calls = 0;
-	var v_calls = 0;
-
-	var h_padding = 10;
-	var v_padding = 10;
-
-	var h_slider_head = 20;
-	var h_slider_tail = 0;
-	var v_slider_head = 20;
-	var v_slider_tail = 0;
-
-	var v_head = 20 + v_padding * 2;
-	var v_tail = 0;
-	var h_head = 20 + h_padding*2;
-	var h_tail = 0;
-
 	this.init = function (opts, model) {
-		var width, height,
-			editMode = opts.editMode;
+    var width, height,
+      editMode = opts.editMode;
 
-		this._model = model;
-		this._tileWidth = opts.tileSettings.tileWidth;
-		this._tileHeight = opts.tileSettings.tileHeight;
+    this.h_calls = 0;
+    this.v_calls = 0;
 
-		this._gridSettings = opts.gridSettings;
+    this.h_padding = 10;
+    this.v_padding = 10;
 
-		width = opts.gridSettings.width;
-		height = opts.gridSettings.height;
-		this._totalWidth = width * this._tileWidth;
-		this._totalHeight = height * this._tileHeight;
+    this.h_slider_head = 20;
+    this.h_slider_tail = 0;
+    this.v_slider_head = 20;
+    this.v_slider_tail = 0;
 
-		if (h_slider_head > width) {
-			h_slider_head = width;
-			h_head = width;
-			h_padding = 0;
-		}
-		if (v_slider_head > height) {
-			v_slider_head = height;
-			v_head = height;
-			v_padding = 0;
-		}
-		/*	By setting v_slider values to height we are moving the scroller to
-			bottom corner, Horizontal sliders are already at left, so the map
-			start rendering from bottom-left corner
-		*/
-		v_slider_tail = height - v_slider_head;
-		v_slider_head = height;
-		v_tail = v_slider_tail - 2 * v_padding;
-		v_head = height;
-		if (v_tail < 0) {
-			v_tail = 0;
-		}
+    this.v_head = 20 + this.v_padding * 2;
+    this.v_tail = 0;
+    this.h_head = 20 + this.h_padding*2;
+    this.h_tail = 0;
 
-		if (h_head > width) {
-			h_head = width;
-			h_padding = width - h_slider_head;
-		}
-		if (v_head > height) {
-			v_head =  height;
-			v_padding = height - v_slider_head;
-		}
 
-		this._touch = {};
-		this._touchIDs = [];
+    this._model = model;
+    this._tileWidth = opts.tileSettings.tileWidth;
+    this._tileHeight = opts.tileSettings.tileHeight;
 
-		//playerview, to track a player
-		this._nodeItems = {};
+    this._gridSettings = opts.gridSettings;
 
-		var scale = opts.scale || 1;
+    width = opts.gridSettings.width;
+    height = opts.gridSettings.height;
+    this._totalWidth = width * this._tileWidth;
+    this._totalHeight = height * this._tileHeight;
 
-		opts = merge(
-			opts,
-			{
-				scrollX: true,
-				scrollY: true,
-				scrollBounds: {
-					minX: 0,
-					minY: 0,
-					maxX: this._totalWidth * scale,
-					maxY: this._totalHeight * scale
-				},
-				bounce: false,
-				minScale: 0.5,
-				maxScale: 2
-			}
-		);
+    if (this.h_slider_head > width) {
+      this.h_slider_head = width;
+      this.h_head = width;
+      this.h_padding = 0;
+    }
+    if (this.v_slider_head > height) {
+      this.v_slider_head = height;
+      this.v_head = height;
+      this.v_padding = 0;
+    }
+    /*	By setting v_slider values to height we are moving the scroller to
+      bottom corner, Horizontal sliders are already at left, so the map
+      start rendering from bottom-left corner
+    */
+    this.v_slider_tail = height - this.v_slider_head;
+    this.v_slider_head = height;
+    this.v_tail = this.v_slider_tail - 2 * this.v_padding;
+    this.v_head = height;
+    if (this.v_tail < 0) {
+      this.v_tail = 0;
+    }
 
-		supr(this, 'init', [opts]);
+    if (this.h_head > width) {
+      this.h_head = width;
+      this.h_padding = width - this.h_slider_head;
+    }
+    if (this.v_head > height) {
+      this.v_head =  height;
+      this.v_padding = height - this.v_slider_head;
+    }
 
-		this._minScale = opts.minScale;
-		this._maxScale = opts.maxScale;
-		this._tileSettings = opts.tileSettings;
-		this._adventureMapLayers = [];
-		this._inputLayerIndex = opts.inputLayerIndex;
+    this._touch = {};
+    this._touchIDs = [];
 
-		this._showTimeout = null;
+    //playerview, to track a player
+    this._nodeItems = {};
 
-		this._fingerOne = null;
-		this._fingerTwo = null;
+    var scale = opts.scale || 1;
 
-		this._content = new View({
-			superview: this,
-			x: 0,
-			y: 0,
-			width: this._totalWidth,
-			height: this._totalHeight,
-			scale: scale
-		});
+    opts = merge(
+      opts,
+      {
+        scrollX: true,
+        scrollY: true,
+        scrollBounds: {
+          minX: 0,
+          minY: 0,
+          maxX: this._totalWidth * scale,
+          maxY: this._totalHeight * scale
+        },
+        bounce: false,
+        minScale: 0.5,
+        maxScale: 2
+      }
+    );
 
-		// Scrolled to the bottom initally
-		// TODO: Needed ?
-		this._contentView.updateOpts({
-			y: -this.getStyleBounds().maxY,
-		});
+    supr(this, 'init', [opts]);
 
-		this._pinch = false;
-		this._pinchScale = 1;
-		this._pinchPoints = {};
-		this._pinchStartDistance = 0;
+    this._minScale = opts.minScale;
+    this._maxScale = opts.maxScale;
+    this._tileSettings = opts.tileSettings;
+    this._adventureMapLayers = [];
+    this._inputLayerIndex = opts.inputLayerIndex;
 
-		var ctors = [
-				AdventureMapBackgroundView,
-				AdventureMapChaptersView,
-				AdventureMapPathsView,
-				AdventureMapNodesView
-			];
-		for (var i = 0; i < ctors.length; i++) {
-			this._adventureMapLayers.push(new ctors[i]({
-				superview: this._content,
-				adventureMapView: this,
-				x: 0,
-				y: 0,
-				width: this._totalWidth,
-				height: this._totalHeight,
-				map: opts.map,
-				tileCtor: ctors[i],
-				tileSettings: opts.tileSettings,
-				gridSettings: opts.gridSettings,
-				nodeSettings: opts.nodeSettings,
-				pathSettings: opts.pathSettings,
-				chapterSettings: opts.chapterSettings,
-				editMode: editMode,
-				blockEvents: opts.editMode ? (i !== 0) : (i < 2),
-				poolSize: v_head * h_head
-			}));
-		}
+    this._showTimeout = null;
 
-		this.editMode = editMode;
+    this._fingerOne = null;
+    this._fingerTwo = null;
 
-		if (!editMode) {
-			this.on('Scrolled', bind(this, function (point) {
-				var x = point.x || 0,
-					y = point.y || 0;
+    this._content = new View({
+      superview: this,
+      x: 0,
+      y: 0,
+      width: this._totalWidth,
+      height: this._totalHeight,
+      scale: scale
+    });
 
-				var adventureMapLayer = this._adventureMapLayers[0];
-				this.move(x, y);
-			}));
-		}
+    // Scrolled to the bottom initally
+    // TODO: Needed ?
+    this._contentView.updateOpts({
+      y: -this.getStyleBounds().maxY,
+    });
+
+    this._pinch = false;
+    this._pinchScale = 1;
+    this._pinchPoints = {};
+    this._pinchStartDistance = 0;
+
+    var ctors = [
+        AdventureMapBackgroundView,
+        AdventureMapChaptersView,
+        AdventureMapPathsView,
+        AdventureMapNodesView
+      ];
+    for (var i = 0; i < ctors.length; i++) {
+      this._adventureMapLayers.push(new ctors[i]({
+        superview: this._content,
+        adventureMapView: this,
+        x: 0,
+        y: 0,
+        width: this._totalWidth,
+        height: this._totalHeight,
+        map: opts.map,
+        tileCtor: ctors[i],
+        tileSettings: opts.tileSettings,
+        gridSettings: opts.gridSettings,
+        nodeSettings: opts.nodeSettings,
+        pathSettings: opts.pathSettings,
+        chapterSettings: opts.chapterSettings,
+        editMode: editMode,
+        blockEvents: opts.editMode ? (i !== 0) : (i < 2),
+        poolSize: this.v_head * this.h_head
+      }));
+    }
+
+    this.editMode = editMode;
+
+    if (!editMode) {
+      this.on('Scrolled', bind(this, function (point) {
+        var x = point.x || 0,
+          y = point.y || 0;
+
+        var adventureMapLayer = this._adventureMapLayers[0];
+        this.move(x, y);
+      }));
+    }
 	};
 
 	this.onUpdate = function (data) {
@@ -385,7 +386,7 @@ exports = Class(ScrollView, function (supr) {
 	this.move = function (x, y) {
 		var posX = Math.ceil(Math.abs(x));
 		var posY = Math.ceil(Math.abs(y));
-		var toScrollMin = 2 * v_padding * this._tileHeight; //no logic here, just picking a large value
+		var toScrollMin = 2 * this.v_padding * this._tileHeight; //no logic here, just picking a large value
 
 		if (x < 0) {
 			this.populateRight(posX);
@@ -409,120 +410,120 @@ exports = Class(ScrollView, function (supr) {
 			end, x, y, i;
 
 		// Handle reaching end of map
-		if (v_tail -num < 0) {
-			num = v_tail;
+		if (this.v_tail -num < 0) {
+			num = this.v_tail;
 		}
-		end = v_tail - num;
-		v_slider_tail -= num;
-		v_slider_head -= num;
-		v_tail = v_slider_head + v_padding;
+		end = this.v_tail - num;
+		this.v_slider_tail -= num;
+		this.v_slider_head -= num;
+		this.v_tail = this.v_slider_head + this.v_padding;
 
-		for (y = v_head; y >= v_head - (v_tail - end); y--) {
-			for (x = h_tail; x < h_head; x++) {
+		for (y = this.v_head; y >= this.v_head - (this.v_tail - end); y--) {
+			for (x = this.h_tail; x < this.h_head; x++) {
 				this.create(undefined, undefined, x, y);
 			}
 		}
 
-		for(y = v_tail - 1; y >= end; y--) {
-			for (x = h_tail; x < h_head; x++) {
+		for(y = this.v_tail - 1; y >= end; y--) {
+			for (x = this.h_tail; x < this.h_head; x++) {
 				this.create(x, y);
 			}
 		}
 
-		v_head -= num;
-		v_tail = v_slider_tail - 2 * v_padding;
+		this.v_head -= num;
+		this.v_tail = this.v_slider_tail - 2 * this.v_padding;
 	};
 
 	this.populateRight = function (count) {
 		var width = this._gridSettings.width;
 		var num = 1;
 		var cell_size = this._tileWidth;
-		var old = h_calls;
+		var old = this.h_calls;
 
-		h_calls += count;
-		var nonflip = old * h_calls >= 0;
+		this.h_calls += count;
+		var nonflip = old * this.h_calls >= 0;
 
-		if (nonflip && h_calls < cell_size) {
+		if (nonflip && this.h_calls < cell_size) {
 			return;
 		} else {
-			num = Math.floor(h_calls/cell_size);
+			num = Math.floor(this.h_calls/cell_size);
 			if (!nonflip && num === 0) {
 				num = 1;
 			}
-			h_calls = Math.floor(h_calls % cell_size);
+			this.h_calls = Math.floor(this.h_calls % cell_size);
 		}
 
-		if (h_slider_head + num > width) {
-			h_slider_tail = width - (h_slider_head - h_slider_tail);
-			h_slider_head = width;
+		if (this.h_slider_head + num > width) {
+			this.h_slider_tail = width - (this.h_slider_head - this.h_slider_tail);
+			this.h_slider_head = width;
 		} else {
-			h_slider_tail += num;
-			h_slider_head += num;
+			this.h_slider_tail += num;
+			this.h_slider_head += num;
 		}
 
 		// right end condition
-		if (h_head + num > width) {
-			num = width - h_head;
+		if (this.h_head + num > width) {
+			num = width - this.h_head;
 		}
 
 		// left end condition
-		if (h_slider_tail - h_padding > h_tail) {
-			var end = h_head + num - 1;
+		if (this.h_slider_tail - this.h_padding > this.h_tail) {
+			var end = this.h_head + num - 1;
 
-			for (var y = v_tail; y < v_head; y++) {
-				for (var x = h_head; x <= end; x++) {
-					var rel = h_tail + (end - x);
+			for (var y = this.v_tail; y < this.v_head; y++) {
+				for (var x = this.h_head; x <= end; x++) {
+					var rel = this.h_tail + (end - x);
 					this.create(x, y, rel, y);
 				}
 			}
-			h_head += num;
-			h_tail += num;
+			this.h_head += num;
+			this.h_tail += num;
 		}
 	};
 
 	this.populateLeft = function (count) {
 		var num = 1;
 		var cell_size = this._tileWidth;
-		var old = h_calls;
+		var old = this.h_calls;
 
-		h_calls -= count;
-		var nonflip = old * h_calls >= 0;
+		this.h_calls -= count;
+		var nonflip = old * this.h_calls >= 0;
 
-		if (nonflip && h_calls * -1 < cell_size) {
+		if (nonflip && this.h_calls * -1 < cell_size) {
 			return;
 		} else {
-			num = Math.floor(h_calls * -1 / cell_size);
+			num = Math.floor(this.h_calls * -1 / cell_size);
 			if (!nonflip && num === 0) {
 				num = 1;
 			}
-			h_calls = Math.floor(h_calls % cell_size);
+			this.h_calls = Math.floor(this.h_calls % cell_size);
 		}
 
-		if (h_slider_tail - num < 0) {
-			h_slider_head = (h_slider_head - h_slider_tail);
-			h_slider_tail = 0;
+		if (this.h_slider_tail - num < 0) {
+			this.h_slider_head = (this.h_slider_head - this.h_slider_tail);
+			this.h_slider_tail = 0;
 		} else {
-			h_slider_tail -= num;
-			h_slider_head -= num;
+			this.h_slider_tail -= num;
+			this.h_slider_head -= num;
 		}
 
 		// left end condition
-		if (h_tail - num < 0) {
-			num = h_tail;
+		if (this.h_tail - num < 0) {
+			num = this.h_tail;
 		}
 
 		// right end condition
-		if (h_slider_tail - h_padding < h_tail) {
-			var end = h_tail - num;
+		if (this.h_slider_tail - this.h_padding < this.h_tail) {
+			var end = this.h_tail - num;
 
-			for (var y = v_tail; y < v_head; y++) {
-				for (var x = h_tail - 1; x >= end; x--) {
-					var rel = h_head - (h_tail - x);
+			for (var y = this.v_tail; y < this.v_head; y++) {
+				for (var x = this.h_tail - 1; x >= end; x--) {
+					var rel = this.h_head - (this.h_tail - x);
 					this.create(x, y, rel, y);
 				}
 			}
-			h_head -= num;
-			h_tail -= num;
+			this.h_head -= num;
+			this.h_tail -= num;
 		}
 	};
 
@@ -530,44 +531,44 @@ exports = Class(ScrollView, function (supr) {
 		var height = this._gridSettings.height;
 		var num = 1;
 		var cell_size = this._tileHeight;
-		var old = v_calls;
+		var old = this.v_calls;
 
-		v_calls += count;
-		var nonflip = old * v_calls >= 0;
+		this.v_calls += count;
+		var nonflip = old * this.v_calls >= 0;
 
-		if (nonflip && v_calls < cell_size) {
+		if (nonflip && this.v_calls < cell_size) {
 			return;
 		} else {
-			num = Math.floor(v_calls/cell_size);
+			num = Math.floor(this.v_calls/cell_size);
 			if (!nonflip && num === 0) {
 				num = 1;
 			}
-			v_calls = Math.floor(v_calls % cell_size);
+			this.v_calls = Math.floor(this.v_calls % cell_size);
 		}
 
-		if (v_slider_head + num > height) {
-			v_slider_tail = height - (v_slider_head - v_slider_tail);
-			v_slider_head = height;
+		if (this.v_slider_head + num > height) {
+			this.v_slider_tail = height - (this.v_slider_head - this.v_slider_tail);
+			this.v_slider_head = height;
 		} else {
-			v_slider_tail += num;
-			v_slider_head += num;
+			this.v_slider_tail += num;
+			this.v_slider_head += num;
 		}
 
-		if (v_head + num > height) {
-			num = height - v_head;
+		if (this.v_head + num > height) {
+			num = height - this.v_head;
 		}
 
-		if (v_slider_tail - v_padding > v_tail) {
-			var end = v_head + num - 1;
+		if (this.v_slider_tail - this.v_padding > this.v_tail) {
+			var end = this.v_head + num - 1;
 
-			for (var y = v_head; y <= end; y++) {
-				var rel = v_tail + (y - v_head);
-				for (var x = h_tail; x < h_head; x++) {
+			for (var y = this.v_head; y <= end; y++) {
+				var rel = this.v_tail + (y - this.v_head);
+				for (var x = this.h_tail; x < this.h_head; x++) {
 					this.create(x, y, x, rel);
 				}
 			}
-			v_head += num;
-			v_tail += num;
+			this.v_head += num;
+			this.v_tail += num;
 		}
 	};
 
@@ -575,44 +576,44 @@ exports = Class(ScrollView, function (supr) {
 		var height = this._gridSettings.height;
 		var num = 1;
 		var cell_size = this._tileHeight;
-		var old = v_calls;
+		var old = this.v_calls;
 
-		v_calls -= count;
-		var nonflip = old * v_calls >= 0;
+		this.v_calls -= count;
+		var nonflip = old * this.v_calls >= 0;
 
-		if (nonflip && v_calls * -1 < cell_size) {
+		if (nonflip && this.v_calls * -1 < cell_size) {
 			return;
 		} else {
-			num = Math.floor(v_calls * -1 /cell_size);
+			num = Math.floor(this.v_calls * -1 /cell_size);
 			if (!nonflip && num === 0) {
 				num = 1;
 			}
-			v_calls = Math.floor(v_calls % cell_size);
+			this.v_calls = Math.floor(this.v_calls % cell_size);
 		}
 
 		//set proper slider values if end of map is reached
-		if (v_slider_tail - num < 0) {
-			v_slider_head = (v_slider_head - v_slider_tail);
-			v_slider_tail = 0;
+		if (this.v_slider_tail - num < 0) {
+			this.v_slider_head = (this.v_slider_head - this.v_slider_tail);
+			this.v_slider_tail = 0;
 		} else {
-			v_slider_tail -= num;
-			v_slider_head -= num;
+			this.v_slider_tail -= num;
+			this.v_slider_head -= num;
 		}
 
-		if (v_tail - num < 0) {
-			num = v_tail;
+		if (this.v_tail - num < 0) {
+			num = this.v_tail;
 		}
 
-		if (v_slider_head + v_padding < v_head) {
-			var end = v_tail - num;
-			for (var y = v_tail - 1; y >= end; y--) {
-				var rel = v_head - (v_tail - y);
-				for (var x = h_tail; x < h_head; x++) {
+		if (this.v_slider_head + this.v_padding < this.v_head) {
+			var end = this.v_tail - num;
+			for (var y = this.v_tail - 1; y >= end; y--) {
+				var rel = this.v_head - (this.v_tail - y);
+				for (var x = this.h_tail; x < this.h_head; x++) {
 					this.create(x, y, x, rel);
 				}
 			}
-			v_head -= num;
-			v_tail -= num;
+			this.v_head -= num;
+			this.v_tail -= num;
 		}
 	};
 
@@ -633,13 +634,13 @@ exports = Class(ScrollView, function (supr) {
 
 		if (type === 'slider') {
 			ret = {
-				v: [v_slider_tail, v_slider_head],
-				h: [h_slider_tail, h_slider_head]
+				v: [this.v_slider_tail, this.v_slider_head],
+				h: [this.h_slider_tail, this.h_slider_head]
 			};
 		} else {
 			ret = {
-				v: [v_tail, v_head],
-				h: [h_tail, h_head]
+				v: [this.v_tail, this.v_head],
+				h: [this.h_tail, this.h_head]
 			};
 		}
 
