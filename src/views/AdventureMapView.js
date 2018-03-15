@@ -386,7 +386,7 @@ exports = Class(ScrollView, function (supr) {
 	this.move = function (x, y) {
 		var posX = Math.ceil(Math.abs(x));
 		var posY = Math.ceil(Math.abs(y));
-		var toScrollMin = 2 * this.v_padding * this._tileHeight; //no logic here, just picking a large value
+		var toScrollMin = 0.35 * this.v_padding * this._tileHeight; //no logic here, just picking a large value
 
 		if (x < 0) {
 			this.populateRight(posX);
