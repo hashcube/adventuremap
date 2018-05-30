@@ -24,14 +24,13 @@ var _ = require('lodash'),
   id = 1,
   grid;
 
-for (var i = map_config.height; i >= first_chapter_height; i-=first_chapter_height) {
-  chapters.push(i);
+for (var i = map_config.height; i >= first_chapter_height; i -= first_chapter_height) {
+  chapters.push(i - bridge_length);
 }
-chapters = _.map(chapters, function (val) {return val - 3;});
-
 data = JSON.parse(data.split('exports = ')[1].split(';')[0]);
 
 grid = _.reverse(data.grid);
+
 _.each(grid, function (row, idx) {
   if (chapters.indexOf(idx) > -1) {
     var tile = row[0];
