@@ -7,12 +7,8 @@ var _ = require('lodash'),
   map_config_path = process.argv[4] ? process.argv[4] :
   path.join(__dirname, 'map_config.json'),
   map_config = require(map_config_path),
-  dat = fs.readFileSync(map_config_path, 'utf8'),
   map_data = {},
   map_id = process.argv[2],
-  width = map_config.width,
-  tile_width = map_config.tileWidth,
-  tile_height = map_config.tileHeight,
   map_length = map_config.maps[0].length,
   map_repeat = map_config.maps[0].repeat,
   bridge_length = map_config.bridge.length,
@@ -27,6 +23,7 @@ var _ = require('lodash'),
 for (var i = map_config.height; i >= first_chapter_height; i -= first_chapter_height) {
   chapters.push(i - bridge_length);
 }
+
 data = JSON.parse(data.split('exports = ')[1].split(';')[0]);
 
 grid = _.reverse(data.grid);
