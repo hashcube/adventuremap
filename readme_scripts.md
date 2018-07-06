@@ -5,6 +5,8 @@ Scripts:
 
     3. map_config - This has config values like width, height of the map. Comingsoon shows the length of comingsoon and bridge. Maps object is used to define the length of each map and how many times it's repeated.
 
+    4. gen_chapters - Adds the chapters based on the values from map_config script like length of maps and repetitions of each maps. And it will export added chapters to maps/final_map.js.
+
     When creating a map for placing milestones, the length property for comingsoon and bridge should be 0, and only 1 map of some length and repeat as 1.
 
 Files:
