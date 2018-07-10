@@ -21,8 +21,7 @@ var _ = require('underscore'),
   new_height = (new_maps.length * single_map_len) + (new_maps.length * bridge_height),
   old_config = fs.readFileSync(path.join(__dirname, 'maps/tile_config.json'), 'utf8'),
   new_map_config = [],
-  actual_height,
-  map_no,
+  actual_height, map_no, new_item, map_data
   get_object = function (tile, pos) {
     var ms_obj = {
       node: '1',
@@ -46,10 +45,7 @@ var _ = require('underscore'),
   },
   create_map = function () {
     var final_map = [],
-      i = 0,
-      new_item,
-      map_data,
-      item;
+      i = 0;
 
     if (!_.isNumber(max_ms) && max_ms > 0) {
       console.log("Error: Please provide total no of milestones!!");
@@ -68,11 +64,9 @@ var _ = require('underscore'),
 
     _.times(coming_soon_height, function () {
       new_item = [];
-
       _.times(width, function () {
         new_item.push(++i);
       });
-
       final_map.push(new_item);
     });
 
@@ -118,7 +112,6 @@ var _ = require('underscore'),
 
       _.times(bridge_height, function () {
         new_item = [];
-
         _.times(width, function () {
           new_item.push(++i)
         });
@@ -196,15 +189,3 @@ var _ = require('underscore'),
   };
 
 create_map();
-
-
-
-
-
-
-
-
-
-
-
-
