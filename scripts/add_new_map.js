@@ -47,6 +47,9 @@ var _ = require('underscore'),
     var final_map = [],
       i = 0;
 
+    jsio.path.add('../');
+    jsio('import scripts.maps.original_map as original_map');
+
     if (!_.isNumber(max_ms) && max_ms > 0) {
       console.log("Error: Please provide total no of milestones!!");
       return;
@@ -56,9 +59,6 @@ var _ = require('underscore'),
 
     old_config = JSON.parse(old_config.replace(/'/g,'"')
       .replace(/(['"])?([a-z0-9A-Z_]+)(['"])?:/g, '"$2": '));
-
-    jsio.path.add('../');
-    jsio('import scripts.maps.original_map as original_map');
 
     actual_height = new_height + original_map.height;
 

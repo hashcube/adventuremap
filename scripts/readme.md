@@ -14,9 +14,9 @@ To modify node positions:
   6. Copy final_map to map tiles and tile_config as the maps config for tile.js
 
 To add a map:
-  1. Copy exciting map as original map in maps folder
+  1. Copy existing map as original map in maps folder
 
-  2. Copy exciting tile_config to tile_config file inside maps folder
+  2. Copy existing tile_config to tile_config file inside maps folder
 
   3. Create a folder named 'new_maps' and copy the new individual maps
 
@@ -35,7 +35,7 @@ duplicate_map <1> <2> <3> (This scrip should be run from scripts folder)
     at adventuremap/scripts/maps/final_map.js
   <3> location to map export config. default: adventuremap/scripts/map_config.json
 
-add_new_map <1> <2> <3> (This scrip should be run from scripts folder)
+add_new_map <1> <2> <3> (This script should be run from scripts folder)
   <1> new max_ms (Mandatory)
   <2> no of rpeats of individual maps (default is 1)
   <3> add chapters or not (1 for enabling, defalt is 0)
