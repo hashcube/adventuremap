@@ -17,9 +17,9 @@ exports = Class(ImageView, function (supr) {
 			superview: this,
 		}, this._titleSettings));
 
-		this._idText = new ScoreView(merge({
+		this._idText = new ScoreView({
 			superview: this
-		}, this._idSettings));
+		});
 
 		this.canHandleEvents(false);
 	};
@@ -29,6 +29,9 @@ exports = Class(ImageView, function (supr) {
 
 		this._tileX = tileX;
 		this._tileY = tileY;
+
+		// Doing this to avoid unwanted loading of image assets
+		this._idText.updateOpts(this._idSettings);
 
 		if (tile && tile.chapter) {
 			if (this._chapterSettings.image) {
