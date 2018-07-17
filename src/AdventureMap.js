@@ -128,4 +128,9 @@ exports = Class(Emitter, function (supr) {
 		var node = this._model.getNodesById()[id];
 		return node && this._adventureMapView.getNodePosition(node);
 	};
+
+	this.getRelativeNodePosition = function (id, view) {
+		var node = this._model.getNodesById()[id];
+		return node && this._adventureMapView.getRelativeNodePosition(node, view);
+	};
 });

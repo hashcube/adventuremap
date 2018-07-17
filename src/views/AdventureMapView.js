@@ -378,6 +378,15 @@ exports = Class(ScrollView, function (supr) {
 		};
 	};
 
+	this.getRelativeNodePosition = function (node, view) {
+		var pos = this._adventureMapLayers[3]._views[node.tileY][node.tileX].getPosition(view);
+
+		return {
+			x: pos.x,
+			y: pos.y
+		};
+	};
+
 	this.removeItemViews = function () {
 		this._adventureMapLayers[4].removeItemViews();
 	};
