@@ -18,7 +18,8 @@ exports = Class(AdventureMapLayerView, function (supr) {
       initOpts: {
         tileSettings: opts.tileSettings,
         width: tileWidth - margin,
-        height: tileHeight - margin
+        height: tileHeight - margin,
+        scale: 1.01
       }
     });
   };
