@@ -347,8 +347,8 @@ exports = Class(Emitter, function (supr) {
 		var map = this._map;
 		var grid = data.grid;
 		var width = data.width;
-    var height = data.height;
-    var tileNum = 0;
+		var height = data.height;
+		var tileNum = 0;
 
 		this._data.width = width;
 		this._data.height = height;
@@ -359,7 +359,7 @@ exports = Class(Emitter, function (supr) {
 		this._nodesById = {};
 
 		this._maxNodeId = 0;
-    this._minNodeId = 999999;
+		this._minNodeId = 999999;
 
 		for (var y = 0; y < height; y++) {
 			if (!map[y]) {
@@ -414,8 +414,8 @@ exports = Class(Emitter, function (supr) {
 					this._nodesById[tile.id] = tile;
 				}
 
-        this._data.grid[y][x] = tile;
-        tileNum++;
+				this._data.grid[y][x] = tile;
+				tileNum++;
 			}
 
 			// If the map was larger the remove the remaining part:
