@@ -360,8 +360,11 @@ exports = Class(Emitter, function (supr) {
 		this._maxNodeId = 0;
 		this._minNodeId = 999999;
 
+		var k = 0;
+		var node_pos = Object.keys(grid);
+
 		for (var y = 0; y < height; y++) {
-			var gridLine = grid[y] || [];
+			var gridLine = grid[node_pos[y]] || [];
 
 			if (!map[y]) {
 				map[y] = [];
@@ -369,17 +372,18 @@ exports = Class(Emitter, function (supr) {
 			}
 
 			for (var x = 0; x < width; x++) {
-				var len = gridLine.length || 1,
-					tile = gridLine[Math.min(x, len - 1)];
+        var gridLine = grid[node_pos[k]] || k,
+          len = gridLine.length || 1,
+					tile = gridLine;
 
 				if (!tile) {
 					map[y][x] = width * y + x;
 					tile = {};
-				} else if (typeof tile === 'number') { // If it's only a background then set the background and make a new tile...
+				} else if (typeof tile !== 'object') { // If it's only a background then set the background and make a new tile...
 					map[y][x] = tile;
 					tile = {};
 				} else {
-					map[y][x] = tile.map;
+					map[y][x] = node_pos[y];
 				}
 				for (var i in DEFAULT_TILE_VALUES) {
 					// If there's no value and the value can't be "anything" then set the default:
@@ -393,7 +397,7 @@ exports = Class(Emitter, function (supr) {
 						tile[i] = value;
 					}
 				}
-				delete tile.map;
+				// delete tile.map;
 
 				tile.tileX = x;
 				tile.tileY = y;
@@ -418,6 +422,8 @@ exports = Class(Emitter, function (supr) {
 				}
 
 				this._data.grid[y][x] = tile;
+        k++;
+        tile = undefined;
 			}
 
 			// If the map was larger the remove the remaining part:
