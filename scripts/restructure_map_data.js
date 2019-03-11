@@ -6,11 +6,11 @@ var _ = require('underscore'),
   writable = fs.createWriteStream(final_map),
   new_grid = {}, new_obj,
   restructure_map = function () {
-    jsio.path.add('../');
-    jsio('import scripts.maps.final_map as original_map');
-    if (!original_map) {
+    try {
+      jsio.path.add('../');
+      jsio('import scripts.maps.final_map as original_map');
+    } catch (e) {
       console.log("Place final_map.js in maps folder and Run the script");
-
       return;
     }
     _.each(original_map.grid, function (grids) {
