@@ -22,6 +22,8 @@ To add a map:
 
   4. Run add_new_map script replace the output in game
 
+  5. Run restructure_map_data script to migrate to new structure.
+
 Parameters:
 
 create_empty_map <1> <2> <3>
