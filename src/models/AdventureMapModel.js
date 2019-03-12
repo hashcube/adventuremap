@@ -348,6 +348,7 @@ exports = Class(Emitter, function (supr) {
 		var grid = data.grid;
 		var width = data.width;
 		var height = data.height;
+		var tileNum = 0;
 
 		this._data.width = width;
 		this._data.height = height;
@@ -361,16 +362,13 @@ exports = Class(Emitter, function (supr) {
 		this._minNodeId = 999999;
 
 		for (var y = 0; y < height; y++) {
-			var gridLine = grid[y] || [];
-
 			if (!map[y]) {
 				map[y] = [];
 				this._data.grid[y] = [];
 			}
 
 			for (var x = 0; x < width; x++) {
-				var len = gridLine.length || 1,
-					tile = gridLine[Math.min(x, len - 1)];
+				var tile = grid[tileNum] || tileNum;
 
 				if (!tile) {
 					map[y][x] = width * y + x;
@@ -379,7 +377,7 @@ exports = Class(Emitter, function (supr) {
 					map[y][x] = tile;
 					tile = {};
 				} else {
-					map[y][x] = tile.map;
+					map[y][x] = tile;
 				}
 				for (var i in DEFAULT_TILE_VALUES) {
 					// If there's no value and the value can't be "anything" then set the default:
@@ -393,7 +391,6 @@ exports = Class(Emitter, function (supr) {
 						tile[i] = value;
 					}
 				}
-				delete tile.map;
 
 				tile.tileX = x;
 				tile.tileY = y;
@@ -418,6 +415,7 @@ exports = Class(Emitter, function (supr) {
 				}
 
 				this._data.grid[y][x] = tile;
+				tileNum++;
 			}
 
 			// If the map was larger the remove the remaining part:
